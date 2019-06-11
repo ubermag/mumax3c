@@ -16,8 +16,23 @@ setcellsize(d,d,d)
 
 m = uniform(0,0,1)
 
+
 nSnaps := 10
 totalTime := 1e-9
+setsolver(5)
+fixdt=0.
 
 autosave(m, totalTime/nSnaps)
+tableautosave(totalTime/nSnaps)
+tableadd(E_total)
 run(totalTime)
+//OR alternatively:
+// for i:=0;i<nSnaps;i++{
+//	run(totalTime/nSnaps)
+//	save(m)
+//	tablesave()
+// }
+
+
+
+print(m)
