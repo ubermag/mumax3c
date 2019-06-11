@@ -6,8 +6,8 @@ L := 10e-9
 d := 1e-9
 Msat = 8e6  // saturation magnetisation (A/m)
 Aex = 1e-12  // exchange energy constant (J/m)
-B_ext = vector(5e6, 0, 0) // external magnetic field in the x-direction (A/m)
-gammaLL = 2.211e5  // gamma parameter (m/As)
+B_ext = vector(5e6*mu0, 0, 0) // external magnetic field in the x-direction (A/m)
+gammaLL = 2.211e5/mu0  // gamma parameter (m/As)
 alpha = 0.2  // Gilbert damping
 
 SetGridSize(L/d, L/d, L/d)
