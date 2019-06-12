@@ -11,7 +11,8 @@ class MinDriver(Driver):
         mx3 += f"Msat={self.Ms}\n"
         mx3 += "Msat.setregion(255, 0)\n"
         mx3 += "minimize()\n\n"
-        mx3 += "save(m)\n\n"
+        mx3 += "save(m)\n"
+        mx3 += "tablesave()\n\n"
         return mx3
 
     def _checkargs(self, **kwargs):
