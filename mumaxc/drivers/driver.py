@@ -4,7 +4,7 @@ import json
 import shutil
 import datetime
 import mumaxc as mc
-import oommfodt as oo
+import mumaxtxt as oo
 import discretisedfield as df
 import micromagneticmodel as mm
 
@@ -113,5 +113,5 @@ class Driver(mm.Driver):
 
     def _update_dt(self, system):
         pass
-        #system.dt = oo.read(os.path.join(self.dirname,
-        #                                 f'{system.name}.odt'))
+        system.dt = oo.read(os.path.join(self.dirname, f'{system.name}.out',
+                                         'table.txt'))

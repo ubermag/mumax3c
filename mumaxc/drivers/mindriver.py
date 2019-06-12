@@ -8,7 +8,8 @@ class MinDriver(Driver):
 
         mx3 = f"m.LoadFile(\"{self.omffilename}\")\n\n"
         mx3 += "minimize()\n\n"
-        mx3 += "save(m)\n\n"
+        mx3 += "save(m)\n"
+        mx3 += "tablesave()\n\n"
         return mx3
 
     def _checkargs(self, **kwargs):
