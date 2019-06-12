@@ -14,5 +14,5 @@ class TestExchange(mmt.TestExchange):
 
             lines = script.split("\n")
             assert len(lines) == 4
-            assert lines[0] == "// UniformExchange".format(A)
+            assert lines[0] == "// UniformExchange"
             assert lines[1] == "Aex={}".format(A)

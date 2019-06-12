@@ -15,4 +15,4 @@ class TestZeeman(mmt.TestZeeman):
             lines = script.split("\n")
             assert len(lines) == 4
             assert lines[0] == "// Zeeman"
-            assert lines[1] == "B_ext=vector({},{},{})".format(*H)
+            assert lines[1] == "B_ext=vector({}*mu0mm,{}*mu0mm,{}*mu0mm)".format(*H)
