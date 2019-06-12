@@ -87,12 +87,10 @@ class Driver(mm.Driver):
         system.m.write(self.omffilename)
     
     def _makeomf_regions(self, system):
-        print('Im in.')
         max_region_num = 256
         def Ms_init(pos):
             tol = 1e-3
             norm = np.linalg.norm(system.m(pos))
-            print(norm)
             if norm <= tol:
                 return max_region_number - 1
             else:
