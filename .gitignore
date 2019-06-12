@@ -1,0 +1,13 @@
+*~
+.#*
+*#
+docs/ipynb/*
+!docs/ipynb/*.ipynb
+.cache
+.coverage
+.pytest_cache/
+.ipynb_checkpoints/
+__pycache__/
+build/
+dist/
+*.egg-info/
