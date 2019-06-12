@@ -3,6 +3,7 @@ import glob
 import json
 import shutil
 import datetime
+import numpy as np
 import mumaxc as mc
 import oommfodt as oo
 import discretisedfield as df
@@ -32,14 +33,14 @@ class Driver(mm.Driver):
         # Make a directory inside which OOMMF will be run.
         self._makedir()
 
+        # Save system's regions in regions.ovf file.
+        self._makeomf_regions(system)
+
         # Generate and save mx3 file.
         self._makemx3(system, **kwargs)
 
         # Save system's initial magnetisation m0.omf file.
         self._makeomf(system)
-
-        # Save system's regions in regions.ovf file.
-        self._makeomf_regions(system)
 
         # Create json info file.
         self._makejson(system, **kwargs)
@@ -86,13 +87,16 @@ class Driver(mm.Driver):
         system.m.write(self.omffilename)
     
     def _makeomf_regions(self, system):
+        print('Im in.')
         max_region_num = 256
         def Ms_init(pos):
             tol = 1e-3
-            if np.norm(system.m(pos)) <= tol:
+            norm = np.linalg.norm(system.m(pos))
+            print(norm)
+            if norm <= tol:
                 return max_region_number - 1
             else:
-                self.Ms = np.norm(system.m(pos))
+                self.Ms = norm
                 return 0
 
         field = df.Field(system.m.mesh, value=Ms_init, dim=1)
