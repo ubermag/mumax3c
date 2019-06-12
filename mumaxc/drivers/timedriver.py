@@ -21,7 +21,7 @@ class TimeDriver(Driver):
         mx3 += "fixdt=0.\n\n"
         mx3 += "for snap_counter:=0;snap_counter<{};snap_counter++{{\n".format(kwargs["n"])
         mx3 += "    run({}/{})\n".format(kwargs["t"], kwargs["n"])
-        mx3 += "    save(m)\n"
+        mx3 += "    save(m_full)\n"
         mx3 += "    tablesave()\n"
         mx3 += "}"
 
