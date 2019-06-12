@@ -4,7 +4,7 @@ import json
 import shutil
 import datetime
 import mumaxc as mc
-import mumaxtxt as oo
+import oommfodt as oo
 import discretisedfield as df
 import micromagneticmodel as mm
 
