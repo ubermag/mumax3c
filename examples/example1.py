@@ -1,5 +1,5 @@
-import oommfc as mc
-# import mumaxc as mc
+#import oommfc as mc
+import mumaxc as mc
 import discretisedfield as df
 
 L = 10e-9

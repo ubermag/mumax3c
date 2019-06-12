@@ -3,7 +3,7 @@ import glob
 import json
 import shutil
 import datetime
-import oommfc as oc
+import mumaxc as mc
 import oommfodt as oo
 import discretisedfield as df
 import micromagneticmodel as mm
@@ -31,7 +31,7 @@ class Driver(mm.Driver):
         # Make a directory inside which OOMMF will be run.
         self._makedir()
 
-        # Generate and save mif file.
+        # Generate and save mx3 file.
         self._makemx3(system, **kwargs)
 
         # Save system's initial magnetisation m0.omf file.
@@ -72,12 +72,11 @@ class Driver(mm.Driver):
             os.makedirs(self.dirname)
 
     def _makemx3(self, system, **kwargs):
-        mif = '# MIF 2.1\n\n'
-        mif += system._script
-        mif += self._script(system, **kwargs)
+        mx3 = system._script
+        mx3 += self._script(system, **kwargs)
 
-        with open(self.miffilename, 'w') as miffile:
-            miffile.write(mif)
+        with open(self.mx3filename, 'w') as mx3file:
+            mx3file.write(mx3)
 
     def _makeomf(self, system):
         system.m.write(self.omffilename)
@@ -95,15 +94,15 @@ class Driver(mm.Driver):
 
     def _runmumax(self):
         mumax = mc.mumax.get_mumax_runner()
-        mumax.call(argstr=self.miffilename)
+        mumax.call(argstr=self.mx3filename)
 
     def _update_m(self, system):
         # An example .omf filename is:
         # test_sample-Oxs_TimeDriver-Magnetization-01-0000008.omf
-        omffiles = glob.iglob(os.path.join(self.dirname,
-                                           f'{system.name}*.omf'))
-        lastomffile = sorted(omffiles)[-1]
-        m_field = df.read(lastomffile)
+        ovffiles = glob.iglob(os.path.join(self.dirname, f'{system.name}.out',
+                                           'm*.ovf'))
+        lastovffile = list(sorted(ovffiles))[-1]
+        m_field = df.read(lastovffile)
 
         # This line exists because the mesh generated in df.read
         # method comes from the discrtisedfield module where the

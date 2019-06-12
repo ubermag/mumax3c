@@ -10,8 +10,8 @@ import subprocess as sp
 log = logging.getLogger(__name__)
 
 
-class MuMaxRunner:
-    """Base class for running MuMax.
+class MumaxRunner:
+    """Base class for running mumax3.
 
     Don't use this directly. Use get_mumax_runner() to pick a subclass
     of this class.
@@ -24,7 +24,7 @@ class MuMaxRunner:
                                                             now.day,
                                                             now.hour,
                                                             now.minute)
-        print('{}: Running MuMax3 ({}) ... '.format(timestamp, argstr), end='')
+        print('{}: Running mumax3 ({}) ... '.format(timestamp, argstr), end='')
 
         tic = time.time()
         res = self._call(argstr=argstr, need_stderr=need_stderr)
@@ -40,12 +40,12 @@ class MuMaxRunner:
                 stderr = res.stderr.decode('utf-8', 'replace')
                 stdout = res.stdout.decode('utf-8', 'replace')
                 cmdstr = ' '.join(res.args)
-                print('MuMax error:')
+                print('mumax error:')
                 print('\tcommand: {}'.format(cmdstr))
                 print('\tstdout: {}'.format(stdout))
                 print('\tstderr: {}'.format(stderr))
                 print('\n')
-            raise RuntimeError('Error in MuMax run.')
+            raise RuntimeError('Error in mumax run.')
 
         return res
 
@@ -64,7 +64,7 @@ class MuMaxRunner:
         pass
 
     
-class ExeMuMaxRunner(MuMaxRunner):
+class ExeMumaxRunner(MumaxRunner):
     """Using mumax executable on $PATH.
 
     """
@@ -81,9 +81,9 @@ class ExeMuMaxRunner(MuMaxRunner):
 
 
 def get_mumax_runner(use_cache=True, mumax_exe='mumax3'):
-    """Find the best available way to run MuMax.
+    """Find the best available way to run Mumax.
 
-    Returns an MuMaxRunner object, or raises EnvironmentError if no suitable
+    Returns an MumaxRunner object, or raises EnvironmentError if no suitable
     method is found.
 
     Parameters
@@ -103,9 +103,9 @@ def get_mumax_runner(use_cache=True, mumax_exe='mumax3'):
     """
     mumax_exe = shutil.which(mumax_exe)
     if mumax_exe:
-        return ExeMuMaxRunner(mumax_exe)
+        return ExeMumaxRunner(mumax_exe)
     else:
-        raise EnvironmentError('MuMax3 cannot be found.')
+        raise EnvironmentError('mumax3 cannot be found.')
 
 def status():
     """Run a macrospin example for 1 ps through oommfc and print the OOMMF

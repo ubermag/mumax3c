@@ -18,7 +18,8 @@ class System(mm.System):
     """
     @property
     def _script(self):
-        mx3 = self.m.mesh._script
+        mx3 = "mu0mm:={}\n\n".format(mm.mu0)
+        mx3 += self.m.mesh._script
         mx3 += self.hamiltonian._script
         return mx3
 
