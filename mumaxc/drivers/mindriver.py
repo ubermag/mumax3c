@@ -6,7 +6,10 @@ class MinDriver(Driver):
         meshname = system.m.mesh.name
         systemname = system.name
 
-        mx3 = f"m.LoadFile(\"{self.omffilename}\")\n\n"
+        mx3 = f"m.LoadFile(\"{self.omffilename}\")\n"
+        mx3 += f"regions.LoadFile(\"{self.omfregionsfilename}\")\n"
+        mx3 += "Msat={self.Ms}\n"
+        mx3 += "Msat.setregion(255, 0)\n"
         mx3 += "minimize()\n\n"
         mx3 += "save(m)\n"
         mx3 += "tablesave()\n\n"

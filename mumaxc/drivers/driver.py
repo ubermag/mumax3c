@@ -19,6 +19,7 @@ class Driver(mm.Driver):
         self.dirname = os.path.join(system.name,
                                     'drive-{}'.format(system.drive_number))
         self.omffilename = os.path.join(self.dirname, 'm0.omf')
+        self.omfregionsfilename = os.path.join(self.dirname, 'regions.omf')
         self.mx3filename = os.path.join(self.dirname,
                                         '{}.mx3'.format(system.name))
         self.jsonfilename = os.path.join(self.dirname, 'info.json')
@@ -36,6 +37,9 @@ class Driver(mm.Driver):
 
         # Save system's initial magnetisation m0.omf file.
         self._makeomf(system)
+
+        # Save system's regions in regions.ovf file.
+        self._makeomf_regions(system)
 
         # Create json info file.
         self._makejson(system, **kwargs)
@@ -80,6 +84,19 @@ class Driver(mm.Driver):
 
     def _makeomf(self, system):
         system.m.write(self.omffilename)
+    
+    def _makeomf_regions(self, system):
+        max_region_num = 256
+        def Ms_init(pos):
+            tol = 1e-3
+            if np.norm(system.m(pos)) <= tol:
+                return max_region_number - 1
+            else:
+                self.Ms = np.norm(system.m(pos))
+                return 0
+
+        field = df.Field(system.m.mesh, value=Ms_init, dim=1)
+        field.write(self.omfregionsfilename)
 
     def _makejson(self, system, **kwargs):
         info = {}
@@ -112,6 +129,6 @@ class Driver(mm.Driver):
         system.m = m_field
 
     def _update_dt(self, system):
-        pass
-        system.dt = oo.read(os.path.join(self.dirname, f'{system.name}.out',
-                                         'table.txt'))
+        system.dt = oo.read(os.path.join(self.dirname,f'{system.name}.out',
+                                         f'table.txt'))
+

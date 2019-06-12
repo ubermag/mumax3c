@@ -80,6 +80,22 @@ class ExeMumaxRunner(MumaxRunner):
         #sp.run([self.oommf_exe, "killoommf"] + targets)
 
 
+class OptirunMumaxRunner(MumaxRunner):
+    """Using mumax executable on $PATH.
+
+    """
+    def __init__(self, mumax_exe='mumax3'):
+        self.mumax_exe = mumax_exe
+
+    def _call(self, argstr, need_stderr=False):
+        cmd = ['optirun', self.mumax_exe, argstr]
+        return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
+
+    def _kill(self, targets=['all']):
+        pass
+        #sp.run([self.oommf_exe, "killoommf"] + targets)
+
+
 def get_mumax_runner(use_cache=True, mumax_exe='mumax3'):
     """Find the best available way to run Mumax.
 
@@ -101,11 +117,16 @@ def get_mumax_runner(use_cache=True, mumax_exe='mumax3'):
       The name or path of the docker command
 
     """
+    optirun_exe = shutil.which('optirun')
     mumax_exe = shutil.which(mumax_exe)
-    if mumax_exe:
-        return ExeMumaxRunner(mumax_exe)
+    if optirun_exe:
+        return OptirunMumaxRunner(mumax_exe)
     else:
-        raise EnvironmentError('mumax3 cannot be found.')
+        if mumax_exe:
+            return ExeMumaxRunner(mumax_exe)
+        else:
+        
+            raise EnvironmentError('mumax3 cannot be found.')
 
 def status():
     """Run a macrospin example for 1 ps through oommfc and print the OOMMF
