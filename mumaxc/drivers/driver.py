@@ -121,7 +121,7 @@ class Driver(mm.Driver):
         # An example .omf filename is:
         # test_sample-Oxs_TimeDriver-Magnetization-01-0000008.omf
         ovffiles = glob.iglob(os.path.join(self.dirname, f'{system.name}.out',
-                                           'm*.ovf'))
+                                           'm_full*.ovf'))
         lastovffile = list(sorted(ovffiles))[-1]
         m_field = df.read(lastovffile)
 
