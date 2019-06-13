@@ -106,7 +106,7 @@ If you use `mumaxc` in your research, please cite it as:
 1. M. Beg, R. A. Pepper, and H. Fangohr. User interfaces for computational science: A domain specific language for OOMMF embedded in Python. [AIP Advances, 7, 56025](http://aip.scitation.org/doi/10.1063/1.4977225) (2017).
 
 2. A. Vansteenkiste, J. Leliaert, M. Dvornik, M. Helsen, F. Garcia-Sanchez and B. Van Waeyenberge. 
-The design and verification of MuMax3. [AIP Advances 4, 107133] (https://doi.org/10.1063/1.4899186) (2014).
+The design and verification of MuMax3. [AIP Advances 4, 107133](https://doi.org/10.1063/1.4899186) (2014).
 
 
 ## Acknowledgements
