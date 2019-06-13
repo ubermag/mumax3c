@@ -1,4 +1,4 @@
-# oommfc
+# mumaxc
 Marijan Beg<sup>1,2</sup>, Ryan A. Pepper<sup>2</sup>, Thomas Kluyver<sup>1</sup>, and Hans Fangohr<sup>1,2</sup>
 
 <sup>1</sup> *European XFEL GmbH, Holzkoppel 4, 22869 Schenefeld, Germany*  
@@ -18,17 +18,17 @@ Marijan Beg<sup>1,2</sup>, Ryan A. Pepper<sup>2</sup>, Thomas Kluyver<sup>1</sup
 
 ## About
 
-`oommfc` is a Python package that provides:
+`mumaxc` is a Python package that provides:
 
-- An interface to the Object Oriented MicroMagnetic Framework [OOMMF](https://math.nist.gov/oommf/)
+- An interface to mumax^3 (https://mumax3.github.io)
 
-- Integration of OOMMF simulations into the [Jupyter](http://jupyter.org) notebook
+- Integration of mumax simulations into the [Jupyter](http://jupyter.org) notebook
 
 It is available on all major operating systems (Windows, MacOS, Linux) and requires Python 3.5 or higher.
 
 ## Installation
 
-We recommend installing `oommfc` by using either of the `pip` or `conda` package managers.
+We recommend installing `mumaxc` by using either of the `pip` or `conda` package managers.
 
 #### Python requirements
 
@@ -89,11 +89,11 @@ The most recent development version of `oommfc` that is not yet released can be 
 
 ## Documentation
 
-Documentation for `oommfc` is available [here](http://oommfc.readthedocs.io/en/latest/?badge=latest), where APIs and tutorials (in the form of Jupyter notebooks) are available.
+Documentation for `mumaxc` is available [here](http://mumaxc.readthedocs.io/en/latest/?badge=latest), where APIs and tutorials (in the form of Jupyter notebooks) are available.
 
 ## Support
 
-If you require support on installation or usage of `oommfc` or if you want to report a problem, you are welcome to raise an issue in our [joommf/help](https://github.com/joommf/help) repository.
+If you require support on installation or usage of `mumaxc` or if you want to report a problem, you are welcome to raise an issue in our [ubermag/help](https://github.com/ubermag/help) repository.
 
 ## License
 
@@ -101,12 +101,14 @@ Licensed under the BSD 3-Clause "New" or "Revised" License. For details, please 
 
 ## How to cite
 
-If you use `oommfc` in your research, please cite it as:
+If you use `mumaxc` in your research, please cite it as:
 
 1. M. Beg, R. A. Pepper, and H. Fangohr. User interfaces for computational science: A domain specific language for OOMMF embedded in Python. [AIP Advances, 7, 56025](http://aip.scitation.org/doi/10.1063/1.4977225) (2017).
 
-2. DOI will be available soon
+2. A. Vansteenkiste, J. Leliaert, M. Dvornik, M. Helsen, F. Garcia-Sanchez and B. Van Waeyenberge. 
+The design and verification of MuMax3. [AIP Advances 4, 107133] (https://doi.org/10.1063/1.4899186) (2014).
+
 
 ## Acknowledgements
 
-`oommfc` was developed as a part of [OpenDreamKit](http://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541).
+`mumaxc` was developed as a part of [OpenDreamKit](http://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541).
