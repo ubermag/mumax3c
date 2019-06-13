@@ -83,6 +83,17 @@ class Driver(mm.Driver):
         with open(self.mx3filename, 'w') as mx3file:
             mx3file.write(mx3)
 
+    @property
+    def _defineoutput(self):
+        mx3 = "tableadd(E_total)\n"
+        mx3 += "tableadd(E_exch)\n"
+        mx3 += "tableadd(E_demag)\n"
+        mx3 += "tableadd(E_zeeman)\n"
+        mx3 += "tableadd(E_anis)\n"
+        mx3 += "tableadd(dt)\n"
+        mx3 += "tableadd(maxtorque)\n"
+        return mx3
+
     def _makeomf(self, system):
         system.m.write(self.omffilename)
     
