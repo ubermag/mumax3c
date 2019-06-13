@@ -27,67 +27,6 @@ Jonathan Leliaert<sup>1</sup>, Jeroen Mulkers<sup>1</sup>, Vanessa Nehruji<sup>2
 
 It is available on all major operating systems (Windows, MacOS, Linux) and requires Python 3.5 or higher.
 
-## Installation
-
-We recommend installing `mumaxc` by using either of the `pip` or `conda` package managers.
-
-#### Python requirements
-
-Before installing `oommfc` via `pip`, please make sure you have Python 3.5 or higher on your system. You can check that by running
-
-    python3 --version
-
-If you are on Linux, it is likely that you already have Python installed. However, on MacOS and Windows, this is usually not the case. If you do not have Python 3.5 or higher on your machine, we strongly recommend installing the [Anaconda](https://www.anaconda.com/) Python distribution. [Download Anaconda](https://www.anaconda.com/download) for your operating system and follow instructions on the download page. Further information about installing Anaconda can be found [here](https://conda.io/docs/user-guide/install/download.html).
-
-#### OOMMF requirements
-
-`oommfc` is a Python package used to drive [OOMMF](https://math.nist.gov/oommf/). Therefore, OOMMF is a requirement (dependency) of `oommfc`. If you decide to install `oommfc` using `conda`, then OOMMF will be automatically installed. However, if you decide to use `pip` for `oommfc` installation, we strongly recommend using conda to install OOMMF. You can install OOMMF by running:
-
-    conda install --channel conda-forge oommf
-    
-**Note:** Details on how to install Anaconda Python distribution can be found in the `conda` section.
-
-#### `pip`
-
-After installing Anaconda on MacOS or Windows, `pip` will also be installed. However, on Linux, if you do not already have `pip`, you can install it with
-
-    sudo apt install python3-pip
-
-To install the `oommfc` version currently in the Python Package Index repository [PyPI](https://pypi.org/project/oommfc/) on all operating systems run:
-
-    python3 -m pip install oommfc
-
-#### `conda`
-
-`oommfc` is installed using `conda` by running
-
-    conda install --channel conda-forge oommfc
-
-For further information on the `conda` package, dependency, and environment management, please have a look at its [documentation](https://conda.io/docs/). 
-
-## Updating
-
-If you used pip to install `oommfc`, you can update to the latest released version in [PyPI](https://pypi.org/project/oommfc/) by running
-
-    python3 -m pip install --upgrade oommfc
-
-On the other hand, if you used `conda` for installation, update `oommfc` with
-
-    conda upgrade oommfc
-
-#### Development version
-
-The most recent development version of `oommfc` that is not yet released can be installed/updated with
-
-    git clone https://github.com/joommf/oommfc
-    python3 -m pip install --upgrade oommfc
-
-**Note**: If you do not have `git` on your system, it can be installed by following the instructions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-
-## Binder
-
-`oommfc` can be used in the cloud via Binder. This does not require you to have anything installed and no files will be created on your machine. To use `oommfc` in the cloud, follow this [link](https://mybinder.org/v2/gh/joommf/oommfc/master?filepath=index.ipynb).
-
 ## Documentation
 
 Documentation for `mumaxc` is available [here](http://mumaxc.readthedocs.io/en/latest/?badge=latest), where APIs and tutorials (in the form of Jupyter notebooks) are available.
@@ -113,3 +52,4 @@ The design and verification of MuMax3. [AIP Advances 4, 107133](https://doi.org/
 ## Acknowledgements
 
 `mumaxc` was developed as a part of [OpenDreamKit](http://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541).
+This work was supported by the Fonds Wetenschappelijk Onderzoek (FWO-Vlaanderen) through Project No. G098917N (Jeroen Mulekers) and with a postdoctoral fellowship (Jonathan Leliaert).
