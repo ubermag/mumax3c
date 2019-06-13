@@ -1,8 +1,9 @@
-# mumaxc
-Marijan Beg<sup>1,2</sup>, Ryan A. Pepper<sup>2</sup>, Thomas Kluyver<sup>1</sup>, and Hans Fangohr<sup>1,2</sup>
+# mumax3c
+Jonathan Leliaert<sup>1</sup>, Jeroen Mulkers<sup>1</sup>, Vanessa Nehruji<sup>2</sup>, Gary Downing<sup>2</sup>, Ryan A. Pepper<sup>2</sup>, Marijan Beg<sup>2,3</sup>, and Hans Fangohr<sup>2,3</sup>
 
-<sup>1</sup> *European XFEL GmbH, Holzkoppel 4, 22869 Schenefeld, Germany*  
+<sup>1</sup> *DyNaMat group, Dept. Solid State Sciences, Ghent University, BE9000 Ghent, Belgium*    
 <sup>2</sup> *Faculty of Engineering and the Environment, University of Southampton, Southampton SO17 1BJ, United Kingdom*  
+<sup>3</sup> *European XFEL GmbH, Holzkoppel 4, 22869 Schenefeld, Germany*  
 
 | Description | Badge |
 | --- | --- |
@@ -20,7 +21,7 @@ Marijan Beg<sup>1,2</sup>, Ryan A. Pepper<sup>2</sup>, Thomas Kluyver<sup>1</sup
 
 `mumaxc` is a Python package that provides:
 
-- An interface to mumax^3 (https://mumax3.github.io)
+- An interface to mumax<sup>3</sup> (https://mumax3.github.io)
 
 - Integration of mumax simulations into the [Jupyter](http://jupyter.org) notebook
 
