@@ -23,5 +23,5 @@ class System(mm.System):
         mx3 += self.hamiltonian._script
         return mx3
 
-    #def total_energy(self):
-    #    return self.dt.tail(1)["E"][0]
+    def total_energy(self):
+        return self.dt.tail(1)["E"][0]
