@@ -17,6 +17,10 @@ class TimeDriver(Driver):
         else:
             mx3 += f"doprecess = true\n"
 
+        mx3 += f"m.LoadFile(\"{self.omffilename}\")\n"
+        mx3 += f"regions.LoadFile(\"{self.omfregionsfilename}\")\n"
+        mx3 += f"Msat={self.Ms}\n"
+        mx3 += "Msat.setregion(255, 0)\n"
         mx3 += "setsolver(5)\n"
         mx3 += "fixdt=0.\n\n"
         mx3 += "for snap_counter:=0;snap_counter<{};snap_counter++{{\n".format(kwargs["n"])
