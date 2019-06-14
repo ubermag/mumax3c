@@ -1,5 +1,5 @@
 # mumax3c
-Jonathan Leliaert<sup>1</sup>, Jeroen Mulkers<sup>1</sup>, Vanessa Nehruji<sup>2</sup>, Gary Downing<sup>2</sup>, Ryan A. Pepper<sup>2</sup>, Marijan Beg<sup>2,3</sup>, and Hans Fangohr<sup>2,3</sup>
+Jeroen Mulkers<sup>1</sup>, Jonathan Leliaert<sup>1</sup>, Vanessa Nehruji<sup>2</sup>, Gary Downing<sup>2</sup>, Ryan A. Pepper<sup>2</sup>, Marijan Beg<sup>2,3</sup>, and Hans Fangohr<sup>2,3</sup>
 
 <sup>1</sup> *DyNaMat group, Dept. Solid State Sciences, Ghent University, BE9000 Ghent, Belgium*    
 <sup>2</sup> *Faculty of Engineering and the Environment, University of Southampton, Southampton SO17 1BJ, United Kingdom*  
