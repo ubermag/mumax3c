@@ -12,8 +12,8 @@ class System(mm.System):
     --------
     Creating a simple system object.
 
-    >>> import oommfc as oc
-    >>> system = oc.System(name="my_system")
+    >>> import mumaxc as mc
+    >>> system = mc.System(name="my_system")
 
     """
     @property

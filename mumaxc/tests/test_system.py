@@ -1,8 +1,9 @@
 import discretisedfield as df
 import mumaxc as mc
-
+import pytest
 
 class TestSystem:
+    @pytest.mark.mumax
     def test_script(self):
         system = mc.System(name="test_system")
 
@@ -31,5 +32,25 @@ class TestSystem:
         assert "Ku2=0" in script
         assert "anisu=vector(0,1,0)" in script
 
+        return None
+
+    @pytest.mark.mumax
+    def test_total_energy(self):
+        system = mc.System(name="test_system")
+
+        system.hamiltonian += mc.Exchange(1e-12)
+        system.hamiltonian += mc.UniaxialAnisotropy(1e3, (0, 1, 0))
+        system.hamiltonian += mc.Zeeman((0, 1e6, 0))
+
+        system.dynamics += mc.Precession(2.211e5)
+        system.dynamics += mc.Damping(0.1)
+
+        mesh = mc.Mesh((0, 0, 0), (5, 5, 5), (1, 1, 1))
+
+        system.m = df.Field(mesh, dim=3, value=(0, 1, 0), norm=1)
+
+        with pytest.raises(AttributeError):
+            system.total_energy()
+            
         return None
 

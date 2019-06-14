@@ -7,14 +7,14 @@ Jeroen Mulkers<sup>1</sup>, Jonathan Leliaert<sup>1</sup>, Vanessa Nehruji<sup>2
 
 | Description | Badge |
 | --- | --- |
-| Latest release | [![PyPI version](https://badge.fury.io/py/oommfc.svg)](https://badge.fury.io/py/oommfc) |
-|                | [![Anaconda-Server Badge](https://anaconda.org/conda-forge/oommfc/badges/version.svg)](https://anaconda.org/conda-forge/oommfc) |
-| Build | [![Build Status](https://travis-ci.org/joommf/oommfc.svg?branch=master)](https://travis-ci.org/joommf/oommfc) |
-|       | [![Build status](https://ci.appveyor.com/api/projects/status/a1cp833x8trei0d8?svg=true)](https://ci.appveyor.com/project/marijanbeg/oommfc) |
-| Coverage | [![codecov](https://codecov.io/gh/joommf/oommfc/branch/master/graph/badge.svg)](https://codecov.io/gh/joommf/oommfc) |
-| Documentation | [![Documentation Status](https://readthedocs.org/projects/oommfc/badge/?version=latest)](http://oommfc.readthedocs.io/en/latest/?badge=latest) |
-| Binder | [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/joommf/oommfc/master?filepath=index.ipynb) |
-| Dependecies | [![Requirements Status](https://requires.io/github/joommf/oommfc/requirements.svg?branch=master)](https://requires.io/github/joommf/oommfc/requirements/?branch=master) |
+| Latest release | [![PyPI version](https://badge.fury.io/py/mumaxc.svg)](https://badge.fury.io/py/mumaxc) |
+|                | [![Anaconda-Server Badge](https://anaconda.org/conda-forge/mumaxc/badges/version.svg)](https://anaconda.org/conda-forge/mumaxc) |
+| Build | [![Build Status](https://travis-ci.org/ubermag/mumaxc.svg?branch=master)](https://travis-ci.org/ubermag/mumaxc) |
+|       | [![Build status](https://ci.appveyor.com/api/projects/status/a1cp833x8trei0d8?svg=true)](https://ci.appveyor.com/project/ubermag/mumaxc) |
+| Coverage | [![codecov](https://codecov.io/gh/ubermag/mumaxc/branch/master/graph/badge.svg)](https://codecov.io/gh/ubermag/mumaxc) |
+| Documentation | [![Documentation Status](https://readthedocs.org/projects/mumaxc/badge/?version=latest)](http://mumaxc.readthedocs.io/en/latest/?badge=latest) |
+| Binder | [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/ubermag/mumaxc/master?filepath=index.ipynb) |
+| Dependecies | [![Requirements Status](https://requires.io/github/ubermag/mumaxc/requirements.svg?branch=master)](https://requires.io/github/ubermag/mumaxc/requirements/?branch=master) |
 | License | [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) |
 
 ## About
