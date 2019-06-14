@@ -12,7 +12,7 @@ Jeroen Mulkers<sup>1</sup>, Jonathan Leliaert<sup>1</sup>, Vanessa Nehruji<sup>2
 | Build | [![Build Status](https://travis-ci.org/ubermag/mumaxc.svg?branch=master)](https://travis-ci.org/ubermag/mumaxc) |
 |       | [![Build status](https://ci.appveyor.com/api/projects/status/a1cp833x8trei0d8?svg=true)](https://ci.appveyor.com/project/ubermag/mumaxc) |
 | Coverage | [![codecov](https://codecov.io/gh/ubermag/mumaxc/branch/master/graph/badge.svg)](https://codecov.io/gh/ubermag/mumaxc) |
-| Documentation | [![Documentation Status](https://readthedocs.org/projects/mumaxc/badge/?version=latest)](http://ubermag.readthedocs.io/en/latest/?badge=latest) |
+| Documentation | [![Documentation Status](https://readthedocs.org/projects/mumaxc/badge/?version=latest)](http://mumaxc.readthedocs.io/en/latest/?badge=latest) |
 | Binder | [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/ubermag/mumaxc/master?filepath=index.ipynb) |
 | Dependecies | [![Requirements Status](https://requires.io/github/ubermag/mumaxc/requirements.svg?branch=master)](https://requires.io/github/ubermag/mumaxc/requirements/?branch=master) |
 | License | [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) |
