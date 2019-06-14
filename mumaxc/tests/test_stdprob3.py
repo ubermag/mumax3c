@@ -55,16 +55,16 @@ def test_stdprob3():
         mesh = mc.Mesh(p1=(0, 0, 0), p2=(cubesize, cubesize, cubesize),
                        cell=(cellsize, cellsize, cellsize))
 
+        # Remove any previous simulation directories.
+        if os.path.exists(name):
+            shutil.rmtree(name)
+        
         system = mc.System(name=name)
         system.hamiltonian = mc.Exchange(A) + mc.UniaxialAnisotropy(K, u) + \
             mc.Demag()
         system.m = df.Field(mesh, value=m_init, norm=Ms)
 
-        # Remove any previous simulation directories.
-        if os.path.exists(name):
-            shutil.rmtree(name)
-        
-        md = mc.MinDriver()
+        md = mc.RelaxDriver()
         md.drive(system)
 
         if os.path.exists(name):
@@ -75,6 +75,8 @@ def test_stdprob3():
     def energy_difference(L):
         vortex = minimise_system_energy(L, m_init_vortex)
         flower = minimise_system_energy(L, m_init_flower)
+
+        print(vortex.dt.columns)
 
         return vortex.total_energy() - flower.total_energy()
 
