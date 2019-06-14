@@ -52,4 +52,4 @@ The design and verification of MuMax3. [AIP Advances 4, 107133](https://doi.org/
 ## Acknowledgements
 
 `mumaxc` was developed as a part of [OpenDreamKit](http://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541).
-This work was supported by the Fonds Wetenschappelijk Onderzoek (FWO-Vlaanderen) through Project No. G098917N (Jeroen Mulekers) and with a postdoctoral fellowship (Jonathan Leliaert).
+This work was supported by the Fonds Wetenschappelijk Onderzoek (FWO-Vlaanderen) through Project No. G098917N (Jeroen Mulkers) and with a postdoctoral fellowship (Jonathan Leliaert).
