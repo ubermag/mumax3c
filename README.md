@@ -1,5 +1,5 @@
 # mumax3c
-Jonathan Leliaert<sup>1</sup>, Jeroen Mulkers<sup>1</sup>, Vanessa Nehruji<sup>2</sup>, Gary Downing<sup>2</sup>, Ryan A. Pepper<sup>2</sup>, Marijan Beg<sup>2,3</sup>, and Hans Fangohr<sup>2,3</sup>
+Jeroen Mulkers<sup>1</sup>, Jonathan Leliaert<sup>1</sup>, Vanessa Nehruji<sup>2</sup>, Gary Downing<sup>2</sup>, Ryan A. Pepper<sup>2</sup>, Marijan Beg<sup>2,3</sup>, and Hans Fangohr<sup>2,3</sup>
 
 <sup>1</sup> *DyNaMat group, Dept. Solid State Sciences, Ghent University, BE9000 Ghent, Belgium*    
 <sup>2</sup> *Faculty of Engineering and the Environment, University of Southampton, Southampton SO17 1BJ, United Kingdom*  
@@ -52,4 +52,4 @@ The design and verification of MuMax3. [AIP Advances 4, 107133](https://doi.org/
 ## Acknowledgements
 
 `mumaxc` was developed as a part of [OpenDreamKit](http://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541).
-This work was supported by the Fonds Wetenschappelijk Onderzoek (FWO-Vlaanderen) through Project No. G098917N (Jeroen Mulekers) and with a postdoctoral fellowship (Jonathan Leliaert).
+This work was supported by the Fonds Wetenschappelijk Onderzoek (FWO-Vlaanderen) through Project No. G098917N (Jeroen Mulkers) and with a postdoctoral fellowship (Jonathan Leliaert).
