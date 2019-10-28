@@ -1,4 +1,5 @@
 # mumax3c
+
 Jeroen Mulkers<sup>1</sup>, Jonathan Leliaert<sup>1</sup>, Vanessa Nehruji<sup>2</sup>, Gary Downing<sup>2</sup>, Ryan A. Pepper<sup>2</sup>, Marijan Beg<sup>2,3</sup>, and Hans Fangohr<sup>2,3</sup>
 
 <sup>1</sup> *DyNaMat group, Dept. Solid State Sciences, Ghent University, BE9000 Ghent, Belgium*    
@@ -14,22 +15,22 @@ Jeroen Mulkers<sup>1</sup>, Jonathan Leliaert<sup>1</sup>, Vanessa Nehruji<sup>2
 | Coverage | [![codecov](https://codecov.io/gh/ubermag/mumaxc/branch/master/graph/badge.svg)](https://codecov.io/gh/ubermag/mumaxc) |
 | Documentation | [![Documentation Status](https://readthedocs.org/projects/mumaxc/badge/?version=latest)](http://mumaxc.readthedocs.io/en/latest/?badge=latest) |
 | Binder | [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/ubermag/mumaxc/master?filepath=index.ipynb) |
-| Dependecies | [![Requirements Status](https://requires.io/github/ubermag/mumaxc/requirements.svg?branch=master)](https://requires.io/github/ubermag/mumaxc/requirements/?branch=master) |
+| Dependencies | [![Requirements Status](https://requires.io/github/ubermag/mumaxc/requirements.svg?branch=master)](https://requires.io/github/ubermag/mumaxc/requirements/?branch=master) |
 | License | [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) |
 
 ## About
 
 `mumaxc` is a Python package that provides:
 
-- An interface to mumax<sup>3</sup> (https://mumax3.github.io)
+- An interface to mumax<sup>3</sup> (http://mumax.github.io)
 
-- Integration of mumax simulations into the [Jupyter](http://jupyter.org) notebook
+- Integration of mumax simulations into the [Jupyter](https://jupyter.org) notebook
 
-It is available on all major operating systems (Windows, MacOS, Linux) and requires Python 3.5 or higher.
+It is available on all major operating systems (Windows, macOS, Linux) and requires Python 3.5 or higher.
 
 ## Documentation
 
-Documentation for `mumaxc` is available [here](http://mumaxc.readthedocs.io/en/latest/?badge=latest), where APIs and tutorials (in the form of Jupyter notebooks) are available.
+Documentation for `mumaxc` is available [here](http://mumax.github.io), where APIs and tutorials (in the form of Jupyter notebooks) are available.
 
 ## Support
 
@@ -51,5 +52,5 @@ The design and verification of MuMax3. [AIP Advances 4, 107133](https://doi.org/
 
 ## Acknowledgements
 
-`mumaxc` was developed as a part of [OpenDreamKit](http://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541).
+`mumaxc` was developed as a part of [OpenDreamKit](https://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541).
 This work was supported by the Fonds Wetenschappelijk Onderzoek (FWO-Vlaanderen) through Project No. G098917N (Jeroen Mulkers) and with a postdoctoral fellowship (Jonathan Leliaert).
