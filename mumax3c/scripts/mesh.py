@@ -2,7 +2,7 @@ import mumax3c as mc
 
 
 def mesh_script(mesh):
-    mx3 = ''
+    mx3 = '// Mesh'
     if mesh.pbc:
         repetitions = [0, 0, 0]
         for direction in mesh.pbc:
