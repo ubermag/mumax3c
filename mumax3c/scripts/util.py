@@ -35,7 +35,6 @@ def set_subregions(field):
 def set_value(name, value, system):
     subregion_names = system.m.mesh.subregions.keys()
     dictionary = dict(zip(subregion_names, range(len(subregion_names))))
-    print(dictionary)
 
     mx3 = ''
     if isinstance(value, numbers.Real):
