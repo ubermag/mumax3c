@@ -35,17 +35,18 @@ def set_subregions(field):
 def set_value(name, value, system):
     subregion_names = system.m.mesh.subregions.keys()
     dictionary = dict(zip(subregion_names, range(len(subregion_names))))
+    print(dictionary)
 
     mx3 = ''
     if isinstance(value, numbers.Real):
         mx3 += f'{name} = {value}\n'
 
     elif isinstance(value, (list, tuple, np.ndarray)):
-        mx3 += '{} = vector({}, {}, {})\n'.format(name, *value)
+        mx3 += '{} = vector({}, {}, {})\n'.format(name, value[0], value[1], value[2])
 
     elif isinstance(value, dict):
-        for name, region in value:
-            mx3 += f'{name}.setregion({dictionary[name]}, {value[name]})\n'
+        for key, val in value.items():
+            mx3 += f'{name}.setregion({dictionary[key]}, {val})\n'
 
     else:
         msg = f'Cannot use {type(value)} to set parameter.'
