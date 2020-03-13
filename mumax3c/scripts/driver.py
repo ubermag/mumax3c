@@ -31,12 +31,13 @@ def driver_script(driver, system, compute=None, **kwargs):
 
         mx3 += f'alpha = {alpha}\n'
         if not gamma0:
-            mx3 += f'gammaLL = {gamma0/mm.consts.mu0}\n'
-        else:
             mx3 += f'doprecess = false\n'
+        else:
+            mx3 += f'gammaLL = {gamma0/mm.consts.mu0}\n'
+            mx3 += f'doprecess = true\n'
 
         mx3 += "setsolver(5)\n"
-        mx3 += "fixDt = 0.\n\n"
+        mx3 += "fixDt = 0.0\n\n"
 
         mx3 += "tableadd(E_total)\n"
         mx3 += "tableadd(E_exch)\n"
@@ -48,7 +49,7 @@ def driver_script(driver, system, compute=None, **kwargs):
 
         t, n = kwargs['t'], kwargs['n']
 
-        mx3 += f'for snap_counter:=0; snap_counter<{n};snap_counter++{{\n'
+        mx3 += f'for snap_counter:=0; snap_counter<{n}; snap_counter++{{\n'
         mx3 += f"    run({t/n})\n"
         mx3 += "    save(m_full)\n"
         mx3 += "    tablesave()\n"

@@ -11,6 +11,9 @@ def energy_script(container):
     for term in container:
         mx3 += globals()[f'{term.name}_script'](term)
 
+    if mm.Demag() not in container:
+        mx3 += "enabledemag = false\n\n"
+
     return mx3
 
 
