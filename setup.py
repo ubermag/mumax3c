@@ -4,9 +4,9 @@ with open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 setuptools.setup(
-    name='oommfc',
-    version='0.8.16',
-    description=('OOMMF calculator.'),
+    name='mumax3c',
+    version='0.1',
+    description=('mumax3 calculator.'),
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://ubermag.github.io',

@@ -1,10 +1,10 @@
-import oommfc as oc
+import mumax3c as mc
 import micromagneticmodel as mm
 
 
 def driver_script(driver, system, compute=None, **kwargs):
     mif = ''
-    if isinstance(driver, oc.MinDriver):
+    if isinstance(driver, mc.MinDriver):
         mx3 = ''
 
         mx3 += f"Msat={system.m.norm.average}\n"
@@ -24,7 +24,7 @@ def driver_script(driver, system, compute=None, **kwargs):
 
 
 
-    if isinstance(driver, oc.TimeDriver):
+    if isinstance(driver, mc.TimeDriver):
         pass
 
     return mx3

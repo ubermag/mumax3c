@@ -1,7 +1,9 @@
 import sys
 import numbers
+import numpy as np
 import mumax3c as mc
 import discretisedfield as df
+import micromagneticmodel as mm
 
 
 def energy_script(container):
@@ -29,7 +31,7 @@ def exchange_script(term):
 
 def zeeman_script(term):
     mx3 = '// Zeeman\n'
-    Bext = np.multiply(term.H * mm.consts.mu0)
+    Bext = np.multiply(term.H, mm.consts.mu0)
     mx3 += 'B_ext=vector({}, {}, {})\n\n'.format(*Bext)
 
     return mx3

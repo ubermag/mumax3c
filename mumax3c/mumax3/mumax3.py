@@ -11,7 +11,7 @@ import ubermagutil as uu
 import micromagneticmodel as mm
 
 log = logging.getLogger(__name__)
-_cached_oommf_runner = None
+_cached_mumax3_runner = None
 
 
 class Mumax3Runner(metaclass=abc.ABCMeta):
@@ -67,7 +67,6 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
 
         tic = time.time()
         res = self._call(argstr=argstr, need_stderr=need_stderr)
-        self._kill()  # kill OOMMF (mostly needed on Windows)
         toc = time.time()
         seconds = '({:0.1f} s)'.format(toc - tic)
         print(seconds)  # append seconds to the previous print.
@@ -95,72 +94,6 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         """
         pass  # pragma: no cover
 
-    @abc.abstractmethod
-    def _kill(self):
-        """This method should be implemented in subclass.
-
-        """
-        pass  # pragma: no cover
-
-    @abc.abstractmethod
-    def errors(self):
-        """Returns the mumax3 errors.
-
-        Returns
-        -------
-        str
-
-            mumax3 errors.
-
-        """
-        pass  # pragma: no cover
-
-    def version(self):
-        """Returns the OOMMF version.
-
-        Returns
-        -------
-        str
-
-            OOMMF version.
-
-        Examples
-        --------
-        1. Getting OOMMF version.
-
-        >>> import oommfc as oc
-        ...
-        >>> runner = oc.oommf.get_oommf_runner()
-        >>> runner.version()
-        Running OOMMF...
-        '...'
-
-        """
-        pass
-
-    def platform(self):
-        """Returns platform seen by OOMMF.
-
-        Returns
-        -------
-        str
-
-            Platform.
-
-        Examples
-        --------
-        1. Getting platform.
-
-        >>> import oommfc as oc
-        ...
-        >>> runner = oc.oommf.get_oommf_runner()
-        >>> runner.platform()
-        Running OOMMF...
-        '...'
-
-        """
-        pass
-
 
 @uu.inherit_docs
 class ExeMumax3Runner(Mumax3Runner):
@@ -171,72 +104,43 @@ class ExeMumax3Runner(Mumax3Runner):
     mumax3_exe: str
 
         Name or path of the mumax3 executable. Defaults to
-        ``$HOME/go/bin/mumax3``.
+        ``mumax3``.
 
     """
-    def __init__(self,
-                 mumax3_exe=os.path.join('$HOME', 'go', 'bin', 'mumax3')):
+    def __init__(self, mumax3_exe='mumax3'):
         self.mumax3_exe = mumax3_exe
 
     def _call(self, argstr, need_stderr=False):
         cmd = [self.mumax3_exe, argstr]
         return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
 
-    def _kill(self):
-        pass
 
-    def errors(self):
-        pass
-
-
-@uu.inherit_docs
-class OptirunMumax3Runner(Mumax3Runner):
-    """Optirun mumax3 runner using mumax3 executable, which can be found on
-    $PATH.
-
-    Parameters
-    ----------
-    mumax3_exe: str
-
-        Name or path of the mumax3 executable. Defaults to
-        ``$HOME/go/bin/mumax3``.
-
-    """
-    def __init__(self,
-                 mumax3_exe=os.path.join('$HOME', 'go', 'bin', 'mumax3')):
-        self.mumax3_exe = mumax3_exe
-
-    def _call(self, argstr, need_stderr=False):
-        cmd = ['optirun', self.mumax3_exe, argstr]
-        return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
-
-    def _kill(self):
-        pass
-
-    def errors(self):
-        pass
-
-
-def get_mumax3_runner(use_cache=True,
-                      mumax3_exe=os.path.join('$HOME', 'go', 'bin', 'mumax3')):
+def get_mumax3_runner(use_cache=True, mumax3_exe='mumax3',
+                      optirun_exe='optirun'):
     """Find the best available way to run mumax3.
 
-    Returns an ``mumax3c.mumax3.Mumax3Runner`` object, or raises
+    Returns a ``mumax3c.mumax3.Mumax3Runner`` object, or raises
     ``EnvironmentError`` if no suitable method is found.
 
     Parameters
     ----------
     use_cache : bool
 
-      The first call to this function will determine the best way to run mumax3
-      and cache it. Normally, subsequent calls will return the ``Mumax3Runner``
-      object from the cache. Setting this parameter to ``False`` will cause it
-      to check for available methods again. Defaults to ``True``.
+        The first call to this function will determine the best way to run
+        mumax3 and cache it. Normally, subsequent calls will return the
+        ``Mumax3Runner`` object from the cache. Setting this parameter to
+        ``False`` will cause it to check for available methods again. Defaults
+        to ``True``.
 
-    muamx3_exe : str
+    mumax3_exe : str
 
-      The name or path of the executable ``mumax3`` command. Defaults to
-      ``$HOME/go/bin/mumax3``.
+        The name or path of the executable ``mumax3`` command. Defaults to
+        ``mumax3``.
+
+    optirun_exe : str
+
+        The name or path of the executable ``optirun`` command. Defaults to
+        ``optirun``.
 
     Returns
     -------
@@ -248,7 +152,7 @@ def get_mumax3_runner(use_cache=True,
     ------
     EnvironmentError
 
-        If no mumax3 can be found on host.
+        If mumax3 cannot be found on host.
 
     Examples
     --------
@@ -265,16 +169,16 @@ def get_mumax3_runner(use_cache=True,
     if use_cache and (_cached_mumax3_runner is not None):
         return _cached_mumax3_runner
 
-    optirun_exe = shutil.which('optirun')
-    mumax3_exe = shutil.which(mumax3_exe)
-    if optirun_exe:
-        _cached_mumax3_runner = OptirunMumax3Runner(mumax3_exe)
-        return _cached_oommf_runner
-    elif mumax3_exe:
-        _cached_mumax3_runner = ExeMumax3Runner(mumax3_exe)
-        return _cached_oommf_runner
+    if shutil.which(optirun_exe):
+        cmd = ['optirun', 'mumax3']
+    elif shutil.which(mumax3_exe):
+        cmd = ['mumax3']
     else:
-        raise EnvironmentError('mumax3 cannot be found.')
+        msg = 'mumax3 cannot be found'
+        raise EnvironmentError(msg)
+
+    _cached_mumax3_runner = ExeMumax3Runner(mumax_exe=cmd)
+    return _cached_mumax3_runner
 
 
 def status():

@@ -46,7 +46,7 @@ def atlas_scalar_field(value, name, atlas='main_atlas'):
 
 
 def setup_m0(field, name):
-    mx3 = f'm = uniform({})'.format(field.value)
+    mx3 = f'm = uniform({field.value})'
     return mx3
 
 
