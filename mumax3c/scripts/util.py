@@ -45,7 +45,12 @@ def set_value(name, value, system):
 
     elif isinstance(value, dict):
         for key, val in value.items():
-            mx3 += f'{name}.setregion({dictionary[key]}, {val})\n'
+            if isinstance(val, numbers.Real):
+                mx3 += f'{name}.setregion({dictionary[key]}, {val})\n'
+
+            elif isinstance(val, (list, tuple, np.ndarray)):
+                mx3 += (f'{name}.setregion({dictionary[key]}, '
+                        f'vector({val[0]}, {val[1]}, {val[2]}))\n')
 
     else:
         msg = f'Cannot use {type(value)} to set parameter.'
