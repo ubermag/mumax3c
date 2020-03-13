@@ -17,8 +17,7 @@ def energy_script(container):
 def exchange_script(term):
     if isinstance(term.A, numbers.Real):
         mx3 = '// Exchange energy\n'
-        mx3 += f'Aex = {term.A}\n'
-        mx3 += '}\n\n'
+        mx3 += f'Aex = {term.A}\n\n'
 
     elif isinstance(term.A, dict):
         raise NotImplementedError
@@ -32,7 +31,7 @@ def exchange_script(term):
 def zeeman_script(term):
     mx3 = '// Zeeman\n'
     Bext = np.multiply(term.H, mm.consts.mu0)
-    mx3 += 'B_ext=vector({}, {}, {})\n\n'.format(*Bext)
+    mx3 += 'B_ext = vector({}, {}, {})\n\n'.format(*Bext)
 
     return mx3
 

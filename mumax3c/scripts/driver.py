@@ -5,8 +5,6 @@ import micromagneticmodel as mm
 def driver_script(driver, system, compute=None, **kwargs):
     mx3 = ''
     if isinstance(driver, mc.MinDriver):
-        mx3 += f"Msat={system.m.norm.average}\n"
-
         mx3 += "tableadd(E_total)\n"
         mx3 += "tableadd(E_exch)\n"
         mx3 += "tableadd(E_demag)\n"
@@ -36,8 +34,6 @@ def driver_script(driver, system, compute=None, **kwargs):
             mx3 += f'gammaLL = {gamma0/mm.consts.mu0}\n'
         else:
             mx3 += f'doprecess = false\n'
-
-        mx3 += f'Msat={system.m.norm.average}\n'
 
         mx3 += "setsolver(5)\n"
         mx3 += "fixDt = 0.\n\n"

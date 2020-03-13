@@ -6,6 +6,7 @@ import shutil
 import tempfile
 import datetime
 import contextlib
+import numpy as np
 import mumax3c as mc
 import ubermagtable as ut
 import discretisedfield as df
@@ -99,7 +100,16 @@ class Driver(mm.Driver):
                 ovffiles = glob.iglob(os.path.join(f'{system.name}.out',
                                                    'm_full*.ovf'))
                 lastovffile = sorted(ovffiles)[-1]
-                system.m.value = df.Field.fromfile(lastovffile)
+                # Read the resulting m
+                result_m = df.Field.fromfile(lastovffile)
+
+                # In mumax3 the minimum mesh point in the resulting ovf file is
+                # always (0, 0, 0). Because of that, system.m must be changed
+                # using a function.
+                def result_m_fun(pos):
+                    mumax3_coord = np.subtract(pos, system.m.mesh.region.pmin)
+                    return result_m(mumax3_coord)
+                system.m.value = result_m_fun
 
                 # Update system's datatable.
                 system.table = ut.read(os.path.join(f'{system.name}.out',
