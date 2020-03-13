@@ -3,100 +3,52 @@ import numpy as np
 import discretisedfield as df
 
 
-def box_atlas(pmin, pmax, name):
-    mif = f'# BoxAtlas for {name}_atlas\n'
-    mif += f'Specify Oxs_BoxAtlas:{name}_atlas {{\n'
-    mif += f'  xrange {{ {pmin[0]} {pmax[0]} }}\n'
-    mif += f'  yrange {{ {pmin[1]} {pmax[1]} }}\n'
-    mif += f'  zrange {{ {pmin[2]} {pmax[2]} }}\n'
-    mif += f'  name {name}\n'
-    mif += '}\n\n'
+def set_subregions(field):
+    # Region field. Where the value is 255, Ms=0. In other regions Ms is const.
+    # Other regions are annotated with 0, 1, 2,... according to the subregions
+    # in field.mesh.
+    rf = df.Field(field.mesh, dim=1, value=0)
 
-    return mif
+    subregion_names = field.mesh.subregions.keys()
+    dictionary = dict(zip(subregion_names, range(len(subregion_names))))
 
+    norm = field.norm
+    max_region_number = 256
+    def value_fun(pos):
+        tol = 1e-3
+        if norm(pos) < tol:
+            # At this point Ms=0.
+            return max_region_number - 1
+        else:
+            for name, region in field.mesh.subregions.items():
+                if pos in region:
+                    return dictionary[name]
+            else:
+                msg = f'Point {pos} does not belong to any region.'
 
-def atlas_vector_field(value, name, atlas='main_atlas'):
-    mif = f'# {name}\n'
-    mif += f'Specify Oxs_AtlasVectorField:{name} {{\n'
-    mif += f'  atlas :{atlas}\n'
-    mif += '  default_value {{{} {} {}}}\n'.format(*value['default'])
-    mif += '  values {\n'
-    for region, val in value.items():
-        if region != 'default':
-            mif += '    {} {{{} {} {}}}\n'.format(region, *val)
-    mif += '  }'
-    mif += '}\n\n'
+    rf.value = value_fun
+    rf.write('regions.omf')
 
-    return mif
-
-
-def atlas_scalar_field(value, name, atlas='main_atlas'):
-    mif = f'# {name}\n'
-    mif += f'Specify Oxs_AtlasScalarField:{name} {{\n'
-    mif += f'  atlas :{atlas}\n'
-    mif += '  default_value {}\n'.format(value['default'])
-    mif += '  values {\n'
-    for region, val in value.items():
-        if region != 'default':
-            mif += f'    {region} {val}\n'
-    mif += '  }'
-    mif += '}\n\n'
-
-    return mif
+    return 'regions.LoadFile("regions.omf")\n'
 
 
-def setup_m0(field, name):
-    mx3 = f'm = uniform({field.value})'
+def set_value(name, value, system):
+    subregion_names = system.m.mesh.subregions.keys()
+    dictionary = dict(zip(subregion_names, range(len(subregion_names))))
+
+    mx3 = ''
+    if isinstance(value, numbers.Real):
+        mx3 += f'{name} = {value}\n'
+
+    elif isinstance(value, (list, tuple, np.ndarray)):
+        mx3 += '{} = vector({}, {}, {})\n'.format(name, *value)
+
+    elif isinstance(value, dict):
+        for name, region in value:
+            mx3 += f'{name}.setregion({dictionary[name]}, {value[name]})\n'
+
+    else:
+        msg = f'Cannot use {type(value)} to set parameter.'
+        raise TypeError(msg)
+
     return mx3
-
-
-def file_vector_field(filename, name, atlas):
-    mif = f'# {name} file\n'
-    mif += f'Specify Oxs_FileVectorField:{name} {{\n'
-    mif += f'  file {filename}\n'
-    mif += f'  atlas :{atlas}\n'
-    mif += '}\n\n'
-
-    return mif
-
-
-def vector_norm_scalar_field(field, name):
-    mif = f'# {name}\n'
-    mif += f'Specify Oxs_VecMagScalarField:{name} {{\n'
-    mif += f'    field :{field}\n'
-    mif += '}\n\n'
-
-    return mif
-
-
-def setup_scalar_parameter(parameter, name):
-    if isinstance(parameter, df.Field):
-        parameter.write(f'{name}.ovf', extend_scalar=True)
-        mif = file_vector_field(f'{name}.ovf', f'{name}', 'main_atlas')
-        mif += vector_norm_scalar_field(f'{name}', f'{name}_norm')
-        return mif, f'{name}_norm'
-
-    elif isinstance(parameter, dict):
-        if 'default' not in parameter.keys():
-            parameter['default'] = 0
-        mif = atlas_scalar_field(parameter, f'{name}')
-        return mif, f'{name}'
-
-    elif isinstance(parameter, numbers.Real):
-        return '', f'{parameter}'
-
-
-def setup_vector_parameter(parameter, name):
-    if isinstance(parameter, df.Field):
-        parameter.write(f'{name}.ovf')
-        mif = file_vector_field(f'{name}.ovf', f'{name}', 'main_atlas')
-        return mif, f'{name}'
-
-    elif isinstance(parameter, dict):
-        if 'default' not in parameter.keys():
-            parameter['default'] = (0, 0, 0)
-        mif = atlas_vector_field(parameter, f'{name}')
-        return mif, f'{name}'
-
-    elif isinstance(parameter, (tuple, list, np.ndarray)):
-        return '', '{{{} {} {}}}'.format(*parameter)

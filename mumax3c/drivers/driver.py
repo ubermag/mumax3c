@@ -100,7 +100,6 @@ class Driver(mm.Driver):
                 ovffiles = glob.iglob(os.path.join(f'{system.name}.out',
                                                    'm_full*.ovf'))
                 lastovffile = sorted(ovffiles)[-1]
-                print(lastovffile)
                 # Read the resulting m
                 result_m = df.Field.fromfile(lastovffile)
 

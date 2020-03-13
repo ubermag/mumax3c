@@ -1,6 +1,4 @@
-from .util import file_vector_field, vector_norm_scalar_field, \
-    setup_scalar_parameter, setup_vector_parameter, \
-    box_atlas, setup_m0
+from .util import set_subregions, set_value
 from .mesh import mesh_script
 from .energy import energy_script
 from .magnetisation import magnetisation_script

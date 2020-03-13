@@ -1,40 +1,43 @@
 import sys
 import numbers
 import numpy as np
-import mumax3c as mc
+import mumax3c as calculator
 import discretisedfield as df
 import micromagneticmodel as mm
 
 
-def energy_script(container):
+def energy_script(system):
     mx3 = ''
-    for term in container:
-        mx3 += globals()[f'{term.name}_script'](term)
+    for term in system.energy:
+        mx3 += globals()[f'{term.name}_script'](system)
 
-    if mm.Demag() not in container:
+    # Demagnetisation in mumax3 is enabled by default.
+    if mm.Demag() not in system.energy:
         mx3 += "enabledemag = false\n\n"
 
     return mx3
 
 
-def exchange_script(term):
-    if isinstance(term.A, numbers.Real):
-        mx3 = '// Exchange energy\n'
-        mx3 += f'Aex = {term.A}\n\n'
-
-    elif isinstance(term.A, dict):
-        raise NotImplementedError
-
-    elif isinstance(term.A, df.Field):
-        raise NotImplementedError
+def exchange_script(system):
+    mx3 = '// Exchange energy\n'
+    mx3 += calculator.scripts.set_value('Aex',
+                                        system.energy.exchange.A, system)
 
     return mx3
 
 
-def zeeman_script(term):
+def zeeman_script(system):
+    # mx3 file takes B, not H.
+    H = system.energy.zeeman.H
+    if isinstance(H, dict):
+        B = dict()
+        for key in H.keys():
+            B[key] = np.multiply(H[key], mm.consts.mu0)
+    else:
+        B = np.multiply(H, mm.consts.mu0)
+
     mx3 = '// Zeeman\n'
-    Bext = np.multiply(term.H, mm.consts.mu0)
-    mx3 += 'B_ext = vector({}, {}, {})\n\n'.format(*Bext)
+    mx3 += calculator.scripts.set_value('B_ext', B, system)
 
     return mx3
 
