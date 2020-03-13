@@ -15,7 +15,7 @@ _cached_mumax3_runner = None
 
 
 class Mumax3Runner(metaclass=abc.ABCMeta):
-    """Abstract class for running OOMMF.
+    """Abstract class for running mumax3.
 
     """
     def call(self, argstr, need_stderr=False):
@@ -83,7 +83,7 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
                 print(f'\tstdout: {cmdstr}')
                 print(f'\tstderr: {stderr}')
                 print('\n')
-            raise RuntimeError('Error in OOMMF run.')
+            raise RuntimeError('Error in mumax3 run.')
 
         return res
 
@@ -245,11 +245,11 @@ def overhead():
     mumax3c_stop = time.time()
     mumax3c_time = mumax3c_stop - mumax3c_start
 
-    # Running OOMMF directly.
+    # Running mumax3 directly.
     mumax3_runner = get_mumax3_runner()
     mx3path = os.path.realpath(os.path.join(system.name,
                                             'drive-0',
-                                            'macrospin.mif'))
+                                            'macrospin.mx3'))
     mumax3_start = time.time()
     mumax3_runner.call(mx3path)
     mumax3_stop = time.time()

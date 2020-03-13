@@ -1,4 +1,4 @@
-PROJECT=oommfc
+PROJECT=mumax3c
 IPYNBPATH=docs/ipynb/*.ipynb
 CODECOVTOKEN=8ac500f6-4ed4-4b0e-86a6-a8ed4184d788
 PYTHON?=python3
