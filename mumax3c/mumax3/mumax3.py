@@ -170,14 +170,14 @@ def get_mumax3_runner(use_cache=True, mumax3_exe='mumax3',
         return _cached_mumax3_runner
 
     if shutil.which(optirun_exe):
-        cmd = ['optirun', 'mumax3']
+        cmd = 'optirun mumax3'
     elif shutil.which(mumax3_exe):
-        cmd = ['mumax3']
+        cmd = 'mumax3'
     else:
         msg = 'mumax3 cannot be found'
         raise EnvironmentError(msg)
 
-    _cached_mumax3_runner = ExeMumax3Runner(mumax_exe=cmd)
+    _cached_mumax3_runner = ExeMumax3Runner(mumax3_exe=cmd)
     return _cached_mumax3_runner
 
 
