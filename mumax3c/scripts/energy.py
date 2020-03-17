@@ -20,9 +20,9 @@ def energy_script(system):
 
 def exchange_script(system):
     mx3 = '// Exchange energy\n'
-    mx3 += calculator.scripts.set_value('Aex',
-                                        system.energy.exchange.A, system)
-
+    mx3 += calculator.scripts.set_parameter(parameter=system.energy.exchange.A,
+                                            name='Aex',
+                                            system=system)
     return mx3
 
 
@@ -31,14 +31,15 @@ def zeeman_script(system):
     H = system.energy.zeeman.H
     if isinstance(H, dict):
         B = dict()
-        for key in H.keys():
-            B[key] = np.multiply(H[key], mm.consts.mu0)
+        for key, value in H.items():
+            B[key] = np.multiply(value, mm.consts.mu0)
     else:
         B = np.multiply(H, mm.consts.mu0)
 
     mx3 = '// Zeeman\n'
-    mx3 += calculator.scripts.set_value('B_ext', B, system)
-
+    mx3 += calculator.scripts.set_parameter(parameter=B,
+                                            name='B_ext',
+                                            system=system)
     return mx3
 
 

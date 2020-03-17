@@ -1,4 +1,4 @@
-from .util import set_subregions, set_value
+from .util import set_subregions, set_parameter
 from .mesh import mesh_script
 from .energy import energy_script
 from .magnetisation import magnetisation_script

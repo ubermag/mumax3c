@@ -1,1 +1,1 @@
-from micromagnetictests.calculatortests import TestZeeman, TestExchange
+from micromagnetictests.calculatortests import TestExchange, TestZeeman

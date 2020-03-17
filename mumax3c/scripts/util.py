@@ -3,58 +3,59 @@ import numpy as np
 import discretisedfield as df
 
 
-def set_subregions(field):
-    # Region field. Where the value is 255, Ms=0. In other regions Ms is const.
-    # Other regions are annotated with 0, 1, 2,... according to the subregions
-    # in field.mesh.
-    rf = df.Field(field.mesh, dim=1, value=0)
+def set_subregions(system):
+    names = system.m.mesh.subregions.keys()
+    subregions_dict = dict(zip(names, range(len(names))))
 
-    subregion_names = field.mesh.subregions.keys()
-    dictionary = dict(zip(subregion_names, range(len(subregion_names))))
-
-    norm = field.norm
+    norm = system.m.norm
     max_region_number = 256
     def value_fun(pos):
         tol = 1e-3
         if norm(pos) < tol:
-            # At this point Ms=0.
             return max_region_number - 1
         else:
-            for name, region in field.mesh.subregions.items():
-                if pos in region:
-                    return dictionary[name]
+            for name, subregion in system.m.mesh.subregions.items():
+                if pos in subregion:
+                    return subregions_dict[name]
+
+            if not system.m.mesh.subregions:  # subregions are not defined
+                return 0
             else:
                 msg = f'Point {pos} does not belong to any region.'
+                raise ValueError(msg)
 
-    rf.value = value_fun
-    rf.write('regions.omf')
+    # Region field. Where the value is 255, Ms=0. In other regions Ms is const.
+    # Other regions are annotated with 0, 1, 2,... according to the subregions
+    # in field.mesh.
+    rf = df.Field(system.m.mesh, dim=1, value=value_fun)
+    rf.write('subregions.omf')
 
-    return 'regions.LoadFile("regions.omf")\n'
+    return 'regions.LoadFile("subregions.omf")\n'
 
 
-def set_value(name, value, system):
-    subregion_names = system.m.mesh.subregions.keys()
-    dictionary = dict(zip(subregion_names, range(len(subregion_names))))
-
+def set_parameter(parameter, name, system):
     mx3 = ''
-    if isinstance(value, numbers.Real):
-        mx3 += f'{name} = {value}\n'
+    if isinstance(parameter, numbers.Real):
+        mx3 += f'{name} = {parameter}\n'
 
-    elif isinstance(value, (list, tuple, np.ndarray)):
-        mx3 += '{} = vector({}, {}, {})\n'.format(name, *value)
+    elif isinstance(parameter, (list, tuple, np.ndarray)):
+        mx3 += '{} = vector({}, {}, {})\n'.format(name, *parameter)
 
-    elif isinstance(value, dict):
-        for key, val in value.items():
-            if isinstance(val, numbers.Real):
-                mx3 += f'{name}.setregion({dictionary[key]}, {val})\n'
+    elif isinstance(parameter, dict):
+        names = system.m.mesh.subregions.keys()
+        subregions_dict = dict(zip(names, range(len(names))))
 
-            elif isinstance(val, (list, tuple, np.ndarray)):
-                mx3 += (f'{name}.setregion({dictionary[key]}, '
-                        f'vector({val[0]}, {val[1]}, {val[2]}))\n')
+        for key, value in parameter.items():
+            if isinstance(value, numbers.Real):
+                mx3 += f'{name}.setregion({subregions_dict[key]}, {value})\n'
+
+            elif isinstance(value, (list, tuple, np.ndarray)):
+                mx3 += (f'{name}.setregion({subregions_dict[key]}, '
+                        'vector({}, {}, {}))\n'.format(*value))
 
     else:
         # In mumax3, the parameter cannot be set using Field.
-        msg = f'Cannot use {type(value)} to set parameter.'
+        msg = f'Cannot use {type(parameter)} to set parameter.'
         raise TypeError(msg)
 
     return mx3
