@@ -43,34 +43,30 @@ def zeeman_script(system):
     return mx3
 
 
-def demag_script(term):
-    mx3 = "// Demag\n"
-    mx3 += "enabledemag = true\n\n"
-
+def demag_script(system):
+    mx3 = '// Demag\n'
+    mx3 += 'enabledemag = true\n\n'
     return mx3
 
 
-def dmi_script(term):
+def dmi_script(system):
     mx3 = ''
-    if isinstance(term.D, numbers.Real):
-        if term.crystalclass in ['t', 'o']:
-            mx3 += '// DMI of crystallographic class T(O)\n'
-            mx3 += f'Dbulk={term.D}\n\n'
-        elif self.crystalclass == 'cnv':
-            mx3 = '// DMI of crystallographic class Cnv\n'
-            # DMI in mumax3 is negative of the one in micromagneticmodel
-            mx3 += f'Dind={-term.D}\n\n'
-        else:
-            msg = (f'The {self.crystalclass} crystal class '
-                   'is not supported in mumax3.')
-            raise ValueError(msg)
+    if system.energy.dmi.crystalclass.lower() in ['t', 'o']:
+        name = 'Dbulk'
+    elif system.energy.dmi.crystalclass.lower() == 'cnv':
+        name = 'Dind'
+        # In mumax3 D = -D for interfacial DMI
+    else:
+        msg = (f'The {system.energy.dmi.crystalclass} crystal class '
+               'is not supported in mumax3.')
+        raise ValueError(msg)
 
-    elif isinstance(term.D, dict):
-        raise NotImplementedError
-
-    elif isinstance(term.D, df.Field):
-        raise NotImplementedError
-
+    if mm.Exchange() not in system.energy:
+        mx3 += 'Aex = 1e-20\n'
+    mx3 += '// DMI\n'
+    mx3 += calculator.scripts.set_parameter(parameter=system.energy.dmi.D,
+                                            name=name,
+                                            system=system)
     return mx3
 
 
