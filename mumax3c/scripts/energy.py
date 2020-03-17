@@ -44,7 +44,7 @@ def zeeman_script(system):
 
 def demag_script(term):
     mx3 = "// Demag\n"
-    mx3 += "enabledemag=true\n\n"
+    mx3 += "enabledemag = true\n\n"
 
     return mx3
 

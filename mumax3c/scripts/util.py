@@ -41,7 +41,7 @@ def set_value(name, value, system):
         mx3 += f'{name} = {value}\n'
 
     elif isinstance(value, (list, tuple, np.ndarray)):
-        mx3 += '{} = vector({}, {}, {})\n'.format(name, value[0], value[1], value[2])
+        mx3 += '{} = vector({}, {}, {})\n'.format(name, *value)
 
     elif isinstance(value, dict):
         for key, val in value.items():
@@ -53,6 +53,7 @@ def set_value(name, value, system):
                         f'vector({val[0]}, {val[1]}, {val[2]}))\n')
 
     else:
+        # In mumax3, the parameter cannot be set using Field.
         msg = f'Cannot use {type(value)} to set parameter.'
         raise TypeError(msg)
 
