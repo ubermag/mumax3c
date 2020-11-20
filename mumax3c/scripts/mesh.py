@@ -3,7 +3,7 @@ import mumax3c as calculator
 
 def mesh_script(system):
     mx3 = '// Mesh\n'
-    if system.m.mesh.pbc:
+    if any(i in system.m.mesh.bc for i in 'xyz'):
         repetitions = [0, 0, 0]
         for direction in system.m.mesh.pbc:
             # Need to figure out the way of setting up the repetitions.

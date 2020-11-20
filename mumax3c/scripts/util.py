@@ -35,12 +35,15 @@ def set_subregions(system):
 
 def set_parameter(parameter, name, system):
     mx3 = ''
+    # Spatially constant scalar parameter.
     if isinstance(parameter, numbers.Real):
         mx3 += f'{name} = {parameter}\n'
 
+    # Spatially constant vector parameter.
     elif isinstance(parameter, (list, tuple, np.ndarray)):
         mx3 += '{} = vector({}, {}, {})\n'.format(name, *parameter)
 
+    # Spatially varying parameter defined using subregions.
     elif isinstance(parameter, dict):
         names = system.m.mesh.subregions.keys()
         subregions_dict = dict(zip(names, range(len(names))))

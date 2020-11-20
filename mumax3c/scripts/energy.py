@@ -18,14 +18,6 @@ def energy_script(system):
     return mx3
 
 
-def exchange_script(system):
-    mx3 = '// Exchange energy\n'
-    mx3 += calculator.scripts.set_parameter(parameter=system.energy.exchange.A,
-                                            name='Aex',
-                                            system=system)
-    return mx3
-
-
 def zeeman_script(system):
     # mx3 file takes B, not H.
     H = system.energy.zeeman.H
@@ -40,6 +32,23 @@ def zeeman_script(system):
     mx3 += calculator.scripts.set_parameter(parameter=B,
                                             name='B_ext',
                                             system=system)
+    return mx3
+
+
+def exchange_script(system):
+    mx3 = '// Exchange energy\n'
+    mx3 += calculator.scripts.set_parameter(parameter=system.energy.exchange.A,
+                                            name='Aex',
+                                            system=system)
+    return mx3
+
+
+def uniaxialanisotropy_script(system):
+    mx3 = "// UniaxialAnisotropy\n"
+    mx3 += f"Ku1 = {system.energy.uniaxialanisotropy.K1}\n"
+    # K2 to be added
+    mx3 += "anisu = vector({}, {}, {})\n\n".format(*system.energy.uniaxialanisotropy.u)
+
     return mx3
 
 
@@ -67,15 +76,6 @@ def dmi_script(system):
     mx3 += calculator.scripts.set_parameter(parameter=system.energy.dmi.D,
                                             name=name,
                                             system=system)
-    return mx3
-
-
-def uniaxialanisotropy_script(term):
-    mx3 = "// UniaxialAnisotropy\n"
-    mx3 += f"Ku1 = {term.K1}\n"
-    #mx3 += "Ku2={}\n".format(self.K2)
-    mx3 += "anisu = vector({}, {}, {})\n\n".format(*term.u)
-
     return mx3
 
 

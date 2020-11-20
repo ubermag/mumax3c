@@ -112,7 +112,7 @@ class Driver(mm.Driver):
                 system.m.value = result_m_fun
 
                 # Update system's datatable.
-                system.table = ut.read(os.path.join(f'{system.name}.out',
+                system.table = ut.Table.fromfile(os.path.join(f'{system.name}.out',
                                                     f'table.txt'))
 
         # Increment drive_number independent of whether the files are saved
