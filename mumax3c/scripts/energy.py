@@ -18,6 +18,14 @@ def energy_script(system):
     return mx3
 
 
+def exchange_script(system):
+    mx3 = '// Exchange energy\n'
+    mx3 += calculator.scripts.set_parameter(parameter=system.energy.exchange.A,
+                                            name='Aex',
+                                            system=system)
+    return mx3
+
+
 def zeeman_script(system):
     # mx3 file takes B, not H.
     H = system.energy.zeeman.H
@@ -35,14 +43,7 @@ def zeeman_script(system):
     return mx3
 
 
-def exchange_script(system):
-    mx3 = '// Exchange energy\n'
-    mx3 += calculator.scripts.set_parameter(parameter=system.energy.exchange.A,
-                                            name='Aex',
-                                            system=system)
-    return mx3
-
-
+# Needs to be tidied up
 def uniaxialanisotropy_script(system):
     mx3 = "// UniaxialAnisotropy\n"
     mx3 += f"Ku1 = {system.energy.uniaxialanisotropy.K1}\n"
@@ -70,8 +71,9 @@ def dmi_script(system):
                'is not supported in mumax3.')
         raise ValueError(msg)
 
+    # In mumax3 DMI cannot be used without exchange
     if mm.Exchange() not in system.energy:
-        mx3 += 'Aex = 1e-20\n'
+        mx3 += 'Aex = 1e-25\n'
     mx3 += '// DMI\n'
     mx3 += calculator.scripts.set_parameter(parameter=system.energy.dmi.D,
                                             name=name,
