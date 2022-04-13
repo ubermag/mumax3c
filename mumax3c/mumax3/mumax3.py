@@ -70,18 +70,17 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         print(seconds)  # append seconds to the previous print.
 
         if res.returncode != 0:
-            if sys.platform != "win32":
+            msg = 'Error in mumax3 run.\n'
+            cmdstr = ' '.join(res.args)
+            msg += f'command: {cmdstr}\n'
+            if sys.platform != 'win32':
                 # Only on Linux and MacOS - on Windows we do not get stderr and
                 # stdout.
-                stderr = res.stderr.decode("utf-8", "replace")
-                stdout = res.stdout.decode("utf-8", "replace")
-                cmdstr = " ".join(res.args)
-                print("mumax3 error:")
-                print(f"\tcommand: {cmdstr}")
-                print(f"\tstdout: {stdout}")
-                print(f"\tstderr: {stderr}")
-                print("\n")
-            raise RuntimeError("Error in mumax3 run.")
+                stderr = res.stderr.decode('utf-8', 'replace')
+                stdout = res.stdout.decode('utf-8', 'replace')
+                msg += f'stdout: {stdout}\n'
+                msg += f'stderr: {stderr}\n'
+            raise RuntimeError(msg)
 
         return res
 
