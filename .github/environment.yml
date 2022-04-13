@@ -2,10 +2,12 @@ name: conda-environment
 
 channels:
   - conda-forge
+  - hcc
 
 dependencies:
   - python==3.8
   - pip
+  - mumax3
   - pip:
     - git+https://github.com/ubermag/ubermagutil.git
     - git+https://github.com/ubermag/ubermagtable.git
