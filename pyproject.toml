@@ -1,0 +1,87 @@
+[build-system]
+# 40.8.0 is the first version compatible with PEP 517
+requires = ["setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mumax3c"
+version = "0.1"
+description = "Python interface to mumax3 integrated into Jupyter notebook."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+
+authors = [
+    {name = "Marijan Beg"},
+    {name = "Jeroen Mulkers"},
+    {name = "Jonathan Leliaert"},
+    {name = "Vanessa Nehruji"},
+    {name = "Gary Downing"},
+    {name = "Ryan A. Pepper"},
+    {name = "Martin Lang"},
+    {name = "Thomas Kluyver"},
+    {name = "Hans Fangohr"}
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Visualization"
+]
+
+dependencies = [
+    "scipy",
+    "micromagneticmodel",
+    "ubermagtable"
+]
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "invoke",
+    "nbval",
+    "pre-commit",
+    "pytest-cov",
+    "twine"
+]
+
+[project.urls]
+homepage = "https://ubermag.github.io"
+documentation = "https://ubermag.github.io/documentation/mumax3c"
+repository = "https://github.com/ubermag/mumax3c"
+
+
+
+# to define additional information we use a custom table
+# we need to own the entry for tool.NAME on PyPI
+# see: https://www.python.org/dev/peps/pep-0518/#tool-table
+[tool.ubermag]
+doi = "10.5281/zenodo.3539461"
+copyright_holder = "Marijan Beg and Hans Fangohr"
+contributors = [
+]
+about = """
+- An interface to mumax<sup>3</sup> (http://mumax.github.io)
+
+- Integration of mumax simulations into the [Jupyter](https://jupyter.org) notebook
+"""
+
+[tool.coverage.run]
+omit = ["mumax3c/tests/*"]
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true  # ignores files listed in .gitignore
+
+[tool.black]
+experimental-string-processing = true

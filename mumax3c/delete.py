@@ -44,5 +44,5 @@ def delete(system):
     if os.path.exists(system.name):
         shutil.rmtree(system.name)
     else:
-        msg = f'Directory {system.name} does not exist.'
+        msg = f"Directory {system.name} does not exist."
         raise FileNotFoundError(msg)

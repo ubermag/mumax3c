@@ -1,11 +1,11 @@
-import mumax3c as calc
+import mumax3c as mc
 
 
 def test_version():
-    assert isinstance(calc.__version__, str)
-    assert '.' in calc.__version__
+    assert isinstance(mc.__version__, str)
+    assert "." in mc.__version__
 
 
 def test_dependencies():
-    assert isinstance(calc.__dependencies__, list)
-    assert len(calc.__dependencies__) > 0
+    assert isinstance(mc.__dependencies__, list)
+    assert len(mc.__dependencies__) > 0

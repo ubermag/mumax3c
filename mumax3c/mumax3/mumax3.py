@@ -1,23 +1,24 @@
-import os
 import abc
-import sys
-import time
 import datetime
 import logging
+import os
 import shutil
-import mumax3c as mc
 import subprocess as sp
-import ubermagutil as uu
+import sys
+import time
+
 import micromagneticmodel as mm
+import ubermagutil as uu
+
+import mumax3c as mc
 
 log = logging.getLogger(__name__)
 _cached_mumax3_runner = None
 
 
 class Mumax3Runner(metaclass=abc.ABCMeta):
-    """Abstract class for running mumax3.
+    """Abstract class for running mumax3."""
 
-    """
     def call(self, argstr, need_stderr=False):
         """Calls mumax3 by passing ``argstr`` to mumax3.
 
@@ -57,41 +58,35 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
 
         """
         now = datetime.datetime.now()
-        timestamp = '{}/{:02d}/{:02d} {:02d}:{:02d}'.format(now.year,
-                                                            now.month,
-                                                            now.day,
-                                                            now.hour,
-                                                            now.minute)
-        print(f'Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ',
-              end='')
+        timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
+            now.year, now.month, now.day, now.hour, now.minute
+        )
+        print(f"Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ", end="")
 
         tic = time.time()
         res = self._call(argstr=argstr, need_stderr=need_stderr)
         toc = time.time()
-        seconds = '({:0.1f} s)'.format(toc - tic)
+        seconds = "({:0.1f} s)".format(toc - tic)
         print(seconds)  # append seconds to the previous print.
 
         if res.returncode != 0:
-            if sys.platform != 'win32':
+            msg = "Error in mumax3 run.\n"
+            cmdstr = " ".join(res.args)
+            msg += f"command: {cmdstr}\n"
+            if sys.platform != "win32":
                 # Only on Linux and MacOS - on Windows we do not get stderr and
                 # stdout.
-                stderr = res.stderr.decode('utf-8', 'replace')
-                stdout = res.stdout.decode('utf-8', 'replace')
-                cmdstr = ' '.join(res.args)
-                print('mumax3 error:')
-                print(f'\tcommand: {cmdstr}')
-                print(f'\tstdout: {cmdstr}')
-                print(f'\tstderr: {stderr}')
-                print('\n')
-            raise RuntimeError('Error in mumax3 run.')
+                stderr = res.stderr.decode("utf-8", "replace")
+                stdout = res.stdout.decode("utf-8", "replace")
+                msg += f"stdout: {stdout}\n"
+                msg += f"stderr: {stderr}\n"
+            raise RuntimeError(msg)
 
         return res
 
     @abc.abstractmethod
     def _call(self, argstr, need_stderr=False):
-        """This method should be implemented in subclass.
-
-        """
+        """This method should be implemented in subclass."""
         pass  # pragma: no cover
 
 
@@ -107,7 +102,8 @@ class ExeMumax3Runner(Mumax3Runner):
         ``mumax3``.
 
     """
-    def __init__(self, mumax3_exe='mumax3'):
+
+    def __init__(self, mumax3_exe="mumax3"):
         self.mumax3_exe = mumax3_exe
 
     def _call(self, argstr, need_stderr=False):
@@ -115,8 +111,7 @@ class ExeMumax3Runner(Mumax3Runner):
         return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
 
 
-def get_mumax3_runner(use_cache=True, mumax3_exe='mumax3',
-                      optirun_exe='optirun'):
+def get_mumax3_runner(use_cache=True, mumax3_exe="mumax3", optirun_exe="optirun"):
     """Find the best available way to run mumax3.
 
     Returns a ``mumax3c.mumax3.Mumax3Runner`` object, or raises
@@ -170,11 +165,11 @@ def get_mumax3_runner(use_cache=True, mumax3_exe='mumax3',
         return _cached_mumax3_runner
 
     if shutil.which(optirun_exe):
-        cmd = 'optirun mumax3'
+        cmd = "optirun mumax3"
     elif shutil.which(mumax3_exe):
-        cmd = 'mumax3'
+        cmd = "mumax3"
     else:
-        msg = 'mumax3 cannot be found'
+        msg = "mumax3 cannot be found"
         raise EnvironmentError(msg)
 
     _cached_mumax3_runner = ExeMumax3Runner(mumax3_exe=cmd)
@@ -208,10 +203,10 @@ def status():
     try:
         td = mc.TimeDriver()
         td.drive(system, t=1e-12, n=1)
-        print('mumax3 found and running.')
+        print("mumax3 found and running.")
         return 0
     except (EnvironmentError, RuntimeError):
-        print('Cannot find mumax3.')
+        print("Cannot find mumax3.")
         return 1
 
 
@@ -247,9 +242,7 @@ def overhead():
 
     # Running mumax3 directly.
     mumax3_runner = get_mumax3_runner()
-    mx3path = os.path.realpath(os.path.join(system.name,
-                                            'drive-0',
-                                            'macrospin.mx3'))
+    mx3path = os.path.realpath(os.path.join(system.name, "drive-0", "macrospin.mx3"))
     mumax3_start = time.time()
     mumax3_runner.call(mx3path)
     mumax3_stop = time.time()

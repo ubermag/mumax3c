@@ -1,6 +1,7 @@
 import numbers
-import numpy as np
+
 import discretisedfield as df
+import numpy as np
 
 
 def set_subregions(system):
@@ -9,6 +10,7 @@ def set_subregions(system):
 
     norm = system.m.norm
     max_region_number = 256
+
     def value_fun(pos):
         tol = 1e-3
         if norm(pos) < tol:
@@ -21,27 +23,27 @@ def set_subregions(system):
             if not system.m.mesh.subregions:  # subregions are not defined
                 return 0
             else:
-                msg = f'Point {pos} does not belong to any region.'
+                msg = f"Point {pos} does not belong to any region."
                 raise ValueError(msg)
 
     # Region field. Where the value is 255, Ms=0. In other regions Ms is const.
     # Other regions are annotated with 0, 1, 2,... according to the subregions
     # in field.mesh.
     rf = df.Field(system.m.mesh, dim=1, value=value_fun)
-    rf.write('subregions.omf')
+    rf.write("subregions.omf")
 
     return 'regions.LoadFile("subregions.omf")\n'
 
 
 def set_parameter(parameter, name, system):
-    mx3 = ''
+    mx3 = ""
     # Spatially constant scalar parameter.
     if isinstance(parameter, numbers.Real):
-        mx3 += f'{name} = {parameter}\n'
+        mx3 += f"{name} = {parameter}\n"
 
     # Spatially constant vector parameter.
     elif isinstance(parameter, (list, tuple, np.ndarray)):
-        mx3 += '{} = vector({}, {}, {})\n'.format(name, *parameter)
+        mx3 += "{} = vector({}, {}, {})\n".format(name, *parameter)
 
     # Spatially varying parameter defined using subregions.
     elif isinstance(parameter, dict):
@@ -50,15 +52,17 @@ def set_parameter(parameter, name, system):
 
         for key, value in parameter.items():
             if isinstance(value, numbers.Real):
-                mx3 += f'{name}.setregion({subregions_dict[key]}, {value})\n'
+                mx3 += f"{name}.setregion({subregions_dict[key]}, {value})\n"
 
             elif isinstance(value, (list, tuple, np.ndarray)):
-                mx3 += (f'{name}.setregion({subregions_dict[key]}, '
-                        'vector({}, {}, {}))\n'.format(*value))
+                mx3 += (
+                    f"{name}.setregion({subregions_dict[key]}, "
+                    "vector({}, {}, {}))\n".format(*value)
+                )
 
     else:
         # In mumax3, the parameter cannot be set using Field.
-        msg = f'Cannot use {type(parameter)} to set parameter.'
+        msg = f"Cannot use {type(parameter)} to set parameter."
         raise TypeError(msg)
 
     return mx3
