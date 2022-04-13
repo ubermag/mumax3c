@@ -1,42 +1,40 @@
-import re
-import os
 import glob
+import os
+import re
 import shutil
-import mumax3c as oc
-import ubermagtable as ut
+
 import discretisedfield as df
 import micromagneticmodel as mm
+import ubermagtable as ut
+
+import mumax3c as oc
 
 
 def oxs_class(term):
-    """Extract the OOMMF ``Oxs_`` class name of an individual term.
-
-    """
-    mif = getattr(mc.scripts.energy, f'{term.name}_script')(term)
-    return re.search(r'Oxs_([\w_]+)', mif).group(1)
+    """Extract the OOMMF ``Oxs_`` class name of an individual term."""
+    mif = getattr(mc.scripts.energy, f"{term.name}_script")(term)
+    return re.search(r"Oxs_([\w_]+)", mif).group(1)
 
 
 def schedule_script(func):
-    """Generate OOMMF ``Schedule...`` line for saving an individual value.
-
-    """
-    if func.__name__ == 'energy':
-        return ''  # Datatable with energies is saved by default.
-    elif func.__name__ == 'effective_field':
+    """Generate OOMMF ``Schedule...`` line for saving an individual value."""
+    if func.__name__ == "energy":
+        return ""  # Datatable with energies is saved by default.
+    elif func.__name__ == "effective_field":
         if isinstance(func.__self__, mm.Energy):
-            output = 'Oxs_RungeKuttaEvolve:evolver:Total field'
+            output = "Oxs_RungeKuttaEvolve:evolver:Total field"
         else:
-            output = f'Oxs_{oxs_class(func.__self__)}::Field'
-    elif func.__name__ == 'density':
+            output = f"Oxs_{oxs_class(func.__self__)}::Field"
+    elif func.__name__ == "density":
         if isinstance(func.__self__, mm.Energy):
-            output = 'Oxs_RungeKuttaEvolve:evolver:Total energy density'
+            output = "Oxs_RungeKuttaEvolve:evolver:Total energy density"
         else:
-            output = f'Oxs_{oxs_class(func.__self__)}::Energy density'
+            output = f"Oxs_{oxs_class(func.__self__)}::Energy density"
     else:
-        msg = f'Computing the value of {func} is not supported.'
+        msg = f"Computing the value of {func} is not supported."
         raise ValueError(msg)
 
-    return 'Schedule \"{}\" archive Step 1\n'.format(output)
+    return 'Schedule "{}" archive Step 1\n'.format(output)
 
 
 def compute(func, system):
@@ -79,26 +77,28 @@ def compute(func, system):
 
     """
     td = mc.TimeDriver(total_iteration_limit=1)
-    td.drive(system, t=1e-25, n=1, save=True, overwrite=True,
-             compute=schedule_script(func))
+    td.drive(
+        system, t=1e-25, n=1, save=True, overwrite=True, compute=schedule_script(func)
+    )
 
-    if func.__name__ == 'energy':
-        extension = '*.odt'
-    elif func.__name__ == 'effective_field':
-        extension = '*.ohf'
-    elif func.__name__ == 'density':
-        extension = '*.oef'
+    if func.__name__ == "energy":
+        extension = "*.odt"
+    elif func.__name__ == "effective_field":
+        extension = "*.ohf"
+    elif func.__name__ == "density":
+        extension = "*.oef"
 
-    dirname = os.path.join(system.name, f'compute-{system.drive_number}')
-    output_file = max(glob.iglob(os.path.join(dirname, extension)),
-                      key=os.path.getctime)
+    dirname = os.path.join(system.name, f"compute-{system.drive_number}")
+    output_file = max(
+        glob.iglob(os.path.join(dirname, extension)), key=os.path.getctime
+    )
 
-    if func.__name__ == 'energy':
+    if func.__name__ == "energy":
         table = ut.read(output_file, rename=False)
         if isinstance(func.__self__, mm.Energy):
-            output = table['RungeKuttaEvolve:evolver:Total energy'][0]
+            output = table["RungeKuttaEvolve:evolver:Total energy"][0]
         else:
-            output = table[f'{oxs_class(func.__self__)}::Energy'][0]
+            output = table[f"{oxs_class(func.__self__)}::Energy"][0]
     else:
         output = df.Field.fromfile(output_file)
 

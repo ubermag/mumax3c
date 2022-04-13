@@ -34,29 +34,32 @@ class TimeDriver(Driver):
     [...]
 
     """
-    _allowed_attributes = ['evolver',
-                           'stopping_dm_dt',
-                           'stage_iteration_limit',
-                           'total_iteration_limit',
-                           'stage_count_check',
-                           'checkpoint_file',
-                           'checkpoint_interval',
-                           'checkpoint_disposal',
-                           'start_iteration',
-                           'start_stage',
-                           'start_stage_iteration',
-                           'start_stage_start_time',
-                           'start_stage_elapsed_time',
-                           'start_last_timestep',
-                           'normalize_aveM_output',
-                           'report_max_spin_angle',
-                           'report_wall_time']
+
+    _allowed_attributes = [
+        "evolver",
+        "stopping_dm_dt",
+        "stage_iteration_limit",
+        "total_iteration_limit",
+        "stage_count_check",
+        "checkpoint_file",
+        "checkpoint_interval",
+        "checkpoint_disposal",
+        "start_iteration",
+        "start_stage",
+        "start_stage_iteration",
+        "start_stage_start_time",
+        "start_stage_elapsed_time",
+        "start_last_timestep",
+        "normalize_aveM_output",
+        "report_max_spin_angle",
+        "report_wall_time",
+    ]
 
     def _checkargs(self, **kwargs):
-        t, n = kwargs['t'], kwargs['n']
+        t, n = kwargs["t"], kwargs["n"]
         if t <= 0:
-            msg = f'Cannot drive with t={t}.'
+            msg = f"Cannot drive with t={t}."
             raise ValueError(msg)
         elif n <= 0 or not isinstance(n, int):
-            msg = f'Cannot drive with n={n}.'
+            msg = f"Cannot drive with n={n}."
             raise ValueError(msg)
