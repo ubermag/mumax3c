@@ -1,0 +1,39 @@
+default_language_version:
+  python: python3.8
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.2.0
+  hooks:
+  - id: check-merge-conflict  # checks for files that contain merge conflict strings
+  - id: check-toml  # checks toml files for parseable syntax
+  - id: debug-statements  # checks for debugger imports and py37+ `breakpoint()` calls in python source
+#  - id: trailing-whitespace   # needs more checks
+#    args: [--markdown-linebreak-ext=md]
+#    exclude: 'mumax3c/tests/test_sample/.*'
+
+- repo: https://github.com/pycqa/isort
+  rev: 5.10.1
+  hooks:
+  - id: isort
+
+- repo: https://github.com/nbQA-dev/nbQA
+  rev: 1.3.1
+  hooks:
+  - id: nbqa-isort  # isort inside Jupyter notebooks
+
+- repo: https://github.com/PyCQA/flake8
+  rev: 4.0.1
+  hooks:
+  - id: flake8
+    additional_dependencies: [flake8-rst-docstrings]  #, flake8-docstrings]
+
+- repo: https://github.com/psf/black
+  rev: 22.3.0
+  hooks:
+  - id: black-jupyter
+
+# - repo: https://github.com/codespell-project/codespell
+#   rev: v2.1.0
+#   hooks:
+#   - id: codespell
