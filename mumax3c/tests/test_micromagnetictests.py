@@ -1,6 +1,6 @@
-from micromagnetictests.calculatortests import (
+from micromagnetictests.calculatortests import (  # noqa: F401
     TestDemag,
     TestDMI,
     TestExchange,
     TestZeeman,
-)  # noqa: F401
+)
