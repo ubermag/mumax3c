@@ -89,10 +89,10 @@ def cubicanisotropy_script(term):
 
 
 def magnetoelastic_script(term):
-    B1mx3, B1name = oc.scripts.setup_scalar_parameter(term.B1, "mel_B1")
-    B2mx3, B2name = oc.scripts.setup_scalar_parameter(term.B2, "mel_B2")
-    ediagmx3, ediagname = oc.scripts.setup_vector_parameter(term.e_diag, "mel_ediag")
-    eoffdiagmx3, eoffdiagname = oc.scripts.setup_vector_parameter(
+    B1mx3, B1name = mc.scripts.setup_scalar_parameter(term.B1, "mel_B1")
+    B2mx3, B2name = mc.scripts.setup_scalar_parameter(term.B2, "mel_B2")
+    ediagmx3, ediagname = mc.scripts.setup_vector_parameter(term.e_diag, "mel_ediag")
+    eoffdiagmx3, eoffdiagname = mc.scripts.setup_vector_parameter(
         term.e_offdiag, "mel_eoffdiag"
     )
 
