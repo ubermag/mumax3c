@@ -1,13 +1,15 @@
-import os
+import datetime
 import glob
 import json
+import os
 import shutil
-import datetime
-import numpy as np
-import mumaxc as mc
-import oommfodt as oo
+
 import discretisedfield as df
 import micromagneticmodel as mm
+import numpy as np
+import oommfodt as oo
+
+import mumaxc as mc
 
 
 class Driver(mm.Driver):
@@ -17,13 +19,11 @@ class Driver(mm.Driver):
         self._checkargs(**kwargs)
 
         # Generate the necessary filenames.
-        self.dirname = os.path.join(system.name,
-                                    'drive-{}'.format(system.drive_number))
-        self.omffilename = os.path.join(self.dirname, 'm0.omf')
-        self.omfregionsfilename = os.path.join(self.dirname, 'regions.omf')
-        self.mx3filename = os.path.join(self.dirname,
-                                        '{}.mx3'.format(system.name))
-        self.jsonfilename = os.path.join(self.dirname, 'info.json')
+        self.dirname = os.path.join(system.name, "drive-{}".format(system.drive_number))
+        self.omffilename = os.path.join(self.dirname, "m0.omf")
+        self.omfregionsfilename = os.path.join(self.dirname, "regions.omf")
+        self.mx3filename = os.path.join(self.dirname, "{}.mx3".format(system.name))
+        self.jsonfilename = os.path.join(self.dirname, "info.json")
 
         # Check whether a directory with the same name as system.name
         # already exists. If it does, warn the user and tell him that
@@ -50,7 +50,7 @@ class Driver(mm.Driver):
 
         # Update system's m and dt attributes if the derivation of E,
         # Heff, or energy density was not asked.
-        if 'derive' not in kwargs:
+        if "derive" not in kwargs:
             self._update_m(system)
             self._update_dt(system)
 
@@ -58,16 +58,18 @@ class Driver(mm.Driver):
         system.drive_number += 1
 
     def _checkargs(self, **kwargs):
-        raise NotImplementedError('This method is defined in a derived class')
+        raise NotImplementedError("This method is defined in a derived class")
 
     def _checkdir(self, system, overwrite=False):
         if os.path.exists(self.dirname):
             if not overwrite:
-                msg = ('Directory with name={} already exists. If you want '
-                       'to overwrite it, pass overwrite=True to the drive '
-                       'method. Otherwise, change the name of the system '
-                       'or delete the directory by running '
-                       'system.delete().'.format(self.dirname))
+                msg = (
+                    "Directory with name={} already exists. If you want "
+                    "to overwrite it, pass overwrite=True to the drive "
+                    "method. Otherwise, change the name of the system "
+                    "or delete the directory by running "
+                    "system.delete().".format(self.dirname)
+                )
                 raise FileExistsError(msg)
             else:
                 shutil.rmtree(system.name)
@@ -80,7 +82,7 @@ class Driver(mm.Driver):
         mx3 = system._script
         mx3 += self._script(system, **kwargs)
 
-        with open(self.mx3filename, 'w') as mx3file:
+        with open(self.mx3filename, "w") as mx3file:
             mx3file.write(mx3)
 
     @property
@@ -96,9 +98,10 @@ class Driver(mm.Driver):
 
     def _makeomf(self, system):
         system.m.write(self.omffilename)
-    
+
     def _makeomf_regions(self, system):
         max_region_number = 256
+
         def Ms_init(pos):
             tol = 1e-3
             norm = np.linalg.norm(system.m(pos))
@@ -113,13 +116,13 @@ class Driver(mm.Driver):
 
     def _makejson(self, system, **kwargs):
         info = {}
-        info['drive_number'] = system.drive_number
-        info['date'] = datetime.datetime.now().strftime('%Y-%m-%d')
-        info['time'] = datetime.datetime.now().strftime('%H:%M:%S')
-        info['driver'] = self.__class__.__name__
-        info['args'] = kwargs
+        info["drive_number"] = system.drive_number
+        info["date"] = datetime.datetime.now().strftime("%Y-%m-%d")
+        info["time"] = datetime.datetime.now().strftime("%H:%M:%S")
+        info["driver"] = self.__class__.__name__
+        info["args"] = kwargs
 
-        with open(self.jsonfilename, 'w') as jsonfile:
+        with open(self.jsonfilename, "w") as jsonfile:
             jsonfile.write(json.dumps(info))
 
     def _runmumax(self):
@@ -129,8 +132,9 @@ class Driver(mm.Driver):
     def _update_m(self, system):
         # An example .omf filename is:
         # test_sample-Oxs_TimeDriver-Magnetization-01-0000008.omf
-        ovffiles = glob.iglob(os.path.join(self.dirname, f'{system.name}.out',
-                                           'm_full*.ovf'))
+        ovffiles = glob.iglob(
+            os.path.join(self.dirname, f"{system.name}.out", "m_full*.ovf")
+        )
         lastovffile = list(sorted(ovffiles))[-1]
         m_field = df.read(lastovffile)
 
@@ -142,6 +146,6 @@ class Driver(mm.Driver):
         system.m = m_field
 
     def _update_dt(self, system):
-        system.dt = oo.mumax_read(os.path.join(self.dirname,f'{system.name}.out',
-                                         f'table.txt'))
-
+        system.dt = oo.mumax_read(
+            os.path.join(self.dirname, f"{system.name}.out", f"table.txt")
+        )

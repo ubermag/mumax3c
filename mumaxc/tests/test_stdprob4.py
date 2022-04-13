@@ -1,10 +1,11 @@
-import os
 import glob
+import os
 import shutil
-import pytest
-import mumaxc as mc
+
 import discretisedfield as df
 import pytest
+
+import mumaxc as mc
 
 
 @pytest.mark.oommf
@@ -15,7 +16,7 @@ def test_stdprob4():
     if os.path.exists(name):
         shutil.rmtree(name)
 
-    L, d, th = 500e-9, 125e-9, 3e-9   # (m)
+    L, d, th = 500e-9, 125e-9, 3e-9  # (m)
     cellsize = (5e-9, 5e-9, 3e-9)  # (m)
     mesh = mc.Mesh((0, 0, 0), (L, d, th), cellsize)
 
@@ -34,7 +35,7 @@ def test_stdprob4():
     md = mc.MinDriver()
     md.drive(system)  # updates system.m in-place
 
-    dirname = os.path.join(name, "drive-{}".format(system.drive_number-1))
+    dirname = os.path.join(name, "drive-{}".format(system.drive_number - 1))
     mx3filename = os.path.join(dirname, "{}.mx3".format(name))
     assert os.path.exists(dirname)
     assert os.path.isfile(mx3filename)
@@ -49,13 +50,13 @@ def test_stdprob4():
     assert len(txt_files) == 2
     shutil.rmtree(name)
 
-    H = (-24.6e-3/mc.mu0, 4.3e-3/mc.mu0, 0)
+    H = (-24.6e-3 / mc.mu0, 4.3e-3 / mc.mu0, 0)
     system.hamiltonian += mc.Zeeman(H)
 
     td = mc.TimeDriver()
     td.drive(system, t=1e-9, n=200)
 
-    dirname = os.path.join(name, "drive-{}".format(system.drive_number-1))
+    dirname = os.path.join(name, "drive-{}".format(system.drive_number - 1))
     mx3filename = os.path.join(dirname, "{}.mx3".format(name))
     assert os.path.exists(dirname)
     assert os.path.isfile(mx3filename)

@@ -1,5 +1,6 @@
-import mumaxc as mc
 import micromagneticmodel.tests as mmt
+
+import mumaxc as mc
 
 
 class TestDemag(mmt.TestDemag):

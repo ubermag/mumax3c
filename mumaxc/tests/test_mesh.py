@@ -1,8 +1,9 @@
-import pytest
 import re
-import mumaxc as oc
-import discretisedfield.tests as dft
 
+import discretisedfield.tests as dft
+import pytest
+
+import mumaxc as oc
 
 fp_regex = "[-+]?[0-9]*.?[0-9]+([eE][-+]?[0-9]+)?"
 coord_regex = f"\\({fp_regex}, {fp_regex}, {fp_regex}\\)"

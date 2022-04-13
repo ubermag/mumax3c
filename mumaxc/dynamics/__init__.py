@@ -1,4 +1,4 @@
-from .precession import Precession
 from .damping import Damping
-from .stt import STT
 from .dynamics import Dynamics
+from .precession import Precession
+from .stt import STT

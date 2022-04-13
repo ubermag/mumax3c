@@ -1,6 +1,8 @@
 import discretisedfield as df
-import mumaxc as mc
 import pytest
+
+import mumaxc as mc
+
 
 class TestSystem:
     @pytest.mark.mumax
@@ -51,6 +53,5 @@ class TestSystem:
 
         with pytest.raises(AttributeError):
             system.total_energy()
-            
-        return None
 
+        return None

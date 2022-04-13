@@ -1,12 +1,12 @@
 import pkg_resources
-from .hamiltonian import *
-from .dynamics import *
-from .mesh import Mesh
-from .system import System
+from micromagneticmodel.consts import e, g, gamma, gamma0, h, hbar, kB, me, mu0, muB
+
 from .drivers import *
+from .dynamics import *
+from .hamiltonian import *
+from .mesh import Mesh
 from .mumax import *
-from micromagneticmodel.consts import mu0, e, me, kB, h, g, \
-    hbar, gamma, muB, gamma0
+from .system import System
 
 __version__ = pkg_resources.get_distribution(__name__).version
 __dependencies__ = pkg_resources.require(__name__)
