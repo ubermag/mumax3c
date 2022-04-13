@@ -24,7 +24,7 @@ authors = [
 ]
 
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
@@ -68,7 +68,8 @@ repository = "https://github.com/ubermag/mumax3c"
 [tool.ubermag]
 doi = "10.5281/zenodo.3539461"
 copyright_holder = "Marijan Beg and Hans Fangohr"
-contributors = []
+contributors = [
+]
 about = """
 - An interface to mumax<sup>3</sup> (http://mumax.github.io)
 
