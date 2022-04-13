@@ -7,7 +7,7 @@ import discretisedfield as df
 import micromagneticmodel as mm
 import ubermagtable as ut
 
-import mumax3c as oc
+import mumax3c as mc
 
 
 def oxs_class(term):

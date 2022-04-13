@@ -1,8 +1,3 @@
-import discretisedfield as df
-
-import mumax3c as calculator
-
-
 def find_Ms(m):
     tol = 1e-3
     norm = m.norm

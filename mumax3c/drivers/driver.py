@@ -4,7 +4,6 @@ import datetime
 import glob
 import json
 import os
-import shutil
 import tempfile
 
 import discretisedfield as df
@@ -113,7 +112,7 @@ class Driver(mm.Driver):
 
                 # Update system's datatable.
                 system.table = ut.Table.fromfile(
-                    os.path.join(f"{system.name}.out", f"table.txt")
+                    os.path.join(f"{system.name}.out", "table.txt")
                 )
 
         # Increment drive_number independent of whether the files are saved

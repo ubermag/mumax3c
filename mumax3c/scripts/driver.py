@@ -31,10 +31,10 @@ def driver_script(driver, system, compute=None, **kwargs):
 
         mx3 += f"alpha = {alpha}\n"
         if not gamma0:
-            mx3 += f"doprecess = false\n"
+            mx3 += "doprecess = false\n"
         else:
             mx3 += f"gammaLL = {gamma0/mm.consts.mu0}\n"
-            mx3 += f"doprecess = true\n"
+            mx3 += "doprecess = true\n"
 
         mx3 += "setsolver(5)\n"
         mx3 += "fixDt = 0.0\n\n"

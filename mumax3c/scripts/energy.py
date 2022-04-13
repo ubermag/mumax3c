@@ -1,11 +1,7 @@
-import numbers
-import sys
-
-import discretisedfield as df
 import micromagneticmodel as mm
 import numpy as np
 
-import mumax3c as calculator
+import mumax3c as mc
 
 
 def energy_script(system):
@@ -22,7 +18,7 @@ def energy_script(system):
 
 def exchange_script(system):
     mx3 = "// Exchange energy\n"
-    mx3 += calculator.scripts.set_parameter(
+    mx3 += mc.scripts.set_parameter(
         parameter=system.energy.exchange.A, name="Aex", system=system
     )
     return mx3
@@ -39,7 +35,7 @@ def zeeman_script(system):
         B = np.multiply(H, mm.consts.mu0)
 
     mx3 = "// Zeeman\n"
-    mx3 += calculator.scripts.set_parameter(parameter=B, name="B_ext", system=system)
+    mx3 += mc.scripts.set_parameter(parameter=B, name="B_ext", system=system)
     return mx3
 
 
@@ -77,7 +73,7 @@ def dmi_script(system):
     if mm.Exchange() not in system.energy:
         mx3 += "Aex = 1e-25\n"
     mx3 += "// DMI\n"
-    mx3 += calculator.scripts.set_parameter(
+    mx3 += mc.scripts.set_parameter(
         parameter=system.energy.dmi.D, name=name, system=system
     )
     return mx3
@@ -86,8 +82,8 @@ def dmi_script(system):
 def cubicanisotropy_script(term):
     mx3 = "// CubicAnisotropy\n"
     mx3 += f"Kc1 = {term.K1}\n"
-    mx3 += "anisC1 = vector({}, {}, {})\n".format(*self.u1)
-    mx3 += "anisC2 = vector({}, {}, {})\n\n".format(*self.u2)
+    mx3 += "anisC1 = vector({}, {}, {})\n".format(*term.u1)
+    mx3 += "anisC2 = vector({}, {}, {})\n\n".format(*term.u2)
 
     return mx3
 

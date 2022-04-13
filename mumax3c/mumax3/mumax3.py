@@ -78,7 +78,7 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
                 cmdstr = " ".join(res.args)
                 print("mumax3 error:")
                 print(f"\tcommand: {cmdstr}")
-                print(f"\tstdout: {cmdstr}")
+                print(f"\tstdout: {stdout}")
                 print(f"\tstderr: {stderr}")
                 print("\n")
             raise RuntimeError("Error in mumax3 run.")

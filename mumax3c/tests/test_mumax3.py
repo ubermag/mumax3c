@@ -1,9 +1,5 @@
 import os
 import shutil
-import sys
-
-import micromagneticmodel as mm
-import pytest
 
 import mumax3c as calc
 

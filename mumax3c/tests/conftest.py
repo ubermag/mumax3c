@@ -1,11 +1,11 @@
 import pytest
 
-import mumax3c as calc
+import mumax3c as mc
 
 
 @pytest.fixture(scope="module")
 def calculator():
-    return calc
+    return mc
 
 
 @pytest.fixture  # (scope='module')
