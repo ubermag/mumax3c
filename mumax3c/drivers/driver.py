@@ -4,7 +4,6 @@ import datetime
 import glob
 import json
 import os
-import tempfile
 
 import discretisedfield as df
 import micromagneticmodel as mm
@@ -26,112 +25,42 @@ def _changedir(dirname):
 
 
 class Driver(mm.Driver):
+    """Driver base class."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if hasattr(self, "evolver"):
+            self.autoselect_evolver = False
+        else:
+            self.autoselect_evolver = True
+
     @abc.abstractmethod
     def _checkargs(self, **kwargs):
-        """Abstract method defined in a derived driver class."""
+        """Abstract method for checking arguments."""
         pass  # pragma: no cover
 
     def drive(
-        self, system, basedirname="", overwrite=False, compute=None, runner=None, **kwargs
-    ):
-        """Convenience function, which allows to drive in different Python
-        contexts.
-
-        """
-        # This method is implemented in the derived driver class. It raises
-        # exception if any of the arguments are not valid.
-        self._checkargs(**kwargs)
-
-        # Generate directory.
-        if compute is None:
-            subdir = f"drive-{system.drive_number}"
-        else:
-            subdir = f"compute-{system.drive_number}"
-
-        dirname = os.path.join(basedirname, system.name, subdir)
-        # Check whether a directory already exists.
-        if os.path.exists(dirname):
-            if overwrite:
-                mc.delete(system)
-            else:
-                msg = (
-                    f"Directory {dirname} already exists. To overwrite "
-                    "it, pass overwrite=True to the drive method."
-                )
-                raise FileExistsError(msg)
-
-        # Make a directory inside which mumax3 will be run.
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
-
-        # Generate the necessary filenames.
-        mx3filename = f"{system.name}.mx3"
-        jsonfilename = "info.json"
-
-        # Change directory to dirname
-        with _changedir(dirname):
-            # Generate and save mx3 file.
-            mx3 = mc.scripts.system_script(system)
-            mx3 += mc.scripts.driver_script(self, system, compute=compute, **kwargs)
-            with open(mx3filename, "w") as mx3file:
-                mx3file.write(mx3)
-
-            # Generate and save json info file.
-            info = {}
-            info["drive_number"] = system.drive_number
-            info["date"] = datetime.datetime.now().strftime("%Y-%m-%d")
-            info["time"] = datetime.datetime.now().strftime("%H:%M:%S")
-            info["driver"] = self.__class__.__name__
-            info["args"] = kwargs
-            with open(jsonfilename, "w") as jsonfile:
-                jsonfile.write(json.dumps(info))
-
-            # Run mumax3.
-            if runner is None:
-                runner = mc.mumax3.get_mumax3_runner()
-            runner.call(argstr=mx3filename)
-
-            # Update system's m and datatable attributes if the derivation of
-            # E, Heff, or energy density was not asked.
-            if compute is None:
-                # Update system's magnetisation. An example .omf filename:
-                # test_sample-Oxs_TimeDriver-Magnetization-01-0000008.omf
-                ovffiles = glob.iglob(os.path.join(f"{system.name}.out", "m_full*.ovf"))
-                lastovffile = sorted(ovffiles)[-1]
-                # Read the resulting m
-                result_m = df.Field.fromfile(lastovffile)
-
-                # In mumax3 the minimum mesh point in the resulting ovf file is
-                # always (0, 0, 0). Because of that, system.m must be changed
-                # using a function.
-                def result_m_fun(pos):
-                    mumax3_coord = np.subtract(pos, system.m.mesh.region.pmin)
-                    return result_m(mumax3_coord)
-
-                system.m.value = result_m_fun
-
-                # Update system's datatable.
-                system.table = ut.Table.fromfile(
-                    os.path.join(f"{system.name}.out", "table.txt")
-                )
-
-        # Increment drive_number independent of whether the files are saved
-        # or not.
-        if compute is None:
-            system.drive_number += 1
-
-    def _drive(
-        self, system, save=False, overwrite=False, compute=None, runner=None, **kwargs
+        self,
+        system,
+        /,
+        dirname=".",
+        append=True,
+        fixed_subregions=None,
+        compute=None,
+        output_step=False,
+        n_threads=None,
+        runner=None,
+        ovf_format="bin8",
+        verbose=1,
+        **kwargs,
     ):
         """Drives the system in phase space.
 
         Takes ``micromagneticmodel.System`` and drives it in the phase space.
-        If ``save=True``, the resulting files obtained from the mumax3 run are
-        saved in the current directory (in ``system.name`` directory). If
-        ``overwrite=True`` is passed, the directory with all previously created
-        files (if exists) will be deleted before the system is run. To save a
-        specific value during an mumax3 run ``Schedule...`` line can be passed
-        using ``compute``. To specify the way mumax3 is run, an
+        If ``append=True`` and the system director already exists, drive will
+        be appended to that directory. Otherwise, an exception will be raised.
+        To save a specific value during an mumax3 run ``Schedule...`` line 
+        can be passed using ``compute``. To specify the way mumax3 is run, an
         ``mumax3c.mumax3.mumax3Runner`` can be passed using ``runner``.
 
         This method accepts any other arguments that could be required by the
@@ -143,26 +72,50 @@ class Driver(mm.Driver):
 
           System to be driven.
 
-        save : bool
+        append : bool, optional
 
-            If ``True`` files created during an mumax3 run will be saved in the
-            current directory. Defaults to ``False``.
+            If ``True`` and the system directory already exists, drive or
+            compute directories will be appended. Defaults to ``True``.
 
-        overwrite : bool
+        fixed_subregions : list, optional
 
-            If the directory from the previous drive already exists, it will be
-            overwritten. Defaults to ``False``.
+            List of strings, where each string is the name of the subregion in
+            the mesh whose spins should remain fixed while the system is being
+            driven. Defaults to ``None``.
 
-        compute : str
+        output_step: bool, optional
 
-            ``Schedule...`` mx3 line which can be added to the mumax3 file to
+            If ``True``, output is saved at each step. Default to ``False``.
+
+        compute : str, optional
+
+            ``Schedule...`` MIF line which can be added to the mumax3 file to
             save additional data. Defaults to ``None``.
 
-        runner : mumax3c.mumax3.mumax3Runner
+        runner : mumax3c.mumax3.mumax3Runner, optional
 
-            mumax3 Runner which is going to be used for running mumax3. If
+            OOMMF Runner which is going to be used for running OOMMF. If
             ``None``, mumax3 runner will be found automatically. Defaults to
             ``None``.
+
+        ovf_format : str
+
+            Format of the magnetisation output files written by OOMMF. Can be
+            one of ``'bin8'`` (binary, double precision), ``'bin4'`` (binary,
+            single precision) or ``'txt'`` (text-based, double precision).
+            Defaults to ``'bin8'``.
+
+        verbose : int, optional
+
+            If ``verbose=0``, no output is printed. For ``verbose>=1``
+            information about the mumax3 runner and the runtime is printed to
+            stdout. Defaults is ``verbose=1``.
+
+        Raises
+        ------
+        FileExistsError
+
+            If system directory already exists and append=False.
 
         Examples
         --------
@@ -177,35 +130,141 @@ class Driver(mm.Driver):
         >>> mesh = df.Mesh(p1=(0, 0, 0), p2=(1e-9, 1e-9, 10e-9), n=(1, 1, 10))
         >>> system.m = df.Field(mesh, dim=3, value=(1, 1, 1), norm=1e6)
         ...
-        >>> md = mc.MinDriver()
+        >>> md = oc.MinDriver()
         >>> md.drive(system)
-        Running mumax3...
+        Running OOMMF...
 
         2. Drive system using time driver (``TimeDriver``).
 
         >>> system.energy.zeeman.H = (0, 1e6, 0)
         ...
-        >>> td = mc.TimeDriver()
+        >>> td = oc.TimeDriver()
         >>> td.drive(system, t=0.1e-9, n=10)
-        Running mumax3...
+        Running OOMMF...
 
         """
-        if save:
-            self._drive(
-                system=system,
-                basedirname="",
-                overwrite=overwrite,
-                compute=compute,
-                runner=runner,
-                **kwargs,
-            )
+        # This method is implemented in the derived driver class. It raises
+        # exception if any of the arguments are not valid.
+        self._checkargs(**kwargs)
+
+        # system directory already exists
+        if os.path.exists(os.path.join(dirname, system.name)):
+            dirs = os.listdir(os.path.join(dirname, system.name))
+            drive_dirs = [i for i in dirs if i.startswith("drive")]
+            compute_dirs = [i for i in dirs if i.startswith("compute")]
+            if compute is None:
+                if drive_dirs:
+                    if append:
+                        numbers = list(zip(*[i.split("-") for i in drive_dirs]))[1]
+                        numbers = list(map(int, numbers))
+                        system.drive_number = max(numbers) + 1
+                    else:
+                        msg = (
+                            f"Directory {system.name=} already exists. To "
+                            "append drives to it, pass append=True."
+                        )
+                        raise FileExistsError(msg)
+                else:
+                    system.drive_number = 0
+            else:
+                if compute_dirs:
+                    if append:
+                        numbers = list(zip(*[i.split("-") for i in compute_dirs]))[1]
+                        numbers = list(map(int, numbers))
+                        system.compute_number = max(numbers) + 1
+                    else:
+                        msg = (
+                            f"Directory {system.name=} already exists. To "
+                            "append drives to it, pass append=True."
+                        )
+                        raise FileExistsError(msg)
+                else:
+                    system.compute_number = 0
+
+        # Generate directory.
+        if compute is None:
+            subdir = f"drive-{system.drive_number}"
         else:
-            with tempfile.TemporaryDirectory() as tmpdir:
-                self._drive(
-                    system=system,
-                    basedirname=tmpdir,
-                    overwrite=overwrite,
-                    compute=compute,
-                    runner=runner,
-                    **kwargs,
+            subdir = f"compute-{system.compute_number}"
+
+        workingdir = os.path.join(dirname, system.name, subdir)
+
+        # Make a directory inside which OOMMF will be run.
+        if not os.path.exists(workingdir):
+            os.makedirs(workingdir)
+
+        # compute tlist for time-dependent field (current)
+        for term in system.energy:
+            if hasattr(term, "func") and callable(term.func):
+                self._time_dependence(term=term, **kwargs)
+
+        # Change directory to workingdir
+        with _changedir(workingdir):
+            # Generate the necessary filenames.
+            mx3filename = f"{system.name}.mif"
+            jsonfilename = "info.json"
+
+            # Generate and save mx3 file.
+            mx3 = mc.scripts.system_script(system) #TODO
+            mx3 += mc.scripts.driver_script(self, system, compute=compute, **kwargs) #TODO
+            with open(mx3filename, "w") as mx3file:
+                mx3file.write(mx3)
+
+            # Generate and save json info file for a drive (not compute).
+            if compute is None:
+                info = {}
+                info["drive_number"] = system.drive_number
+                info["date"] = datetime.datetime.now().strftime("%Y-%m-%d")
+                info["time"] = datetime.datetime.now().strftime("%H:%M:%S")
+                info["driver"] = self.__class__.__name__
+                for k, v in kwargs.items():
+                    info[k] = v
+                with open(jsonfilename, "w") as jsonfile:
+                    jsonfile.write(json.dumps(info))
+
+            # Run mumax3.
+            if runner is None:
+                runner = mc.mumax3.get_mumax3_runner()
+            runner.call(argstr=mx3filename) #TODO
+
+            # Update system's m and datatable attributes if the derivation of
+            # E, Heff, or energy density was not asked.
+            if compute is None:
+                # Update system's magnetisation. An example .omf filename:
+                # test_sample-Oxs_TimeDriver-Magnetization-01-0000008.omf
+                ovffiles = glob.iglob(os.path.join(f"{system.name}.out", "m_full*.ovf"))
+                lastovffile = sorted(ovffiles)[-1]
+                # pass Field.array instead of Field for better performance
+                system.m.value = df.Field.fromfile(lastovffile).array
+
+                # Update system's datatable.
+                system.table = ut.Table.fromfile(
+                    os.path.join(f"{system.name}.out", "table.txt") #TODO
                 )
+
+        if compute is None:
+            system.drive_number += 1
+        else:
+            system.compute_number += 1
+
+        # remove information about fixed cells for subsequent runs
+        #TODO
+
+    def _time_dependence(self, term, **kwargs):
+        try:
+            tmax = kwargs["t"]
+        except KeyError:
+            msg = (
+                f"Time-dependent term {term.__class__.__name__=} must be "
+                "used with time driver."
+            )
+            raise RuntimeError(msg)
+        ts = np.arange(0, tmax + term.dt, term.dt)
+        try:  # vector output from term.func
+            tlist = [list(term.func(t)) for t in ts]
+            dtlist = (np.gradient(tlist)[0] / term.dt).tolist()
+        except TypeError:  # scalar output from term.func
+            tlist = [term.func(t) for t in ts]
+            dtlist = list(np.gradient(tlist) / term.dt)
+        term.tlist = tlist
+        term.dtlist = dtlist
