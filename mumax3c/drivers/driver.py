@@ -31,8 +31,8 @@ class Driver(mm.Driver):
         """Abstract method defined in a derived driver class."""
         pass  # pragma: no cover
 
-    def _drive(
-        self, system, basedirname, overwrite=False, compute=None, runner=None, **kwargs
+    def drive(
+        self, system, basedirname="", overwrite=False, compute=None, runner=None, **kwargs
     ):
         """Convenience function, which allows to drive in different Python
         contexts.
@@ -120,7 +120,7 @@ class Driver(mm.Driver):
         if compute is None:
             system.drive_number += 1
 
-    def drive(
+    def _drive(
         self, system, save=False, overwrite=False, compute=None, runner=None, **kwargs
     ):
         """Drives the system in phase space.
