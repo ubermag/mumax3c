@@ -235,7 +235,10 @@ class Driver(mm.Driver):
                 ovffiles = glob.iglob(os.path.join(f"{system.name}.out", "m_full*.ovf"))
                 lastovffile = sorted(ovffiles)[-1]
                 # pass Field.array instead of Field for better performance
-                system.m.orientation.value = df.Field.fromfile(lastovffile).orientation.array
+                # Mumax3 norm changes so need to set back to old norm
+                norm_field = system.m.norm 
+                system.m.value = df.Field.fromfile(lastovffile).array
+                system.m.norm = norm_field
 
                 # Update system's datatable.
                 system.table = ut.Table.fromfile(
