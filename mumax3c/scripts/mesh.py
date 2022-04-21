@@ -13,6 +13,6 @@ def mesh_script(system):
         mx3 += "SetPBC({}, {}, {})\n".format(*repetitions)
     mx3 += "SetGridSize({}, {}, {})\n".format(*system.m.mesh.n)
     mx3 += "SetCellSize({}, {}, {})\n\n".format(*system.m.mesh.cell)
-    mx3 += mc.scripts.set_subregions(system)
+    #mx3 += mc.scripts.set_subregions(system)
 
     return mx3

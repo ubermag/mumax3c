@@ -235,7 +235,7 @@ class Driver(mm.Driver):
                 ovffiles = glob.iglob(os.path.join(f"{system.name}.out", "m_full*.ovf"))
                 lastovffile = sorted(ovffiles)[-1]
                 # pass Field.array instead of Field for better performance
-                system.m.value = df.Field.fromfile(lastovffile).array
+                system.m.orientation.value = df.Field.fromfile(lastovffile).orientation.array
 
                 # Update system's datatable.
                 system.table = ut.Table.fromfile(
