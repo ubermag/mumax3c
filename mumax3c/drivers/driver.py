@@ -225,7 +225,7 @@ class Driver(mm.Driver):
             # Run mumax3.
             if runner is None:
                 runner = mc.mumax3.get_mumax3_runner()
-            runner.call(argstr=mx3filename) #TODO
+            runner.call(argstr=mx3filename, verbose=verbose) #TODO
 
             # Update system's m and datatable attributes if the derivation of
             # E, Heff, or energy density was not asked.

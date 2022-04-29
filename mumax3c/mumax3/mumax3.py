@@ -19,7 +19,7 @@ _cached_mumax3_runner = None
 class Mumax3Runner(metaclass=abc.ABCMeta):
     """Abstract class for running mumax3."""
 
-    def call(self, argstr, need_stderr=False):
+    def call(self, argstr, need_stderr=False, verbose=1):
         """Calls mumax3 by passing ``argstr`` to mumax3.
 
         Parameters
@@ -32,6 +32,12 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
 
             If ``need_stderr=True``, standard error is captured. Defaults to
             ``False``.
+
+        verbose : int, optional
+
+            If ``verbose=0``, no output is printed. For ``verbose>=1``
+            information about the OOMMF runner and the runtime is printed to
+            stdout. Defaults is ``verbose=1``.
 
         Raises
         ------
@@ -57,17 +63,19 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         CompletedProcess(...)
 
         """
-        now = datetime.datetime.now()
-        timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
-            now.year, now.month, now.day, now.hour, now.minute
-        )
-        print(f"Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ", end="")
+        if verbose >= 1:
+	        now = datetime.datetime.now()
+	        timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
+	            now.year, now.month, now.day, now.hour, now.minute
+	        )
+	        print(f"Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ", end="")
+	        tic = time.time()
 
-        tic = time.time()
         res = self._call(argstr=argstr, need_stderr=need_stderr)
-        toc = time.time()
-        seconds = "({:0.1f} s)".format(toc - tic)
-        print(seconds)  # append seconds to the previous print.
+        if verbose >= 1:
+            toc = time.time()
+            seconds = "({:0.1f} s)".format(toc - tic)
+            print(seconds)  # append seconds to the previous print.
 
         if res.returncode != 0:
             msg = "Error in mumax3 run.\n"
