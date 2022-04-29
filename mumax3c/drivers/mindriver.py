@@ -36,24 +36,7 @@ class MinDriver(Driver):
     """
 
     _allowed_attributes = [
-        "evolver",
-        "stopping_mxHxm",
-        "stage_iteration_limit",
-        "total_iteration_limit",
-        "stage_count",
-        "stage_count_check",
-        "checkpoint_file",
-        "checkpoint_interval",
-        "checkpoint_disposal",
-        "start_iteration",
-        "start_stage",
-        "start_stage_iteration",
-        "start_stage_start_time",
-        "start_stage_elapsed_time",
-        "start_last_timestep",
-        "normalize_aveM_output",
-        "report_max_spin_angle",
-        "report_wall_time",
+        "MinimizerStop"
     ]
 
     def _checkargs(self, **kwargs):
