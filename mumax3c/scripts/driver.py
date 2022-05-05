@@ -13,12 +13,33 @@ def driver_script(driver, system, compute=None, **kwargs):
         mx3 += "tableadd(E_anis)\n"
         mx3 += "tableadd(dt)\n"
         mx3 += "tableadd(maxtorque)\n"
-        
+
         for attr, value in driver:
             if attr != "evolver":
                 mx3 += f"{attr} = {value}\n"
 
         mx3 += "minimize()\n\n"
+        mx3 += "save(m_full)\n"
+        mx3 += "tablesave()\n\n"
+
+    if isinstance(driver, mc.RelaxDriver):
+        if mm.Damping() not in system.dynamics:
+            raise ValueError('A damping term is needed.')
+        alpha = system.dynamics.damping.alpha
+        mx3 += f"alpha = {alpha}\n"
+        mx3 += "tableadd(E_total)\n"
+        mx3 += "tableadd(E_exch)\n"
+        mx3 += "tableadd(E_demag)\n"
+        mx3 += "tableadd(E_zeeman)\n"
+        mx3 += "tableadd(E_anis)\n"
+        mx3 += "tableadd(dt)\n"
+        mx3 += "tableadd(maxtorque)\n"
+
+        for attr, value in driver:
+            if attr != "evolver":
+                mx3 += f"{attr} = {value}\n"
+
+        mx3 += "relax()\n\n"
         mx3 += "save(m_full)\n"
         mx3 += "tablesave()\n\n"
 
