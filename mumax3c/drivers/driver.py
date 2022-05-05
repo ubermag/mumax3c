@@ -48,7 +48,6 @@ class Driver(mm.Driver):
         fixed_subregions=None,
         compute=None,
         output_step=False,
-        n_threads=None,
         runner=None,
         ovf_format="bin8",
         verbose=1,
@@ -59,7 +58,7 @@ class Driver(mm.Driver):
         Takes ``micromagneticmodel.System`` and drives it in the phase space.
         If ``append=True`` and the system director already exists, drive will
         be appended to that directory. Otherwise, an exception will be raised.
-        To save a specific value during an mumax3 run ``Schedule...`` line 
+        To save a specific value during an mumax3 run ``Schedule...`` line
         can be passed using ``compute``. To specify the way mumax3 is run, an
         ``mumax3c.mumax3.mumax3Runner`` can be passed using ``runner``.
 
@@ -225,7 +224,7 @@ class Driver(mm.Driver):
             # Run mumax3.
             if runner is None:
                 runner = mc.mumax3.get_mumax3_runner()
-            runner.call(argstr=mx3filename, verbose=verbose) #TODO
+            runner.call(argstr=mx3filename, verbose=verbose)
 
             # Update system's m and datatable attributes if the derivation of
             # E, Heff, or energy density was not asked.
@@ -236,13 +235,21 @@ class Driver(mm.Driver):
                 lastovffile = sorted(ovffiles)[-1]
                 # pass Field.array instead of Field for better performance
                 # Mumax3 norm changes so need to set back to old norm
-                norm_field = system.m.norm 
+                norm_field = system.m.norm
                 system.m.value = df.Field.fromfile(lastovffile).array
                 system.m.norm = norm_field
 
                 # Update system's datatable.
+                if isinstance(self, mc.TimeDriver):
+                    x = "t"
+                elif isinstance(self, mc.MinDriver):
+                    x = "t"  # TODO correct iteration
+                elif isinstance(self, mc.RelaxDriver):
+                    x = "t"  # TODO correct iteration
+                elif isinstance(self, mc.HysteresisDriver):
+                    x = "B_hysteresis"
                 system.table = ut.Table.fromfile(
-                    os.path.join(f"{system.name}.out", "table.txt") #TODO
+                    os.path.join(f"{system.name}.out", "table.txt"), x=x
                 )
 
         if compute is None:

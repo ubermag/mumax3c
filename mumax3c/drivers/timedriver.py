@@ -58,8 +58,11 @@ class TimeDriver(Driver):
     def _checkargs(self, **kwargs):
         t, n = kwargs["t"], kwargs["n"]
         if t <= 0:
-            msg = f"Cannot drive with t={t}."
+            msg = f"Cannot drive with {t=}."
             raise ValueError(msg)
-        elif n <= 0 or not isinstance(n, int):
-            msg = f"Cannot drive with n={n}."
+        if not isinstance(n, int):
+            msg = f"Cannot drive with {type(n)=}."
+            raise ValueError(msg)
+        if n <= 0:
+            msg = f"Cannot drive with {n=}."
             raise ValueError(msg)
