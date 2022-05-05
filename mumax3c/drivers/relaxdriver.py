@@ -36,7 +36,8 @@ class RelaxDriver(Driver):
     """
 
     _allowed_attributes = [
-        "MinimizerStop"
+        "MinimizerStop",
+        "DemagAccuracy"
     ]
 
     def _checkargs(self, **kwargs):
