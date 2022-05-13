@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windowsGPU]  #, macos-latest, windows-latest]
+        os: [linuxGPU, windowsGPU]  #, macos-latest, windows-latest]
     defaults:
       run:
         shell: bash -l {0}
