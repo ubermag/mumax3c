@@ -6,7 +6,7 @@ on:
     - cron: '0 0 * * 1'  # run every Monday
 
 jobs:
-  workflow:
+  workflow-windows:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -22,6 +22,7 @@ jobs:
     - name: Set up conda
       uses: conda-incubator/setup-miniconda@v2
       with:
+        miniconda-version: "latest"
         auto-update-conda: true
         activate-environment: conda-environment
         environment-file: .github/environment.yml
