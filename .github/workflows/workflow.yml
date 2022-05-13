@@ -20,7 +20,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up conda
-      uses: conda-incubator/setup-miniconda@v2
+      uses: conda-incubator/setup-miniconda
       with:
         auto-update-conda: true
         activate-environment: conda-environment
