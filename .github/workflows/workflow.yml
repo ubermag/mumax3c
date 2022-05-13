@@ -13,7 +13,7 @@ jobs:
         os: [windowsGPU]
     defaults:
       run:
-        shell: powershell {0}
+        shell: cmd /C CALL {0}
 
     steps:
     - name: Initialisation
