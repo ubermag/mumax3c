@@ -10,10 +10,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [linuxGPU, windowsGPU]  #, macos-latest, windows-latest]
+        os: [windowsGPU]
     defaults:
       run:
-        shell: bash -l {0}
+        shell: powershell -l {0}
 
     steps:
     - name: Initialisation
