@@ -13,7 +13,7 @@ jobs:
         os: [windowsGPU]
     defaults:
       run:
-        shell: cmd /C CALL {0}
+        shell: powershell {0}
 
     steps:
     - name: Initialisation
@@ -23,7 +23,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
-        auto-update-conda: true
+        #auto-update-conda: true
         activate-environment: conda-environment
         environment-file: .github/environment.yml
 
