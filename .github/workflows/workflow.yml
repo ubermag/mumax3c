@@ -13,7 +13,7 @@ jobs:
         os: [windowsGPU]
     defaults:
       run:
-        shell: powershell {0}
+        shell: bash -l {0}
 
     steps:
     - name: Initialisation
