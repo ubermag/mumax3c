@@ -26,9 +26,6 @@ jobs:
         #        activate-environment: conda-environment
         #        environment-file: .github/environment.yml
 
-    - name: Which python
-      run: which python
-
     - name: Install invoke
       run: python -m pip install invoke
 
