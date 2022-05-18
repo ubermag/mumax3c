@@ -24,7 +24,7 @@ def driver_script(driver, system, compute=None, **kwargs):
 
     if isinstance(driver, mc.RelaxDriver):
         if mm.Damping() not in system.dynamics:
-            raise ValueError('A damping term is needed.')
+            raise ValueError("A damping term is needed.")
         alpha = system.dynamics.damping.alpha
         mx3 += f"alpha = {alpha}\n"
         mx3 += "tableadd(E_total)\n"
