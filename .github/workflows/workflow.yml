@@ -115,6 +115,7 @@ jobs:
 
     - name: Remove conda env
       run: conda env remove -n test-env
+      if: always()
 
 #    - name: Upload coverage to Codecov.io
 #      uses: codecov/codecov-action@v1
