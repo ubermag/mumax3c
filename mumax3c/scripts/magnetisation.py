@@ -1,5 +1,6 @@
-import numpy as np
 import discretisedfield as df
+import numpy as np
+
 
 def find_Ms(m):
     tol = 1e-3
@@ -30,13 +31,13 @@ def magnetisation_subregions(system):
     sub_region_values = np.empty_like(test_field)
     uniq_arr = np.unique(test_field)
     if uniq_arr.size > 255:
-        raise ValueError('Cannot have more than 255 seperate Ms.')
+        raise ValueError("Cannot have more than 255 seperate Ms.")
 
     for i, val in enumerate(uniq_arr):
-        sub_region_values[test_field==val] = i
+        sub_region_values[test_field == val] = i
         mx3 += f"Msat.setregion({i}, {val})\n\n"
-        
+
     rf = df.Field(system.m.mesh, dim=1, value=sub_region_values)
     rf.write("subregions.omf")
-    
+
     return mx3
