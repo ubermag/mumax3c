@@ -1,6 +1,6 @@
 import discretisedfield as df
 
-import mumax3c as mc
+# import mumax3c as mc
 
 
 def mesh_script(system):
