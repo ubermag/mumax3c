@@ -108,9 +108,7 @@ jobs:
       run: invoke test.ipynb
 
     -name: Conda clean up
-      run: |
-        conda deactivate
-        conda env remove -n test-env
+      run: conda deactivate && conda env remove -n test-env
 
 #    - name: Upload coverage to Codecov.io
 #      uses: codecov/codecov-action@v1
