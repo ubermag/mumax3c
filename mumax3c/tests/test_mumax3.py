@@ -30,7 +30,7 @@ def test_exemumax3runner():
 
 def test_get_mumax3_runner():
     # Tclmumax3Runner
-    runner = calc.mumax3.get_mumax3_runner(use_cache=False, mumax3_exe="mumax3")
+    runner = calc.runner.runner
     assert isinstance(runner, calc.mumax3.ExeMumax3Runner)
     check_runner(runner)
 
