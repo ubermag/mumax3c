@@ -107,8 +107,10 @@ jobs:
     - name: Jupyter notebook tests
       run: invoke test.ipynb
 
-    -name: Conda clean up
-      run: conda deactivate && conda env remove -n test-env
+    - name: Conda clean up
+      run: |
+        conda deactivate
+        conda env remove -n test-env
 
 #    - name: Upload coverage to Codecov.io
 #      uses: codecov/codecov-action@v1
