@@ -73,9 +73,11 @@ jobs:
     - name: Initialisation
       uses: actions/checkout@v2
 
-    - name: Tests
+    - name: Create conda env
+      run: conda create -n test-env -c conda-forge -y python==3.8 pip
+
+    - name: Install packages
       run: |
-        conda create -n test-env -c conda-forge -y python==3.8 pip
         eval "$(conda shell.bash hook)"
         conda activate test-env
         python --version
@@ -86,9 +88,33 @@ jobs:
         python -m pip install git+https://github.com/ubermag/micromagneticmodel.git
         python -m pip install git+https://github.com/ubermag/micromagnetictests.git
         python -m pip install .[dev]
-        #        eval "$(conda shell.bash hook)"
-        conda deactivate
-        conda env remove -n test-env
+
+    - name: Test mumax3c
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate test-env
+        python -m pytest -v mumax3c
+
+    - name: Unit tests 
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate test-env
+        invoke test.unittest
+
+    - name: Doc tests
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate test-env
+        invoke test.docs
+
+    - name: Notebook tests
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate test-env
+        invoke test.ipynb
+
+    - name: Remove conda env
+      run: conda env remove -n test-env
 
 #    - name: Upload coverage to Codecov.io
 #      uses: codecov/codecov-action@v1
