@@ -182,6 +182,7 @@ class Runner:
         self.cache_runner = True
         self.mumax3_exe = "mumax3"
         self.optirun_exe = "optirun"
+        self._runner = None
 
     @property
     def runner(self):
@@ -269,7 +270,7 @@ class Runner:
         )
         if mumax3_exe:
             cmd.append("mumax3")
-            self._runner = ExeMumax3Runner("".join(cmd))
+            self._runner = ExeMumax3Runner(" ".join(cmd))
         else:
             msg = "mumax3 cannot be found"
             raise EnvironmentError(msg)
