@@ -147,10 +147,12 @@ class ExeMumax3Runner(Mumax3Runner):
     """
 
     def __init__(self, mumax3_exe="mumax3"):
+        if isinstance(mumax3_exe, str):
+            mumax3_exe = [mumax3_exe]
         self.mumax3_exe = mumax3_exe
 
     def _call(self, argstr, need_stderr=False):
-        cmd = [self.mumax3_exe, argstr]
+        cmd = self.mumax3_exe + [argstr]
         return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
 
 
@@ -270,7 +272,7 @@ class Runner:
         )
         if mumax3_exe:
             cmd.append("mumax3")
-            self._runner = ExeMumax3Runner(" ".join(cmd))
+            self._runner = ExeMumax3Runner(cmd)
         else:
             msg = "mumax3 cannot be found"
             raise EnvironmentError(msg)
