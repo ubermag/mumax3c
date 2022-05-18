@@ -99,6 +99,7 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         """This method should be implemented in subclass."""
         pass  # pragma: no cover
 
+    @property
     def status(self):
         """Run a macrospin example for 1 ps through mumax3c and print the mumax3
         status.

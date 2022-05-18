@@ -36,7 +36,7 @@ def test_get_mumax3_runner():
 
 
 def test_status():
-    assert calc.mumax3.status() == 0
+    assert calc.runner.runner.status == 0
 
 
 def test_overhead():
