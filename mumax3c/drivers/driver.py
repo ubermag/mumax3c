@@ -204,8 +204,10 @@ class Driver(mm.Driver):
             jsonfilename = "info.json"
 
             # Generate and save mx3 file.
-            mx3 = mc.scripts.system_script(system) #TODO
-            mx3 += mc.scripts.driver_script(self, system, compute=compute, **kwargs) #TODO
+            mx3 = mc.scripts.system_script(system)  # TODO
+            mx3 += mc.scripts.driver_script(
+                self, system, compute=compute, **kwargs
+            )  # TODO
             with open(mx3filename, "w") as mx3file:
                 mx3file.write(mx3)
 
@@ -258,7 +260,7 @@ class Driver(mm.Driver):
             system.compute_number += 1
 
         # remove information about fixed cells for subsequent runs
-        #TODO
+        # TODO
 
     def _time_dependence(self, term, **kwargs):
         try:
