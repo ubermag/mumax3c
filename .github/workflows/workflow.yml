@@ -91,22 +91,22 @@ jobs:
     - name: Install package
       run: python -m pip install .[dev]
 
-    - name: Unit tests
-      run: python -m pytest -v mumax3c
+        #    - name: Unit tests
+        #      run: python -m pytest -v mumax3c
 
-    - name: Unit tests
-      run: invoke test.unittest
+        #    - name: Unit tests
+        #      run: invoke test.unittest
 #      if: matrix.os != 'ubuntu-latest'
 
 #    - name: Unit tests with coverage
 #      run: invoke test.coverage
 #      if: matrix.os == 'ubuntu-latest'
 
-    - name: Documentation tests
-      run: invoke test.docs
+        #    - name: Documentation tests
+        #      run: invoke test.docs
 
-    - name: Jupyter notebook tests
-      run: invoke test.ipynb
+        #    - name: Jupyter notebook tests
+        #      run: invoke test.ipynb
 
     - name: Conda clean up
       run: |
