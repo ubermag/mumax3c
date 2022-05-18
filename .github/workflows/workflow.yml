@@ -76,6 +76,7 @@ jobs:
     - name: Create conda env
       run: |
         conda create -n test-env -c conda-forge -y python==3.8 pip
+        conda init --all --quiet
         conda activate test-env
 
     - name: Install 
@@ -111,6 +112,7 @@ jobs:
       run: |
         conda deactivate
         conda env remove -n test-env
+        conda init --reverse
 
 #    - name: Upload coverage to Codecov.io
 #      uses: codecov/codecov-action@v1
