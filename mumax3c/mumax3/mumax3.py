@@ -97,6 +97,39 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         """This method should be implemented in subclass."""
         pass  # pragma: no cover
 
+    def status(self):
+        """Run a macrospin example for 1 ps through mumax3c and print the mumax3
+        status.
+
+        Returns
+        -------
+        int
+
+            If ``0``, the mumax3 is found and running. Otherwise, ``1`` is
+            returned.
+
+        Examples
+        --------
+        1. Checking the mumax3 status.
+
+        >>> import mumax3c as mc
+        ...
+        >>> mc.mumax3c.status()
+        Running mumax3...
+        mumax3 found and running.
+        0
+
+        """
+        system = mm.examples.macrospin()
+        try:
+            td = mc.TimeDriver()
+            td.drive(system, t=1e-12, n=1, runner=self)
+            print("mumax3 found and running.")
+            return 0
+        except (EnvironmentError, RuntimeError):
+            print("Cannot find mumax3.")
+            return 1
+
 
 @uu.inherit_docs
 class ExeMumax3Runner(Mumax3Runner):
@@ -183,39 +216,6 @@ def get_mumax3_runner(use_cache=True, mumax3_exe="mumax3", optirun_exe="optirun"
     _cached_mumax3_runner = ExeMumax3Runner(mumax3_exe=cmd)
     return _cached_mumax3_runner
 
-
-def status():
-    """Run a macrospin example for 1 ps through mumax3c and print the mumax3
-    status.
-
-    Returns
-    -------
-    int
-
-        If ``0``, the mumax3 is found and running. Otherwise, ``1`` is
-        returned.
-
-    Examples
-    --------
-    1. Checking the mumax3 status.
-
-    >>> import mumax3c as mc
-    ...
-    >>> mc.mumax3c.status()
-    Running mumax3...
-    mumax3 found and running.
-    0
-
-    """
-    system = mm.examples.macrospin()
-    try:
-        td = mc.TimeDriver()
-        td.drive(system, t=1e-12, n=1)
-        print("mumax3 found and running.")
-        return 0
-    except (EnvironmentError, RuntimeError):
-        print("Cannot find mumax3.")
-        return 1
 
 
 def overhead():
