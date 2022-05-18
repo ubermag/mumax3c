@@ -73,8 +73,8 @@ jobs:
     - name: Initialisation
       uses: actions/checkout@v2
 
-    - name: Source bashrc
-      run: source ~/.bashrc
+    - name: Source conda
+      run: source ~/miniconda3/etc/profile.d/conda.sh
 
     - name: Create conda env
       run: |
