@@ -12,8 +12,7 @@ import ubermagutil as uu
 
 import mumax3c as mc
 
-log = logging.getLogger(__name__)
-_cached_mumax3_runner = None
+log = logging.getLogger("mumax3c")
 
 
 class Mumax3Runner(metaclass=abc.ABCMeta):
