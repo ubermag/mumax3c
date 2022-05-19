@@ -93,12 +93,6 @@ jobs:
       run: |
         eval "$(conda shell.bash hook)"
         conda activate test-env
-        python -m pytest -v mumax3c
-
-    - name: Unit tests 
-      run: |
-        eval "$(conda shell.bash hook)"
-        conda activate test-env
         invoke test.unittest
 
     - name: Doc tests
