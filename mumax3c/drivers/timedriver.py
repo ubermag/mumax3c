@@ -35,9 +35,7 @@ class TimeDriver(Driver):
 
     """
 
-    _allowed_attributes = [
-        "DemagAccuracy"
-    ]
+    _allowed_attributes = ["DemagAccuracy"]
 
     def _checkargs(self, **kwargs):
         t, n = kwargs["t"], kwargs["n"]

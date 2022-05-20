@@ -64,12 +64,14 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
 
         """
         if verbose >= 1:
-	        now = datetime.datetime.now()
-	        timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
-	            now.year, now.month, now.day, now.hour, now.minute
-	        )
-	        print(f"Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ", end="")
-	        tic = time.time()
+            now = datetime.datetime.now()
+            timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
+                now.year, now.month, now.day, now.hour, now.minute
+            )
+            print(
+                f"Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ", end=""
+            )
+            tic = time.time()
 
         res = self._call(argstr=argstr, need_stderr=need_stderr)
         if verbose >= 1:

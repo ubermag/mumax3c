@@ -6,7 +6,7 @@ import mumax3c.scripts
 
 from .compute import compute
 from .delete import delete
-from .drivers import MinDriver, TimeDriver, RelaxDriver
+from .drivers import MinDriver, RelaxDriver, TimeDriver
 
 
 def test():
