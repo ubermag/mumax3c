@@ -89,11 +89,11 @@ jobs:
         python -m pip install git+https://github.com/ubermag/micromagnetictests.git
         python -m pip install .[dev]
 
-    - name: Test mumax3c
+    - name: Unit tests with coverage
       run: |
         eval "$(conda shell.bash hook)"
         conda activate test-env
-        invoke test.unittest
+        invoke test.coverage
 
     - name: Doc tests
       run: |
@@ -106,12 +106,6 @@ jobs:
         eval "$(conda shell.bash hook)"
         conda activate test-env
         invoke test.ipynb
-
-    - name: Unit tests with coverage
-      run: |
-        eval "$(conda shell.bash hook)"
-        conda activate test-env
-        invoke test.coverage
 
     - name: Remove conda env
       run: conda env remove -n test-env
