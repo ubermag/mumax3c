@@ -39,19 +39,19 @@ jobs:
     - name: Unit tests with coverage
       run: |
         # eval "$(conda shell.bash hook)"
-        # conda activate test-env
+        conda activate test-env
         invoke test.coverage
 
     - name: Doc tests
       run: |
         # eval "$(conda shell.bash hook)"
-        # conda activate test-env
+        conda activate test-env
         invoke test.docs
 
     - name: Notebook tests
       run: |
         # eval "$(conda shell.bash hook)"
-        # conda activate test-env
+        conda activate test-env
         invoke test.ipynb
 
     - name: Remove conda env
