@@ -24,7 +24,7 @@ jobs:
 
     - name: Install packages
       run: |
-        eval "$(conda shell.bash hook)"
+        # eval "$(conda shell.bash hook)"
         conda activate test-env
         python --version
         python -m pip install invoke
@@ -37,20 +37,20 @@ jobs:
 
     - name: Unit tests with coverage
       run: |
-        eval "$(conda shell.bash hook)"
-        conda activate test-env
+        # eval "$(conda shell.bash hook)"
+        # conda activate test-env
         invoke test.coverage
 
     - name: Doc tests
       run: |
-        eval "$(conda shell.bash hook)"
-        conda activate test-env
+        # eval "$(conda shell.bash hook)"
+        # conda activate test-env
         invoke test.docs
 
     - name: Notebook tests
       run: |
-        eval "$(conda shell.bash hook)"
-        conda activate test-env
+        # eval "$(conda shell.bash hook)"
+        # conda activate test-env
         invoke test.ipynb
 
     - name: Remove conda env
