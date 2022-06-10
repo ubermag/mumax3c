@@ -45,7 +45,10 @@ def mumax3_regions(system):
         # Find unique Ms within subregion
         uniq_arr = np.unique(ms_arr[bool_arr])
         if next_uni_index + uniq_arr.size > 255:
-            raise ValueError("Cannot have more than 255 seperate regions.")
+            msg = "mumax3 does not allow for than 255 seperate regions to be set. "
+            msg += "The number of mumax3 regions is determined by the number of unique "
+            msg += "combinations of `discretisedfield` subregions and saturation magnetisation."
+            raise ValueError(msg)
 
         # Index all unique Ms within region
         for i, val in enumerate(uniq_arr, start=next_uni_index):
