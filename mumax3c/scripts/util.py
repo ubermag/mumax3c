@@ -1,4 +1,5 @@
 import numbers
+
 import discretisedfield as df
 import numpy as np
 
@@ -7,7 +8,7 @@ def identify_subregions(system):
     subregion_values = np.zeros_like(system.m.norm.array)
     if system.m.mesh.subregions:
         names = system.m.mesh.subregions.keys()
-        subregions_dict = dict(zip(names, range(1, len(names)+1)))
+        subregions_dict = dict(zip(names, range(1, len(names) + 1)))
         # Reversed to get same functionality as oommf if subregions overlap
         for key in reversed(subregions_dict):
             # Extract the subregion
@@ -18,7 +19,7 @@ def identify_subregions(system):
     else:
         subregions_dict = dict()
 
-    subregions_dict['ee'] = 0  # Everything else has values of 0
+    subregions_dict["ee"] = 0  # Everything else has values of 0
     return subregion_values, subregions_dict
 
 
@@ -30,7 +31,9 @@ def mumax3_regions(system):
     mx3 += 'm.LoadFile("m0.omf")\n'
     # Array of all subregions and left over and dictionary relating names to subregion index
     subregion_arr, subregions_dict = identify_subregions(system)
-    region_relators = {key: [] for key in subregions_dict}  # relates subregion to mumax3 region
+    region_relators = {
+        key: [] for key in subregions_dict
+    }  # relates subregion to mumax3 region
     ms_arr = system.m.norm.array
     region_values = np.empty_like(ms_arr)
 
@@ -45,7 +48,10 @@ def mumax3_regions(system):
         if next_uni_index + uniq_arr.size > 255:
             msg = "mumax3 does not allow for than 255 seperate regions to be set. "
             msg += "The number of mumax3 regions is determined by the number of unique "
-            msg += "combinations of `discretisedfield` subregions and saturation magnetisation."
+            msg += (
+                "combinations of `discretisedfield` subregions and saturation"
+                " magnetisation."
+            )
             raise ValueError(msg)
 
         # Index all unique Ms within region
@@ -60,7 +66,7 @@ def mumax3_regions(system):
     system.region_relators = region_relators  # Add dict to relate subregions to regions
     m3_regions.write("subregions.omf")
 
-    mx3 += '\n'
+    mx3 += "\n"
     mx3 += 'regions.LoadFile("subregions.omf")\n\n'
     return mx3
 
