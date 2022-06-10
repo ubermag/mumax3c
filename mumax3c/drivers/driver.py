@@ -87,7 +87,7 @@ class Driver(mm.ExternalDriver):
 
             # Generate and save json info file for a drive (not compute).
             if True:  # compute is None:  # TODO does mumxa3 support compute?
-                self._write_info_json(**kwargs)
+                self._write_info_json(system, **kwargs)
 
         # TODO if self/system is modified for mx3 creation reset it here
 
