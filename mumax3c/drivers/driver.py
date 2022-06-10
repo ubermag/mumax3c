@@ -1,30 +1,15 @@
 import abc
-import contextlib
-import datetime
-import glob
-import json
-import os
+import pathlib
 
 import discretisedfield as df
 import micromagneticmodel as mm
-import numpy as np
 import ubermagtable as ut
+import ubermagutil as uu
 
 import mumax3c as mc
 
 
-@contextlib.contextmanager
-def _changedir(dirname):
-    """Context manager for changing directory."""
-    cwd = os.getcwd()
-    os.chdir(dirname)
-    try:
-        yield
-    finally:
-        os.chdir(cwd)
-
-
-class Driver(mm.Driver):
+class Driver(mm.ExternalDriver):
     """Driver base class."""
 
     def __init__(self, **kwargs):
@@ -37,246 +22,97 @@ class Driver(mm.Driver):
     @abc.abstractmethod
     def _checkargs(self, **kwargs):
         """Abstract method for checking arguments."""
-        pass  # pragma: no cover
 
-    def drive(
-        self,
-        system,
-        /,
-        dirname=".",
-        append=True,
-        fixed_subregions=None,
-        compute=None,
-        output_step=False,
-        runner=None,
-        ovf_format="bin8",
-        verbose=1,
-        **kwargs,
-    ):
-        """Drives the system in phase space.
+    def drive_kwargs_setup(self, **kwargs):
+        self._checkargs(**kwargs)
 
-        Takes ``micromagneticmodel.System`` and drives it in the phase space.
-        If ``append=True`` and the system director already exists, drive will
-        be appended to that directory. Otherwise, an exception will be raised.
-        To save a specific value during an mumax3 run ``Schedule...`` line
-        can be passed using ``compute``. To specify the way mumax3 is run, an
-        ``mumax3c.mumax3.mumax3Runner`` can be passed using ``runner``.
+        # TODO OOMMF support additional arguments; are there equivalent options in mumax
+        # fixed_subregions = None  # mumax?
+        # compute = None  # mumax?
+        # output_step = False  # mumax?
+
+    def schedule_kwargs_setup(self, **kwargs):
+        self._checkargs(**kwargs)
+
+    def _write_input_files(self, system, **kwargs):
+        self.write_mx3(system, **kwargs)
+
+    def write_mx3(self, system, dirname=".", ovf_format="bin8", **kwargs):
+        """Write the mx3 file and related files.
+
+        Takes ``micromagneticmodel.System`` and write the mx3 file (and related files)
+        to drive it in the phase space. The files are written directly to directory
+        ``dirname`` (if not specified the current working directory). No additional
+        subdirectiories are created.
 
         This method accepts any other arguments that could be required by the
         specific driver.
+
+        Users are generally not encouraged to use this method directly. Instead
+        ``Driver.drive``, ``Driver.schedule``, or ``mc.schedule`` should be used to
+        write the files an run the simulation. This method is provided to give advanced
+        users full flexibility.
 
         Parameters
         ----------
         system : micromagneticmodel.System
 
-          System to be driven.
+            System object to be driven.
 
-        append : bool, optional
+        dirname : str, optional
 
-            If ``True`` and the system directory already exists, drive or
-            compute directories will be appended. Defaults to ``True``.
-
-        fixed_subregions : list, optional
-
-            List of strings, where each string is the name of the subregion in
-            the mesh whose spins should remain fixed while the system is being
-            driven. Defaults to ``None``.
-
-        output_step: bool, optional
-
-            If ``True``, output is saved at each step. Default to ``False``.
-
-        compute : str, optional
-
-            ``Schedule...`` MIF line which can be added to the mumax3 file to
-            save additional data. Defaults to ``None``.
-
-        runner : mumax3c.mumax3.mumax3Runner, optional
-
-            OOMMF Runner which is going to be used for running OOMMF. If
-            ``None``, mumax3 runner will be found automatically. Defaults to
-            ``None``.
+            Name of a directory in which the input files are stored.
+            If not specified the current workinng
+            directory is used.
 
         ovf_format : str
 
-            Format of the magnetisation output files written by OOMMF. Can be
+            TODO UPDATE TO THE SUPPORTED MUMAX FILE TYPES
+            Format of the magnetisation output files written by mumax3. Can be
             one of ``'bin8'`` (binary, double precision), ``'bin4'`` (binary,
             single precision) or ``'txt'`` (text-based, double precision).
             Defaults to ``'bin8'``.
 
-        verbose : int, optional
-
-            If ``verbose=0``, no output is printed. For ``verbose>=1``
-            information about the mumax3 runner and the runtime is printed to
-            stdout. Defaults is ``verbose=1``.
-
-        Raises
-        ------
-        FileExistsError
-
-            If system directory already exists and append=False.
-
-        Examples
-        --------
-        1. Drive system using minimisation driver (``MinDriver``).
-
-        >>> import micromagneticmodel as mm
-        >>> import discretisedfield as df
-        >>> import mumax3c as oc
-        ...
-        >>> system = mm.System(name='my_cool_system')
-        >>> system.energy = mm.Exchange(A=1e-12) + mm.Zeeman(H=(0, 0, 1e6))
-        >>> mesh = df.Mesh(p1=(0, 0, 0), p2=(1e-9, 1e-9, 10e-9), n=(1, 1, 10))
-        >>> system.m = df.Field(mesh, dim=3, value=(1, 1, 1), norm=1e6)
-        ...
-        >>> md = oc.MinDriver()
-        >>> md.drive(system)
-        Running OOMMF...
-
-        2. Drive system using time driver (``TimeDriver``).
-
-        >>> system.energy.zeeman.H = (0, 1e6, 0)
-        ...
-        >>> td = oc.TimeDriver()
-        >>> td.drive(system, t=0.1e-9, n=10)
-        Running OOMMF...
-
         """
-        # This method is implemented in the derived driver class. It raises
-        # exception if any of the arguments are not valid.
-        self._checkargs(**kwargs)
-
-        # system directory already exists
-        if os.path.exists(os.path.join(dirname, system.name)):
-            dirs = os.listdir(os.path.join(dirname, system.name))
-            drive_dirs = [i for i in dirs if i.startswith("drive")]
-            compute_dirs = [i for i in dirs if i.startswith("compute")]
-            if compute is None:
-                if drive_dirs:
-                    if append:
-                        numbers = list(zip(*[i.split("-") for i in drive_dirs]))[1]
-                        numbers = list(map(int, numbers))
-                        system.drive_number = max(numbers) + 1
-                    else:
-                        msg = (
-                            f"Directory {system.name=} already exists. To "
-                            "append drives to it, pass append=True."
-                        )
-                        raise FileExistsError(msg)
-                else:
-                    system.drive_number = 0
-            else:
-                if compute_dirs:
-                    if append:
-                        numbers = list(zip(*[i.split("-") for i in compute_dirs]))[1]
-                        numbers = list(map(int, numbers))
-                        system.compute_number = max(numbers) + 1
-                    else:
-                        msg = (
-                            f"Directory {system.name=} already exists. To "
-                            "append drives to it, pass append=True."
-                        )
-                        raise FileExistsError(msg)
-                else:
-                    system.compute_number = 0
-
-        # Generate directory.
-        if compute is None:
-            subdir = f"drive-{system.drive_number}"
-        else:
-            subdir = f"compute-{system.compute_number}"
-
-        workingdir = os.path.join(dirname, system.name, subdir)
-
-        # Make a directory inside which OOMMF will be run.
-        if not os.path.exists(workingdir):
-            os.makedirs(workingdir)
-
-        # compute tlist for time-dependent field (current)
-        for term in system.energy:
-            if hasattr(term, "func") and callable(term.func):
-                self._time_dependence(term=term, **kwargs)
-
-        # Change directory to workingdir
-        with _changedir(workingdir):
-            # Generate the necessary filenames.
-            mx3filename = f"{system.name}.mif"
-            jsonfilename = "info.json"
-
-            # Generate and save mx3 file.
+        with uu.changedir(dirname):
             mx3 = mc.scripts.system_script(system)  # TODO
             mx3 += mc.scripts.driver_script(
-                self, system, compute=compute, **kwargs
+                self,
+                system,
+                compute=None,  # TODO does mumax3 support compute?
+                **kwargs,
             )  # TODO
-            with open(mx3filename, "w") as mx3file:
+            with open(self._mx3filename(system), "wt", encoding="utf-8") as mx3file:
                 mx3file.write(mx3)
 
             # Generate and save json info file for a drive (not compute).
-            if compute is None:
-                info = {}
-                info["drive_number"] = system.drive_number
-                info["date"] = datetime.datetime.now().strftime("%Y-%m-%d")
-                info["time"] = datetime.datetime.now().strftime("%H:%M:%S")
-                info["driver"] = self.__class__.__name__
-                for k, v in kwargs.items():
-                    info[k] = v
-                with open(jsonfilename, "w") as jsonfile:
-                    jsonfile.write(json.dumps(info))
+            if True:  # compute is None:  # TODO does mumxa3 support compute?
+                self._write_info_json(**kwargs)
 
-            # Run mumax3.
-            if runner is None:
-                runner = mc.runner.runner
-            runner.call(argstr=mx3filename, verbose=verbose)
+        # TODO if self/system is modified for mx3 creation reset it here
 
-            # Update system's m and datatable attributes if the derivation of
-            # E, Heff, or energy density was not asked.
-            if compute is None:
-                # Update system's magnetisation. An example .omf filename:
-                # test_sample-Oxs_TimeDriver-Magnetization-01-0000008.omf
-                ovffiles = glob.iglob(os.path.join(f"{system.name}.out", "m_full*.ovf"))
-                lastovffile = sorted(ovffiles)[-1]
-                # pass Field.array instead of Field for better performance
-                # Mumax3 norm changes so need to set back to old norm
-                norm_field = system.m.norm
-                system.m.value = df.Field.fromfile(lastovffile).array
-                system.m.norm = norm_field
-
-                # Update system's datatable.
-                if isinstance(self, mc.TimeDriver):
-                    x = "t"
-                elif isinstance(self, mc.MinDriver):
-                    x = "t"  # TODO correct iteration
-                elif isinstance(self, mc.RelaxDriver):
-                    x = "t"  # TODO correct iteration
-                elif isinstance(self, mc.HysteresisDriver):
-                    x = "B_hysteresis"
-                system.table = ut.Table.fromfile(
-                    os.path.join(f"{system.name}.out", "table.txt"), x=x
-                )
-
-        if compute is None:
-            system.drive_number += 1
+    def _call(self, system, runner, verbose=1, dry_run=False, **kwargs):
+        if runner is None:
+            runner = mc.runner.runner
+        if dry_run:
+            return runner.call(argstr=self._mx3filename(system), dry_run=True)
         else:
-            system.compute_number += 1
+            runner.call(argstr=self._mx3filename(system), verbose=verbose)
 
-        # remove information about fixed cells for subsequent runs
-        # TODO
+    def _read_data(self, system):
+        # Update system's magnetisation. An example .ovf filename: m_full000000.ovf
+        ovffiles = pathlib.Path(f"{system.name}.out").glob("m_full*.ovf")
+        lastovffile = sorted(ovffiles)[-1]
+        # pass Field.array instead of Field for better performance
+        # Mumax3 norm changes so need to set back to old norm
+        norm_field = system.m.norm
+        system.m.value = df.Field.fromfile(str(lastovffile)).array
+        system.m.norm = norm_field
 
-    def _time_dependence(self, term, **kwargs):
-        try:
-            tmax = kwargs["t"]
-        except KeyError:
-            msg = (
-                f"Time-dependent term {term.__class__.__name__=} must be "
-                "used with time driver."
-            )
-            raise RuntimeError(msg)
-        ts = np.arange(0, tmax + term.dt, term.dt)
-        try:  # vector output from term.func
-            tlist = [list(term.func(t)) for t in ts]
-            dtlist = (np.gradient(tlist)[0] / term.dt).tolist()
-        except TypeError:  # scalar output from term.func
-            tlist = [term.func(t) for t in ts]
-            dtlist = list(np.gradient(tlist) / term.dt)
-        term.tlist = tlist
-        term.dtlist = dtlist
+        system.table = ut.Table.fromfile(
+            str(pathlib.Path(f"{system.name}/out/table.txt")), x=self._x
+        )
+
+    @staticmethod
+    def _mx3filename(system):
+        return f"{system.name}.mif"
