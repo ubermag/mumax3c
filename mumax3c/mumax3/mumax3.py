@@ -18,7 +18,7 @@ log = logging.getLogger("mumax3c")
 class Mumax3Runner(metaclass=abc.ABCMeta):
     """Abstract class for running mumax3."""
 
-    def call(self, argstr, need_stderr=False, verbose=1):
+    def call(self, argstr, need_stderr=False, verbose=1, dry_run=False):
         """Calls mumax3 by passing ``argstr`` to mumax3.
 
         Parameters
@@ -38,6 +38,11 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
             information about the OOMMF runner and the runtime is printed to
             stdout. Defaults is ``verbose=1``.
 
+        dry_run : bool, optional
+
+            If ``dry_run=True`` this method returns the command to call OOMMF without
+            calling OOMMF. Defaults to ``False``.
+
         Raises
         ------
         RuntimeError
@@ -46,9 +51,10 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
 
         Returns
         -------
-        int
+        int, str
 
-            When the mumax3 run was successful, ``0`` is returned.
+            If ``dry_run=False`` and when the OOMMF run was successful, ``0`` is
+            returned. If ``dry_run=True`` the command to call OOMMF is returned.
 
         Examples
         --------
@@ -62,6 +68,9 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         CompletedProcess(...)
 
         """
+        if dry_run:
+            return self._call(argstr=argstr, need_stderr=need_stderr, dry_run=True)
+
         if verbose >= 1:
             now = datetime.datetime.now()
             timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
@@ -94,7 +103,7 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         return res
 
     @abc.abstractmethod
-    def _call(self, argstr, need_stderr=False):
+    def _call(self, argstr, need_stderr=False, dry_run=False):
         """This method should be implemented in subclass."""
         pass  # pragma: no cover
 
@@ -151,9 +160,12 @@ class ExeMumax3Runner(Mumax3Runner):
             mumax3_exe = [mumax3_exe]
         self.mumax3_exe = mumax3_exe
 
-    def _call(self, argstr, need_stderr=False):
+    def _call(self, argstr, need_stderr=False, dry_run=False):
         cmd = self.mumax3_exe + [argstr]
-        return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
+        if dry_run:
+            return cmd
+        else:
+            return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
 
 
 class Runner:
