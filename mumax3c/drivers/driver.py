@@ -115,4 +115,4 @@ class Driver(mm.ExternalDriver):
 
     @staticmethod
     def _mx3filename(system):
-        return f"{system.name}.mif"
+        return f"{system.name}.mx3"
