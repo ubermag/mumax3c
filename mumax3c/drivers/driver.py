@@ -110,7 +110,7 @@ class Driver(mm.ExternalDriver):
         system.m.norm = norm_field
 
         system.table = ut.Table.fromfile(
-            str(pathlib.Path(f"{system.name}/out/table.txt")), x=self._x
+            str(pathlib.Path(f"{system.name}.out/table.txt")), x=self._x
         )
 
     @staticmethod
