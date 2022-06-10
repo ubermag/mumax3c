@@ -59,7 +59,7 @@ def dmi_script(system):
     mx3 = ""
     if system.energy.dmi.crystalclass.lower() in ["t", "o"]:
         name = "Dbulk"
-    elif system.energy.dmi.crystalclass.lower() == "cnv":
+    elif system.energy.dmi.crystalclass.lower() in ["cnv", "cnv_z"]:
         name = "Dind"
         # In mumax3 D = -D for interfacial DMI
     else:
@@ -70,6 +70,7 @@ def dmi_script(system):
         raise ValueError(msg)
 
     # In mumax3 DMI cannot be used without exchange
+    # TODO Martin thinks this should show a warning to the user
     if mm.Exchange() not in system.energy:
         mx3 += "Aex = 1e-25\n"
     mx3 += "// DMI\n"
