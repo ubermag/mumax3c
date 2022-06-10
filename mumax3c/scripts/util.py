@@ -29,7 +29,7 @@ def mumax3_regions(system):
     system.m.orientation.write("m0.omf")
     mx3 = "// Magnetisation\n"
     mx3 += 'm.LoadFile("m0.omf")\n'
-    # Array of all subregions and left over and dictionary relating names to subregion index
+    # Array of all subregions and left over and dict relating names to subregion index
     subregion_arr, subregions_dict = identify_subregions(system)
     region_relators = {
         key: [] for key in subregions_dict
