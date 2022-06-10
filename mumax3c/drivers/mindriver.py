@@ -39,3 +39,7 @@ class MinDriver(Driver):
 
     def _checkargs(self, **kwargs):
         pass  # no kwargs should be checked
+
+    @property
+    def _x(self):
+        return "t"  # TODO correct iteration
