@@ -13,10 +13,8 @@ def identify_subregions(system):
             # Extract the subregion
             subfield = system.m[key]
             # Add subregion values into region values
-            index_min = system.m.mesh.point2index(subfield.mesh.index2point((0, 0, 0)))
-            index_max = np.add(index_min, subfield.mesh.n)
-            slices = [slice(i, j) for i, j in zip(index_min, index_max)]
-            subregion_values[tuple(slices)] = subregions_dict[key]
+            slices = system.m.mesh.region2slices(subfield.mesh.region)
+            subregion_values[slices] = subregions_dict[key]
     else:
         subregions_dict = dict()
 
