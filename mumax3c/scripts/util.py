@@ -51,7 +51,7 @@ def mumax3_regions(system):
         for i, val in enumerate(uniq_arr, start=next_uni_index):
             region_values[(ms_arr == val) & bool_arr] = i
             region_relators[key].append(i)
-            mx3 += f"Msat.setregion({i}, {val})\n\n"
+            mx3 += f"Msat.setregion({i}, {val})\n"
 
         next_uni_index = i + 1  # next unique index
 
@@ -59,8 +59,8 @@ def mumax3_regions(system):
     system.region_relators = region_relators  # Add dict to relate subregions to regions
     m3_regions.write("subregions.omf")
 
-    mx3 += 'regions.LoadFile("subregions.omf")\n'
-    print(region_relators)
+    mx3 += '\n'
+    mx3 += 'regions.LoadFile("subregions.omf")\n\n'
     return mx3
 
 
