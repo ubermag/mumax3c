@@ -81,18 +81,16 @@ def set_parameter(parameter, name, system):
 
     # Spatially varying parameter defined using subregions.
     elif isinstance(parameter, dict):
-        names = system.m.mesh.subregions.keys()
-        subregions_dict = dict(zip(names, range(len(names))))
-
         for key, value in parameter.items():
-            if isinstance(value, numbers.Real):
-                mx3 += f"{name}.setregion({subregions_dict[key]}, {value})\n"
-
-            elif isinstance(value, (list, tuple, np.ndarray)):
-                mx3 += (
-                    f"{name}.setregion({subregions_dict[key]}, "
-                    "vector({}, {}, {}))\n".format(*value)
-                )
+            # TODO: what if the key is r1:r2?
+            for region in system.region_relators[key]:
+                if isinstance(value, numbers.Real):
+                    mx3 += f"{name}.setregion({region}, {value})\n"
+                elif isinstance(value, (list, tuple, np.ndarray)):
+                    mx3 += (
+                        f"{name}.setregion({region}, "
+                        "vector({}, {}, {}))\n".format(*value)
+                    )
 
     else:
         # In mumax3, the parameter cannot be set using Field.
