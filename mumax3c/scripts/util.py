@@ -1,38 +1,72 @@
+import contextlib
+import itertools
 import numbers
 
 import discretisedfield as df
 import numpy as np
 
 
-def set_subregions(system):
-    names = system.m.mesh.subregions.keys()
-    subregions_dict = dict(zip(names, range(len(names))))
+def _identify_subregions(system):
+    subregion_indices = np.zeros((*system.m.mesh.n, 1), dtype=int)
+    subregion_dict = {0: ""}
+    if system.m.mesh.subregions:
+        subregion_dict.update(zip(itertools.count(start=1), system.m.mesh.subregions))
+        # Reversed to get same functionality as oommf if subregions overlap
+        for sr_index, sr_name in reversed(subregion_dict.items()):
+            with contextlib.suppress(KeyError):
+                slices = system.m.mesh.region2slices(system.m[sr_name].mesh.region)
+                subregion_indices[slices] = sr_index
+    return subregion_indices, subregion_dict
 
-    norm = system.m.norm
-    max_region_number = 256
 
-    def value_fun(pos):
-        tol = 1e-3
-        if norm(pos) < tol:
-            return max_region_number - 1
-        else:
-            for name, subregion in system.m.mesh.subregions.items():
-                if pos in subregion:
-                    return subregions_dict[name]
+def mumax3_regions(system):
+    """Convert ubermag subregions and changing Ms values into mumax3 regions.
 
-            if not system.m.mesh.subregions:  # subregions are not defined
-                return 0
-            else:
-                msg = f"Point {pos} does not belong to any region."
-                raise ValueError(msg)
+    In this method, 'region' refers to mumax3, 'subregion refers to ubermag.
+    """
+    mx3 = ""
+    sr_indices, sr_dict = _identify_subregions(system)
 
-    # Region field. Where the value is 255, Ms=0. In other regions Ms is const.
-    # Other regions are annotated with 0, 1, 2,... according to the subregions
-    # in field.mesh.
-    rf = df.Field(system.m.mesh, dim=1, value=value_fun)
-    rf.write("subregions.omf")
+    Ms_array = system.m.norm.array
+    if np.any(np.isnan(Ms_array)):  # Not sure about this.
+        raise ValueError("Ms values cannot be nan.")
+    if 0 in Ms_array:
+        region_indices = np.full((*system.m.mesh.n, 1), fill_value=255)
+        mx3 += "Msat.setRegion(255, 0.0)\n"
+        max_index = 254
+    else:
+        region_indices = np.empty((*system.m.mesh.n, 1))
+        max_index = 255
 
-    return 'regions.LoadFile("subregions.omf")\n'
+    # dict.fromkeys(..., []) would use the same list for all items
+    region_relator = dict.fromkeys(sr_dict.values())
+    for key in region_relator:
+        region_relator[key] = []
+    unique_index = -1
+
+    for sr_index, sr_name in sr_dict.items():
+        for ms in np.unique(Ms_array[sr_indices == sr_index]):
+            if ms == 0:
+                continue
+            unique_index += 1
+            mx3 += f"Msat.setregion({unique_index}, {ms})\n"
+            region_indices[(sr_indices == sr_index) & (Ms_array == ms)] = unique_index
+            region_relator[sr_name].append(unique_index)
+
+    if unique_index > max_index:
+        raise ValueError(
+            "mumax3 does not allow more than 256 seperate regions to be set. The"
+            " number of mumax3 regions is determined by the number of unique"
+            " combinations of `discretisedfield` subregions and saturation"
+            f" magnetisation values. Found {len(system.m.mesh.subregions)} subregions"
+            f" and {len(np.unique(Ms_array))} Ms values resulting in {unique_index}"
+            " mumax3 regions."
+        )
+
+    df.Field(system.m.mesh, dim=1, value=region_indices).write("mumax3_regions.omf")
+    system.region_relator = region_relator
+    mx3 += '\nregions.LoadFile("mumax3_regions.omf")\n\n'
+    return mx3
 
 
 def set_parameter(parameter, name, system):

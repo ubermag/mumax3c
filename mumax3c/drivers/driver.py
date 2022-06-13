@@ -90,6 +90,7 @@ class Driver(mm.ExternalDriver):
                 self._write_info_json(system, **kwargs)
 
         # TODO if self/system is modified for mx3 creation reset it here
+        delattr(system, "region_relator")
 
     def _call(self, system, runner, verbose=1, dry_run=False, **kwargs):
         if runner is None:
