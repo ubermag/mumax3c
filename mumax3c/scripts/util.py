@@ -1,73 +1,64 @@
+import itertools
 import numbers
 
 import discretisedfield as df
 import numpy as np
 
 
-def identify_subregions(system):
-    subregion_values = np.zeros_like(system.m.norm.array)
+def _identify_subregions(system):
+    subregion_indices = np.zeros(system.m.mesh.n, dtype=int)
+    subregion_dict = {0: ""}
     if system.m.mesh.subregions:
-        names = system.m.mesh.subregions.keys()
-        subregions_dict = dict(zip(names, range(1, len(names) + 1)))
+        subregion_dict.update(zip(itertools.count(start=1), system.m.mesh.subregions))
         # Reversed to get same functionality as oommf if subregions overlap
-        for key in reversed(subregions_dict):
-            # Extract the subregion
-            subfield = system.m[key]
-            # Add subregion values into region values
-            slices = system.m.mesh.region2slices(subfield.mesh.region)
-            subregion_values[slices] = subregions_dict[key]
-    else:
-        subregions_dict = dict()
-
-    subregions_dict["ee"] = 0  # Everything else has values of 0
-    return subregion_values, subregions_dict
+        for sr_name, sr_index in reversed(subregion_dict.items()):
+            slices = system.m.mesh.region2slices(system.m[sr_name].mesh.region)
+            subregion_indices[slices] = sr_index
+    return subregion_indices, subregion_dict
 
 
 def mumax3_regions(system):
-    # Region refers to mumax3
-    # subregion refers to ubermag
-    system.m.orientation.write("m0.omf")
+    """Convert ubermag subregions and changing Ms values into mumax3 regions."""
+    # region refers to mumax3; subregion refers to ubermag
+    system.m.orientation.write("m0.omf")  # TODO: 3 lines can be moved to drive script.
     mx3 = "// Magnetisation\n"
     mx3 += 'm.LoadFile("m0.omf")\n'
-    # Array of all subregions and left over and dict relating names to subregion index
-    subregion_arr, subregions_dict = identify_subregions(system)
-    region_relators = {
-        key: [] for key in subregions_dict
-    }  # relates subregion to mumax3 region
-    ms_arr = system.m.norm.array
-    region_values = np.empty_like(ms_arr)
 
-    next_uni_index = 0  # next unique index
-    for key in region_relators:
-        # Select subregion
-        sub_region_val = subregions_dict[key]
-        bool_arr = subregion_arr == sub_region_val
+    sr_indices, sr_dict = _identify_subregions(system)
 
-        # Find unique Ms within subregion
-        uniq_arr = np.unique(ms_arr[bool_arr])
-        if next_uni_index + uniq_arr.size > 255:
-            msg = "mumax3 does not allow for than 255 seperate regions to be set. "
-            msg += "The number of mumax3 regions is determined by the number of unique "
-            msg += (
-                "combinations of `discretisedfield` subregions and saturation"
-                " magnetisation."
-            )
-            raise ValueError(msg)
+    Ms_array = system.m.norm.array
+    if any(np.isnan(Ms_array)):  # Not sure about this.
+        raise ValueError("Ms values cannot be nan.")
+    if 0 in Ms_array:
+        region_indices = np.full((*system.m.mesh.n, 1), fill_value=255)
+        mx3 += "Msat.setRegion(255, 0.0)\n"
+        max_index = 254
+    else:
+        region_indices = np.empty((*system.m.mesh.n, 1))
+        max_index = 255
 
-        # Index all unique Ms within region
-        for i, val in enumerate(uniq_arr, start=next_uni_index):
-            region_values[(ms_arr == val) & bool_arr] = i
-            region_relators[key].append(i)
-            mx3 += f"Msat.setregion({i}, {val})\n"
+    region_relator = dict.fromkeys(sr_dict.values(), [])
+    unique_index = 0
 
-        next_uni_index = i + 1  # next unique index
+    for sr_index, sr_name in sr_dict.items():
+        for ms in np.unique(Ms_array[sr_indices == sr_index]):
+            if ms == 0:
+                continue
+            if unique_index > max_index:
+                raise ValueError(
+                    "mumax3 does not allow more than 256 seperate regions to be set."
+                    " The number of mumax3 regions is determined by the number of"
+                    " unique combinations of `discretisedfield` subregions and"
+                    " saturation magnetisation values."
+                )
+            mx3 += f"Msat.setregion({unique_index}, {ms})\n"
+            region_indices[(sr_indices == sr_index) & (Ms_array == ms)] = unique_index
+            region_relator[sr_name].append(unique_index)
+            unique_index += 1
 
-    m3_regions = df.Field(system.m.mesh, dim=1, value=region_values)
-    system.region_relators = region_relators  # Add dict to relate subregions to regions
-    m3_regions.write("subregions.omf")
-
-    mx3 += "\n"
-    mx3 += 'regions.LoadFile("subregions.omf")\n\n'
+    df.Field(system.m.mesh, dim=1, value=region_indices).write("subregions.omf")
+    system.region_relator = region_relator
+    mx3 += '\nregions.LoadFile("subregions.omf")\n\n'
     return mx3
 
 
