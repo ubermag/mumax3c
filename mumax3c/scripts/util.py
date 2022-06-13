@@ -60,7 +60,7 @@ def mumax3_regions(system):
             " combinations of `discretisedfield` subregions and saturation"
             f" magnetisation values. Found {len(system.m.mesh.subregions)} subregions"
             f" and {len(np.unique(Ms_array))} Ms values resulting in {unique_index} >"
-            f" {max_index} mumax regions."
+            f" {max_index} mumax3 regions."
         )
 
     df.Field(system.m.mesh, dim=1, value=region_indices).write("mumax3_regions.omf")
