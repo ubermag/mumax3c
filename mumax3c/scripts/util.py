@@ -1,3 +1,4 @@
+import contextlib
 import itertools
 import numbers
 
@@ -6,14 +7,15 @@ import numpy as np
 
 
 def _identify_subregions(system):
-    subregion_indices = np.zeros(system.m.mesh.n, dtype=int)
+    subregion_indices = np.zeros((*system.m.mesh.n, 1), dtype=int)
     subregion_dict = {0: ""}
     if system.m.mesh.subregions:
         subregion_dict.update(zip(itertools.count(start=1), system.m.mesh.subregions))
         # Reversed to get same functionality as oommf if subregions overlap
-        for sr_name, sr_index in reversed(subregion_dict.items()):
-            slices = system.m.mesh.region2slices(system.m[sr_name].mesh.region)
-            subregion_indices[slices] = sr_index
+        for sr_index, sr_name in reversed(subregion_dict.items()):
+            with contextlib.suppress(KeyError):
+                slices = system.m.mesh.region2slices(system.m[sr_name].mesh.region)
+                subregion_indices[slices] = sr_index
     return subregion_indices, subregion_dict
 
 
@@ -27,7 +29,7 @@ def mumax3_regions(system):
     sr_indices, sr_dict = _identify_subregions(system)
 
     Ms_array = system.m.norm.array
-    if any(np.isnan(Ms_array)):  # Not sure about this.
+    if np.any(np.isnan(Ms_array)):  # Not sure about this.
         raise ValueError("Ms values cannot be nan.")
     if 0 in Ms_array:
         region_indices = np.full((*system.m.mesh.n, 1), fill_value=255)
@@ -37,7 +39,10 @@ def mumax3_regions(system):
         region_indices = np.empty((*system.m.mesh.n, 1))
         max_index = 255
 
-    region_relator = dict.fromkeys(sr_dict.values(), [])
+    # dict.fromkeys(..., []) would use the same list for all items
+    region_relator = dict.fromkeys(sr_dict.values())
+    for key in region_relator:
+        region_relator[key] = []
     unique_index = 0
 
     for sr_index, sr_name in sr_dict.items():
