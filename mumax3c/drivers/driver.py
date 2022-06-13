@@ -106,9 +106,9 @@ class Driver(mm.ExternalDriver):
         lastovffile = sorted(ovffiles)[-1]
         # pass Field.array instead of Field for better performance
         # Mumax3 norm changes so need to set back to old norm
-        norm_field = system.m.norm
+        # norm_field = system.m.norm
         system.m.value = df.Field.fromfile(str(lastovffile)).array
-        system.m.norm = norm_field
+        # system.m.norm = norm_field
 
         system.table = ut.Table.fromfile(
             str(pathlib.Path(f"{system.name}.out/table.txt")), x=self._x
