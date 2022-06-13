@@ -83,7 +83,7 @@ def set_parameter(parameter, name, system):
     elif isinstance(parameter, dict):
         for key, value in parameter.items():
             # TODO: what if the key is r1:r2?
-            for region in system.region_relators[key]:
+            for region in system.region_relator[key]:
                 if isinstance(value, numbers.Real):
                     mx3 += f"{name}.setregion({region}, {value})\n"
                 elif isinstance(value, (list, tuple, np.ndarray)):
