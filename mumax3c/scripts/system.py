@@ -6,6 +6,6 @@ def system_script(system, **kwargs):
     mx3 = ""
     mx3 += mc.scripts.mesh_script(system)
     mx3 += mc.scripts.energy_script(system)
-    mx3 += mc.scripts.mumax3_regions(system)
+    mx3 += mc.scripts.magnetisation_script(system)
 
     return mx3

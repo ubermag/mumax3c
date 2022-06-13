@@ -20,12 +20,11 @@ def _identify_subregions(system):
 
 
 def mumax3_regions(system):
-    """Convert ubermag subregions and changing Ms values into mumax3 regions."""
-    # region refers to mumax3; subregion refers to ubermag
-    system.m.orientation.write("m0.omf")  # TODO: 3 lines can be moved to drive script.
-    mx3 = "// Magnetisation\n"
-    mx3 += 'm.LoadFile("m0.omf")\n'
+    """Convert ubermag subregions and changing Ms values into mumax3 regions.
 
+    In this method, 'region' refers to mumax3, 'subregion refers to ubermag.
+    """
+    mx3 = ""
     sr_indices, sr_dict = _identify_subregions(system)
 
     Ms_array = system.m.norm.array
