@@ -61,9 +61,9 @@ def mumax3_regions(system):
             region_relator[sr_name].append(unique_index)
             unique_index += 1
 
-    df.Field(system.m.mesh, dim=1, value=region_indices).write("subregions.omf")
+    df.Field(system.m.mesh, dim=1, value=region_indices).write("mumax3_regions.omf")
     system.region_relator = region_relator
-    mx3 += '\nregions.LoadFile("subregions.omf")\n\n'
+    mx3 += '\nregions.LoadFile("mumax3_regions.omf")\n\n'
     return mx3
 
 
