@@ -42,23 +42,26 @@ def mumax3_regions(system):
     region_relator = dict.fromkeys(sr_dict.values())
     for key in region_relator:
         region_relator[key] = []
-    unique_index = 0
+    unique_index = -1
 
     for sr_index, sr_name in sr_dict.items():
         for ms in np.unique(Ms_array[sr_indices == sr_index]):
             if ms == 0:
                 continue
-            if unique_index > max_index:
-                raise ValueError(
-                    "mumax3 does not allow more than 256 seperate regions to be set."
-                    " The number of mumax3 regions is determined by the number of"
-                    " unique combinations of `discretisedfield` subregions and"
-                    " saturation magnetisation values."
-                )
+            unique_index += 1
             mx3 += f"Msat.setregion({unique_index}, {ms})\n"
             region_indices[(sr_indices == sr_index) & (Ms_array == ms)] = unique_index
             region_relator[sr_name].append(unique_index)
-            unique_index += 1
+
+    if unique_index > max_index:
+        raise ValueError(
+            "mumax3 does not allow more than 256 seperate regions to be set. The"
+            " number of mumax3 regions is determined by the number of unique"
+            " combinations of `discretisedfield` subregions and saturation"
+            f" magnetisation values. Found {len(system.m.mesh.subregions)} subregions"
+            f" and {len(np.unique(Ms_array))} Ms values resulting in {unique_index} >"
+            f" {max_index} mumax regions."
+        )
 
     df.Field(system.m.mesh, dim=1, value=region_indices).write("mumax3_regions.omf")
     system.region_relator = region_relator
