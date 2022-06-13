@@ -16,7 +16,7 @@ def test_mumax3_regions__no_subregion():
     assert len(subregions_dict) == 1
 
     mc.scripts.mumax3_regions(system)
-    subregions = df.Field.fromfile("subregions.omf")
+    subregions = df.Field.fromfile("mumax3_regions.omf")
     assert np.allclose(subregions.array, 0.0)
     assert hasattr(system, "region_relator")
     assert system.region_relator == {"": [0]}
@@ -38,7 +38,7 @@ def test_mumax3_regions__two_subregions():
     assert subregions_dict == {0: "", 1: "r1", 2: "r2"}
 
     mc.scripts.util.mumax3_regions(system)
-    subregions = df.Field.fromfile("subregions.omf")
+    subregions = df.Field.fromfile("mumax3_regions.omf")
     assert np.allclose(np.unique(subregions.array), [0.0, 1.0])
     assert hasattr(system, "region_relator")
     assert system.region_relator == {"": [], "r1": [0], "r2": [1]}
@@ -66,7 +66,7 @@ def test_mumax3_regions__two_subregions_gap_ms():
     assert subregions_dict == {0: "", 1: "r1", 2: "r2"}
 
     mc.scripts.util.mumax3_regions(system)
-    subregions = df.Field.fromfile("subregions.omf")
+    subregions = df.Field.fromfile("mumax3_regions.omf")
     assert np.allclose(np.unique(subregions.array), [0.0, 1.0, 2.0, 3.0, 4.0, 5.0])
     assert hasattr(system, "region_relator")
     assert system.region_relator == {"": [0, 1], "r1": [2, 3], "r2": [4, 5]}
@@ -80,7 +80,7 @@ def test_mumax3_regions__two_subregions_gap_ms():
     system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=ms_fun)
 
     mc.scripts.util.mumax3_regions(system)
-    subregions = df.Field.fromfile("subregions.omf")
+    subregions = df.Field.fromfile("mumax3_regions.omf")
     assert np.allclose(np.unique(subregions.array), [0, 1, 2, 255])
     assert hasattr(system, "region_relator")
     assert system.region_relator == {"": [0], "r1": [1], "r2": [2]}
@@ -101,7 +101,7 @@ def test_identify_subregions__two_overlaping_subregions():
     assert len(subregions_dict) == 3
 
     mc.scripts.util.mumax3_regions(system)
-    subregions = df.Field.fromfile("subregions.omf")
+    subregions = df.Field.fromfile("mumax3_regions.omf")
     assert np.allclose(np.unique(subregions.array), [0, 1])
     assert hasattr(system, "region_relator")
     assert system.region_relator == {"": [], "r1": [0], "r2": [1]}
@@ -120,7 +120,7 @@ def test_identify_subregions__two_overlaping_subregions():
     assert len(subregions_dict) == 3
 
     mc.scripts.util.mumax3_regions(system)
-    subregions = df.Field.fromfile("subregions.omf")
+    subregions = df.Field.fromfile("mumax3_regions.omf")
     assert np.allclose(np.unique(subregions.array), [0])
     assert hasattr(system, "region_relator")
     assert system.region_relator == {"": [], "r1": [0], "r2": []}
@@ -143,7 +143,7 @@ def test_identify_subregions__three_subregions():
     assert len(subregions_dict) == 4
 
     mc.scripts.util.mumax3_regions(system)
-    subregions = df.Field.fromfile("subregions.omf")
+    subregions = df.Field.fromfile("mumax3_regions.omf")
     assert np.allclose(np.unique(subregions.array), [0, 1, 2])
     assert hasattr(system, "region_relator")
     assert system.region_relator == {"": [], "r1": [0], "r2": [1], "r3": [2]}
