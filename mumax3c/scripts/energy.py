@@ -8,8 +8,7 @@ import mumax3c as mc
 def energy_script(system):
     mx3 = ""
     for term in system.energy:  # TODO: different terms of same class not allowed
-        name = term.name
-        mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](system, name)
+        mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](term, system)
 
     # Demagnetisation in mumax3 is enabled by default.
     if mm.Demag() not in system.energy:
@@ -18,17 +17,17 @@ def energy_script(system):
     return mx3
 
 
-def exchange_script(system, name):
+def exchange_script(term, system):
     mx3 = "// Exchange energy\n"
     mx3 += mc.scripts.set_parameter(
-        parameter=getattr(system.energy, name).A, name="Aex", system=system
+        parameter=term.A, name="Aex", system=system
     )
     return mx3
 
 
-def zeeman_script(system, name):
+def zeeman_script(term, system):
     # mx3 file takes B, not H.
-    H = getattr(system.energy, name).H
+    H = term.H
     if isinstance(H, dict):
         B = dict()
         for key, value in H.items():
@@ -42,40 +41,43 @@ def zeeman_script(system, name):
 
 
 # Needs to be tidied up
-def uniaxialanisotropy_script(system, name):
+def uniaxialanisotropy_script(term, system):
     mx3 = "// UniaxialAnisotropy\n"
-    if not isinstance(getattr(system.energy, name).K, ts.descriptors.Parameter):
+    if not isinstance(term.K, ts.descriptors.Parameter):
         mx3 += mc.scripts.set_parameter(
-            parameter=getattr(system.energy, name).K, name="Ku1", system=system
+            parameter=term.K, name="Ku1", system=system
         )
     else:
         mx3 += mc.scripts.set_parameter(
-            parameter=getattr(system.energy, name).K1, name="Ku1", system=system
+            parameter=term.K1, name="Ku1", system=system
         )
         mx3 += mc.scripts.set_parameter(
-            parameter=getattr(system.energy, name).K2, name="Ku2", system=system
+            parameter=term.K2, name="Ku2", system=system
         )
 
     mx3 += mc.scripts.set_parameter(
-        parameter=getattr(system.energy, name).u, name="anisU", system=system
+        parameter=term.u, name="anisU", system=system
     )
     return mx3
 
 
-def demag_script(system, name):
+def demag_script(term, system):
     mx3 = "// Demag\n"
     mx3 += "enabledemag = true\n\n"
     return mx3
 
 
-def dmi_script(system, name):
+def dmi_script(term, system):
     mx3 = ""
     if system.energy.dmi.crystalclass.lower() in ["t", "o"]:
         param_name = "Dbulk"
-        param_val = getattr(system.energy, name).D
+        param_val = term.D
     elif system.energy.dmi.crystalclass.lower() in ["cnv_z", "cnv"]:
         param_name = "Dind"
-        param_val = -getattr(system.energy, name).D
+        if isinstance(term, dict):
+            param_val = {sub_reg: - val for sub_reg, val in term.items()}
+        else:
+            param_val = - term.D
         # In mumax3 D = -D for interfacial DMI
     else:
         msg = (
@@ -92,16 +94,16 @@ def dmi_script(system, name):
     return mx3
 
 
-def cubicanisotropy_script(system, name):
+def cubicanisotropy_script(term, system):
     mx3 = "// CubicAnisotropy\n"
     mx3 += mc.scripts.set_parameter(
-        parameter=getattr(system.energy, name).K, name="Kc1", system=system
+        parameter=term.K, name="Kc1", system=system
     )
     mx3 += mc.scripts.set_parameter(
-        parameter=getattr(system.energy, name).u1, name="anisC1", system=system
+        parameter=term.u1, name="anisC1", system=system
     )
     mx3 += mc.scripts.set_parameter(
-        parameter=getattr(system.energy, name).u2, name="anisC2", system=system
+        parameter=term.u2, name="anisC2", system=system
     )
 
     return mx3
