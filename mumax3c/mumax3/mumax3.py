@@ -1,5 +1,4 @@
 import abc
-import datetime
 import logging
 import os
 import shutil
@@ -15,10 +14,18 @@ import mumax3c as mc
 log = logging.getLogger("mumax3c")
 
 
-class Mumax3Runner(metaclass=abc.ABCMeta):
+class Mumax3Runner(mm.ExternalRunner):
     """Abstract class for running mumax3."""
 
-    def call(self, argstr, need_stderr=False, verbose=1, dry_run=False):
+    def call(
+        self,
+        argstr,
+        need_stderr=False,
+        verbose=1,
+        total=None,
+        glob_name="",
+        dry_run=False,
+    ):
         """Calls mumax3 by passing ``argstr`` to mumax3.
 
         Parameters
@@ -71,21 +78,22 @@ class Mumax3Runner(metaclass=abc.ABCMeta):
         if dry_run:
             return self._call(argstr=argstr, need_stderr=need_stderr, dry_run=True)
 
-        if verbose >= 1:
-            now = datetime.datetime.now()
-            timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
-                now.year, now.month, now.day, now.hour, now.minute
+        if verbose >= 2 and total:
+            context = uu.progress.bar(
+                total=total,
+                package_name="mumax3",
+                runner_name=self.__class__.__name__,
+                glob_name=glob_name,
             )
-            print(
-                f"Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ", end=""
+        elif verbose >= 1:
+            context = uu.progress.summary(
+                package_name="mumax3", runner_name=self.__class__.__name__
             )
-            tic = time.time()
+        else:
+            context = uu.progress.quiet()
 
-        res = self._call(argstr=argstr, need_stderr=need_stderr)
-        if verbose >= 1:
-            toc = time.time()
-            seconds = "({:0.1f} s)".format(toc - tic)
-            print(seconds)  # append seconds to the previous print.
+        with context:
+            res = self._call(argstr=argstr, need_stderr=need_stderr)
 
         if res.returncode != 0:
             msg = "Error in mumax3 run.\n"
