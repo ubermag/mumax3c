@@ -76,6 +76,8 @@ def unique_with_accuracy(array, accuracy=14):
     form 0.xxx. Rounding is then done with ``accuracy`` post-decimal digits.
 
     """
+    if len(array.flat) <= 1:
+        return np.array(array.flat)
     array_max = np.max(array)
     return np.unique(np.round(array / array_max), decimals=accuracy) * array_max
 
