@@ -124,21 +124,18 @@ def _set_inter_reg_params(key, value, name, system):
             "Only Aex and Dind can be set for different region in mumax3."
             f" Cannot set inter region {name}"
         )
-    elif np.any([len(system.region_relator[sub_reg]) > 1 for sub_reg in sub_regions]):
-        raise ValueError(
-            "For now, cannot set inter subregion Exchange or DMI when one of"
-            " the subregions has more than one Ms values excluding Ms = 0."
-            f" The subregions to mumax3 regions relation is {system.region_relator}"
-        )
-    elif name == "Aex":
-        return (
-            f"\next_InterExchange({system.region_relator[sub_regions[0]][0]},"
-            f" {system.region_relator[sub_regions[1]][0]},"
-            f" {value})\n"
-        )
+    # elif np.any([len(system.region_relator[sub_reg]) > 1 for sub_reg in sub_regions]):
+    #     raise ValueError(
+    #         "For now, cannot set inter subregion Exchange or DMI when one of"
+    #         " the subregions has more than one Ms values excluding Ms = 0."
+    #         f" The subregions to mumax3 regions relation is {system.region_relator}"
+    #     )
     else:
-        return (
-            f"\next_InterDind({system.region_relator[sub_regions[0]][0]},"
-            f" {system.region_relator[sub_regions[1]][0]},"
-            f" {value}\n)"
+        reg_combinations = itertools.product(
+            system.region_relator[sub_regions[0]], system.region_relator[sub_regions[1]]
         )
+        for reg_pair in reg_combinations:
+            if name == "Aex":
+                return f"\next_InterExchange({reg_pair[0]}, {reg_pair[1]}, {value})\n"
+            else:
+                return f"\next_InterDind({reg_pair[0]}, {reg_pair[1]}, {value})\n"
