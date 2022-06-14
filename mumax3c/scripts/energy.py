@@ -1,4 +1,5 @@
 import micromagneticmodel as mm
+import ubermagutil.typesystem as ts
 import numpy as np
 
 import mumax3c as mc
@@ -43,7 +44,7 @@ def zeeman_script(system, name):
 # Needs to be tidied up
 def uniaxialanisotropy_script(system, name):
     mx3 = "// UniaxialAnisotropy\n"
-    if hasattr(getattr(system.energy, name), "K"):
+    if not isinstance(getattr(system.energy, name).K, ts.descriptors.Parameter):
         mx3 += mc.scripts.set_parameter(
             parameter=getattr(system.energy, name).K, name="Ku1", system=system
         )
