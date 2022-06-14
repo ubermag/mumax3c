@@ -82,15 +82,17 @@ def set_parameter(parameter, name, system):
     # Spatially varying parameter defined using subregions.
     elif isinstance(parameter, dict):
         for key, value in parameter.items():
-            # TODO: what if the key is r1:r2?
-            for region in system.region_relator[key]:
-                if isinstance(value, numbers.Real):
-                    mx3 += f"{name}.setregion({region}, {value})\n"
-                elif isinstance(value, (list, tuple, np.ndarray)):
-                    mx3 += (
-                        f"{name}.setregion({region}, "
-                        "vector({}, {}, {}))\n".format(*value)
-                    )
+            if ":" in key:
+                mx3 += _set_inter_reg_params(key, value, name, system)
+            else:
+                for region in system.region_relator[key]:
+                    if isinstance(value, numbers.Real):
+                        mx3 += f"{name}.setregion({region}, {value})\n"
+                    elif isinstance(value, (list, tuple, np.ndarray)):
+                        mx3 += (
+                            f"{name}.setregion({region}, "
+                            "vector({}, {}, {}))\n".format(*value)
+                        )
 
     else:
         # In mumax3, the parameter cannot be set using Field.
@@ -98,3 +100,29 @@ def set_parameter(parameter, name, system):
         raise TypeError(msg)
 
     return mx3
+
+
+def _set_inter_reg_params(key, value, name, system):
+    sub_regions = key.split(":")
+    if name not in {"Aex", "Dind"}:  # ext_InterDbulk not available.
+        raise ValueError(
+            "Only Aex and Dind can be set for different region in mumax3."
+            f" Cannot set inter region {name}"
+        )
+    elif np.any([len(system.region_relator(sub_reg)) > 1 for sub_reg in sub_regions]):
+        raise ValueError(
+            "For now, cannot set inter subregion Exchange or DMI when one of"
+            " the subregions has more than one Ms values excluding Ms = 0."
+        )
+    elif name == "Aex":
+        return (
+            f"ext_InterExchange({system.region_relator[sub_regions[0]]},"
+            f" {system.region_relator[sub_regions[1]]},"
+            f" {value})"
+            )
+    else:
+        return (
+            f"ext_InterDind({system.region_relator[sub_regions[0]]},"
+            f" {system.region_relator[sub_regions[1]]},"
+            f" {value})"
+            )
