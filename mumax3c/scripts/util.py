@@ -45,8 +45,7 @@ def mumax3_regions(system):
     unique_index = -1
 
     for sr_index, sr_name in sr_dict.items():
-        # Need alternative for unique
-        for ms in np.unique(Ms_array[sr_indices == sr_index]):
+        for ms in unique_with_accuracy(Ms_array[sr_indices == sr_index]):
             if ms == 0:
                 continue
             unique_index += 1
@@ -60,14 +59,25 @@ def mumax3_regions(system):
             " number of mumax3 regions is determined by the number of unique"
             " combinations of `discretisedfield` subregions and saturation"
             f" magnetisation values. Found {len(system.m.mesh.subregions)} subregions"
-            f" and {len(np.unique(Ms_array))} Ms values resulting in {unique_index}"
-            " mumax3 regions."
+            f" and {len(unique_with_accuracy(Ms_array))} Ms values resulting in"
+            f" {unique_index} mumax3 regions."
         )
 
     df.Field(system.m.mesh, dim=1, value=region_indices).write("mumax3_regions.omf")
     system.region_relator = region_relator
     mx3 += '\nregions.LoadFile("mumax3_regions.omf")\n\n'
     return mx3
+
+
+def unique_with_accuracy(array, accuracy=14):
+    """Find unique float values with accuracy post-decimal digits.
+
+    The method divides the input by its maximum value to ensure that the values have the
+    form 0.xxx. Rounding is then done with ``accuracy`` post-decimal digits.
+
+    """
+    array_max = np.max(array)
+    return np.unique(np.round(array / array_max), decimals=accuracy) * array_max
 
 
 def set_parameter(parameter, name, system):
