@@ -19,9 +19,7 @@ def energy_script(system):
 
 def exchange_script(term, system):
     mx3 = "// Exchange energy\n"
-    mx3 += mc.scripts.set_parameter(
-        parameter=term.A, name="Aex", system=system
-    )
+    mx3 += mc.scripts.set_parameter(parameter=term.A, name="Aex", system=system)
     return mx3
 
 
@@ -44,20 +42,12 @@ def zeeman_script(term, system):
 def uniaxialanisotropy_script(term, system):
     mx3 = "// UniaxialAnisotropy\n"
     if not isinstance(term.K, ts.descriptors.Parameter):
-        mx3 += mc.scripts.set_parameter(
-            parameter=term.K, name="Ku1", system=system
-        )
+        mx3 += mc.scripts.set_parameter(parameter=term.K, name="Ku1", system=system)
     else:
-        mx3 += mc.scripts.set_parameter(
-            parameter=term.K1, name="Ku1", system=system
-        )
-        mx3 += mc.scripts.set_parameter(
-            parameter=term.K2, name="Ku2", system=system
-        )
+        mx3 += mc.scripts.set_parameter(parameter=term.K1, name="Ku1", system=system)
+        mx3 += mc.scripts.set_parameter(parameter=term.K2, name="Ku2", system=system)
 
-    mx3 += mc.scripts.set_parameter(
-        parameter=term.u, name="anisU", system=system
-    )
+    mx3 += mc.scripts.set_parameter(parameter=term.u, name="anisU", system=system)
     return mx3
 
 
@@ -75,9 +65,9 @@ def dmi_script(term, system):
     elif system.energy.dmi.crystalclass.lower() in ["cnv_z", "cnv"]:
         param_name = "Dind"
         if isinstance(term, dict):
-            param_val = {sub_reg: - val for sub_reg, val in term.items()}
+            param_val = {sub_reg: -val for sub_reg, val in term.items()}
         else:
-            param_val = - term.D
+            param_val = -term.D
         # In mumax3 D = -D for interfacial DMI
     else:
         msg = (
@@ -96,15 +86,9 @@ def dmi_script(term, system):
 
 def cubicanisotropy_script(term, system):
     mx3 = "// CubicAnisotropy\n"
-    mx3 += mc.scripts.set_parameter(
-        parameter=term.K, name="Kc1", system=system
-    )
-    mx3 += mc.scripts.set_parameter(
-        parameter=term.u1, name="anisC1", system=system
-    )
-    mx3 += mc.scripts.set_parameter(
-        parameter=term.u2, name="anisC2", system=system
-    )
+    mx3 += mc.scripts.set_parameter(parameter=term.K, name="Kc1", system=system)
+    mx3 += mc.scripts.set_parameter(parameter=term.u1, name="anisC1", system=system)
+    mx3 += mc.scripts.set_parameter(parameter=term.u2, name="anisC2", system=system)
 
     return mx3
 
