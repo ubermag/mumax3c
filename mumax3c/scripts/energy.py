@@ -1,6 +1,6 @@
 import micromagneticmodel as mm
-import ubermagutil.typesystem as ts
 import numpy as np
+import ubermagutil.typesystem as ts
 
 import mumax3c as mc
 
