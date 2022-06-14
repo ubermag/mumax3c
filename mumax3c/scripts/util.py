@@ -119,10 +119,10 @@ def _set_inter_reg_params(key, value, name, system):
             f"ext_InterExchange({system.region_relator[sub_regions[0]]},"
             f" {system.region_relator[sub_regions[1]]},"
             f" {value})"
-            )
+        )
     else:
         return (
             f"ext_InterDind({system.region_relator[sub_regions[0]]},"
             f" {system.region_relator[sub_regions[1]]},"
             f" {value})"
-            )
+        )
