@@ -45,6 +45,7 @@ def mumax3_regions(system):
     unique_index = -1
 
     for sr_index, sr_name in sr_dict.items():
+        # Need alternative for unique
         for ms in np.unique(Ms_array[sr_indices == sr_index]):
             if ms == 0:
                 continue
