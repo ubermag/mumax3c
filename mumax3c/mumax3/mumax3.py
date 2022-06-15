@@ -243,7 +243,9 @@ def overhead():
 
             # Running mumax3 directly.
             mumax3_runner = mc.runner.runner
-            mx3path = str((pathlib.Path() / "drive-0" / "macrospin.mx3").resolve())
+            mx3path = str(
+                (pathlib.Path(system.name) / "drive-0" / "macrospin.mx3").resolve()
+            )
             mumax3_start = time.time()
             mumax3_runner.call(mx3path)
             mumax3_stop = time.time()
