@@ -35,18 +35,20 @@ class TimeDriver(Driver):
 
     """
 
-    _allowed_attributes = ["DemagAccuracy",
-                           "dt",
-                           "FixDt",
-                           "Headroom",
-                           "LastErr",
-                           "MaxDt",
-                           "MaxErr",
-                           "MinDt",
-                           "NEval",
-                           "PeakErr",
-                           "step",
-                           "t"]
+    _allowed_attributes = [
+        "DemagAccuracy",
+        "dt",
+        "FixDt",
+        "Headroom",
+        "LastErr",
+        "MaxDt",
+        "MaxErr",
+        "MinDt",
+        "NEval",
+        "PeakErr",
+        "step",
+        "t",
+    ]
 
     def _checkargs(self, **kwargs):
         t, n = kwargs["t"], kwargs["n"]

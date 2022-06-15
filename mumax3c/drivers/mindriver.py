@@ -35,14 +35,16 @@ class MinDriver(Driver):
 
     """
 
-    _allowed_attributes = ["MinimizerStop",
-                           "DemagAccuracy",
-                           "Headroom",
-                           "LastErr",
-                           "MaxErr",
-                           "MinimizerSamples",
-                           "NEval",
-                           "PeakErr"]
+    _allowed_attributes = [
+        "MinimizerStop",
+        "DemagAccuracy",
+        "Headroom",
+        "LastErr",
+        "MaxErr",
+        "MinimizerSamples",
+        "NEval",
+        "PeakErr",
+    ]
 
     def _checkargs(self, **kwargs):
         pass  # no kwargs should be checked
