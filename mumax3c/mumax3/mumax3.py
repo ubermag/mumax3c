@@ -1,8 +1,9 @@
 import abc
 import logging
-import os
+import pathlib
 import shutil
 import subprocess as sp
+import tempfile
 import time
 
 import micromagneticmodel as mm
@@ -230,21 +231,22 @@ def overhead():
     True
 
     """
-    # Running mumax3 through mumax3c.
-    system = mm.examples.macrospin()
-    td = mc.TimeDriver()
-    mumax3c_start = time.time()
-    td.drive(system, t=1e-12, n=1, save=True, overwrite=True)
-    mumax3c_stop = time.time()
-    mumax3c_time = mumax3c_stop - mumax3c_start
+    with tempfile.TemporaryDirectory() as workingdir:
+        with uu.changedir(workingdir):
+            # Running mumax3 through mumax3c.
+            system = mm.examples.macrospin()
+            td = mc.TimeDriver()
+            mumax3c_start = time.time()
+            td.drive(system, t=1e-12)
+            mumax3c_stop = time.time()
+            mumax3c_time = mumax3c_stop - mumax3c_start
 
-    # Running mumax3 directly.
-    mumax3_runner = mc.runner.runner
-    mx3path = os.path.realpath(os.path.join(system.name, "drive-0", "macrospin.mx3"))
-    mumax3_start = time.time()
-    mumax3_runner.call(mx3path)
-    mumax3_stop = time.time()
-    mumax3_time = mumax3_stop - mumax3_start
-    mc.delete(system)
+            # Running mumax3 directly.
+            mumax3_runner = mc.runner.runner
+            mx3path = str((pathlib.Path() / "drive-0", "macrospin.mx3").resolve())
+            mumax3_start = time.time()
+            mumax3_runner.call(mx3path)
+            mumax3_stop = time.time()
+            mumax3_time = mumax3_stop - mumax3_start
 
     return mumax3c_time - mumax3_time
