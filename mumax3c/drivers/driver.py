@@ -23,7 +23,7 @@ class Driver(mm.ExternalDriver):
     def _checkargs(self, **kwargs):
         """Abstract method for checking arguments."""
 
-    def drive_kwargs_setup(self, abspath=False, **kwargs):
+    def drive_kwargs_setup(self, abspath=True, **kwargs):
         self._checkargs(**kwargs)
         kwargs.setdefault("abspath", abspath)
 
