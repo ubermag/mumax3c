@@ -75,6 +75,13 @@ class Driver(mm.ExternalDriver):
             single precision) or ``'txt'`` (text-based, double precision).
             Defaults to ``'bin8'``.
 
+        abspath : bool, optional
+
+            If ``abspath=True`` absolute paths for additional input files (e.g. initial
+            magnetisation) are written to the mx3 file. If ``abspath=False`` only
+            filenames are written to the file. Relative files require mumax3 to be run
+            from inside the directory containing the mx3 and other input files.
+
         """
         with uu.changedir(dirname):
             mx3 = mc.scripts.system_script(system, abspath)  # TODO
