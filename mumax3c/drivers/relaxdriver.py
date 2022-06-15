@@ -35,7 +35,14 @@ class RelaxDriver(Driver):
 
     """
 
-    _allowed_attributes = ["MinimizerStop", "DemagAccuracy"]
+    _allowed_attributes = ["MinimizerStop",
+                           "DemagAccuracy",
+                           "Headroom",
+                           "LastErr",
+                           "MaxErr",
+                           "RelaxTorqueThreshold",
+                           "NEval",
+                           "PeakErr"]
 
     def _checkargs(self, **kwargs):
         pass  # no kwargs should be checked
