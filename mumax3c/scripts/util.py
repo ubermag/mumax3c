@@ -96,18 +96,18 @@ def set_parameter(parameter, name, system):
 
     # Spatially varying parameter defined using subregions.
     elif isinstance(parameter, dict):
-        names = system.m.mesh.subregions.keys()
-        subregions_dict = dict(zip(names, range(len(names))))
-
         for key, value in parameter.items():
-            if isinstance(value, numbers.Real):
-                mx3 += f"{name}.setregion({subregions_dict[key]}, {value})\n"
-
-            elif isinstance(value, (list, tuple, np.ndarray)):
-                mx3 += (
-                    f"{name}.setregion({subregions_dict[key]}, "
-                    "vector({}, {}, {}))\n".format(*value)
-                )
+            if ":" in key:
+                mx3 += _set_inter_reg_params(key, value, name, system)
+            else:
+                for region in system.region_relator[key]:
+                    if isinstance(value, numbers.Real):
+                        mx3 += f"{name}.setregion({region}, {value})\n"
+                    elif isinstance(value, (list, tuple, np.ndarray)):
+                        mx3 += (
+                            f"{name}.setregion({region}, "
+                            "vector({}, {}, {}))\n".format(*value)
+                        )
 
     else:
         # In mumax3, the parameter cannot be set using Field.
@@ -115,3 +115,27 @@ def set_parameter(parameter, name, system):
         raise TypeError(msg)
 
     return mx3
+
+
+def _set_inter_reg_params(key, value, name, system):
+    sub_regions = key.split(":")
+    if name not in {"Aex", "Dind"}:  # ext_InterDbulk not available.
+        raise ValueError(
+            "Only Aex and Dind can be set for different region in mumax3."
+            f" Cannot set inter region {name}"
+        )
+    # elif np.any([len(system.region_relator[sub_reg]) > 1 for sub_reg in sub_regions]):
+    #     raise ValueError(
+    #         "For now, cannot set inter subregion Exchange or DMI when one of"
+    #         " the subregions has more than one Ms values excluding Ms = 0."
+    #         f" The subregions to mumax3 regions relation is {system.region_relator}"
+    #     )
+    else:
+        reg_combinations = itertools.product(
+            system.region_relator[sub_regions[0]], system.region_relator[sub_regions[1]]
+        )
+        for reg_pair in reg_combinations:
+            if name == "Aex":
+                return f"\next_InterExchange({reg_pair[0]}, {reg_pair[1]}, {value})\n"
+            else:
+                return f"\next_InterDind({reg_pair[0]}, {reg_pair[1]}, {value})\n"
