@@ -6,36 +6,47 @@ class TimeDriver(Driver):
 
     Only attributes in ``_allowed_attributes`` can be defined. For details on
     possible values for individual attributes and their default values, please
-    refer to ``Oxs_TimeDriver`` documentation (https://math.nist.gov/oommf/).
+    refer to ``Mumax3`` documentation (https://mumax.github.io/index.html).
 
     Examples
     --------
     1. Defining driver with a keyword argument.
 
-    >>> import oommfc as oc
+    >>> import mumax3c as mc
     ...
-    >>> td = oc.TimeDriver(total_iteration_limit=5)
+    >>> td = mc.TimeDriver(DemagAccuracy=6)
 
     2. Passing an argument which is not allowed.
 
-    >>> import oommfc as oc
+    >>> import mumax3c as mc
     ...
-    >>> td = oc.TimeDriver(myarg=1)
+    >>> td = mc.TimeDriver(myarg=1)
     Traceback (most recent call last):
        ...
     AttributeError: ...
 
     3. Getting the list of allowed attributes.
 
-    >>> import oommfc as oc
+    >>> import mumax3c as mc
     ...
-    >>> td = oc.TimeDriver()
+    >>> td = mc.TimeDriver()
     >>> td._allowed_attributes
     [...]
 
     """
 
-    _allowed_attributes = ["DemagAccuracy"]
+    _allowed_attributes = ["DemagAccuracy",
+                           "dt",
+                           "FixDt",
+                           "Headroom",
+                           "LastErr",
+                           "MaxDt",
+                           "MaxErr",
+                           "MinDt",
+                           "NEval",
+                           "PeakErr",
+                           "step",
+                           "t"]
 
     def _checkargs(self, **kwargs):
         t, n = kwargs["t"], kwargs["n"]
