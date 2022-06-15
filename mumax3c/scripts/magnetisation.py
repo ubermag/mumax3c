@@ -3,7 +3,7 @@ import os
 import mumax3c as mc
 
 
-def magnetisation_script(system, abspath):
+def magnetisation_script(system, abspath=True):
     system.m.orientation.write("m0.omf")
     m0_path = "m0.omf"
     if abspath:

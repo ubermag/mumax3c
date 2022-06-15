@@ -20,7 +20,7 @@ def _identify_subregions(system):
     return subregion_indices, subregion_dict
 
 
-def mumax3_regions(system, abspath):
+def mumax3_regions(system, abspath=True):
     """Convert ubermag subregions and changing Ms values into mumax3 regions.
 
     In this method, 'region' refers to mumax3, 'subregion refers to ubermag.
