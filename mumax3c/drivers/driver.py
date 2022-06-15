@@ -23,21 +23,23 @@ class Driver(mm.ExternalDriver):
     def _checkargs(self, **kwargs):
         """Abstract method for checking arguments."""
 
-    def drive_kwargs_setup(self, **kwargs):
+    def drive_kwargs_setup(self, abspath=False, **kwargs):
         self._checkargs(**kwargs)
+        kwargs.setdefault("abspath", abspath)
 
         # TODO OOMMF support additional arguments; are there equivalent options in mumax
         # fixed_subregions = None  # mumax?
         # compute = None  # mumax?
         # output_step = False  # mumax?
 
-    def schedule_kwargs_setup(self, **kwargs):
+    def schedule_kwargs_setup(self, abspath=True, **kwargs):
         self._checkargs(**kwargs)
+        kwargs.setdefault("abspath", abspath)
 
     def _write_input_files(self, system, **kwargs):
         self.write_mx3(system, **kwargs)
 
-    def write_mx3(self, system, dirname=".", ovf_format="bin8", **kwargs):
+    def write_mx3(self, system, dirname=".", ovf_format="bin8", abspath=True, **kwargs):
         """Write the mx3 file and related files.
 
         Takes ``micromagneticmodel.System`` and write the mx3 file (and related files)
@@ -75,7 +77,7 @@ class Driver(mm.ExternalDriver):
 
         """
         with uu.changedir(dirname):
-            mx3 = mc.scripts.system_script(system)  # TODO
+            mx3 = mc.scripts.system_script(system, abspath)  # TODO
             mx3 += mc.scripts.driver_script(
                 self,
                 system,

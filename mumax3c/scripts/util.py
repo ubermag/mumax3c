@@ -1,6 +1,7 @@
 import contextlib
 import itertools
 import numbers
+import os
 
 import discretisedfield as df
 import numpy as np
@@ -19,10 +20,14 @@ def _identify_subregions(system):
     return subregion_indices, subregion_dict
 
 
-def mumax3_regions(system):
+def mumax3_regions(system, abspath):
     """Convert ubermag subregions and changing Ms values into mumax3 regions.
 
     In this method, 'region' refers to mumax3, 'subregion refers to ubermag.
+
+    If ``abspath=True`` use an absolute path for the regions omf file otherwise just the
+    file name.
+
     """
     mx3 = ""
     sr_indices, sr_dict = _identify_subregions(system)
@@ -65,9 +70,12 @@ def mumax3_regions(system):
             f" {unique_index} mumax3 regions."
         )
 
-    df.Field(system.m.mesh, dim=1, value=region_indices).write("mumax3_regions.omf")
+    region_path = 'mumax3_regions.omf'
+    df.Field(system.m.mesh, dim=1, value=region_indices).write(region_path)
     system.region_relator = region_relator
-    mx3 += '\nregions.LoadFile("mumax3_regions.omf")\n\n'
+    if abspath:
+        region_path = os.path.abspath(region_path)
+    mx3 += f'\nregions.LoadFile("{region_path}")\n\n'
     return mx3
 
 
