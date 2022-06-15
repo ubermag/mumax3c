@@ -6,7 +6,7 @@ class MinDriver(Driver):
 
     Only attributes in ``_allowed_attributes`` can be defined. For details on
     possible values for individual attributes and their default values, please
-    refer to ``Mumax3`` documentation (https://mumax.github.io/index.html).
+    refer to ``Mumax3`` documentation (https://mumax.github.io).
 
     Examples
     --------
@@ -14,13 +14,13 @@ class MinDriver(Driver):
 
     >>> import mumax3c as mc
     ...
-    >>> td = mc.MinDriver(DemagAccuracy=6)
+    >>> md = mc.MinDriver(DemagAccuracy=6)
 
     2. Passing an argument which is not allowed.
 
     >>> import mumax3c as mc
     ...
-    >>> td = mc.MinDriver(myarg=1)
+    >>> md = mc.MinDriver(myarg=1)
     Traceback (most recent call last):
        ...
     AttributeError: ...
@@ -29,8 +29,8 @@ class MinDriver(Driver):
 
     >>> import mumax3c as mc
     ...
-    >>> td = mc.MinDriver()
-    >>> td._allowed_attributes
+    >>> md = mc.MinDriver()
+    >>> md._allowed_attributes
     [...]
 
     """

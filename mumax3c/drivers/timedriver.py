@@ -6,7 +6,7 @@ class TimeDriver(Driver):
 
     Only attributes in ``_allowed_attributes`` can be defined. For details on
     possible values for individual attributes and their default values, please
-    refer to ``Mumax3`` documentation (https://mumax.github.io/index.html).
+    refer to ``Mumax3`` documentation (https://mumax.github.io).
 
     Examples
     --------

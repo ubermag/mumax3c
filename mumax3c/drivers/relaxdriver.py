@@ -6,7 +6,7 @@ class RelaxDriver(Driver):
 
     Only attributes in ``_allowed_attributes`` can be defined. For details on
     possible values for individual attributes and their default values, please
-    refer to ``Mumax3`` documentation (https://mumax.github.io/index.html).
+    refer to ``Mumax3`` documentation (https://mumax.github.io).
 
     Examples
     --------
@@ -14,13 +14,13 @@ class RelaxDriver(Driver):
 
     >>> import mumax3c as mc
     ...
-    >>> td = mc.RelaxDriver(DemagAccuracy=6)
+    >>> rd = mc.RelaxDriver(DemagAccuracy=6)
 
     2. Passing an argument which is not allowed.
 
     >>> import mumax3c as mc
     ...
-    >>> td = mc.RelaxDriver(myarg=1)
+    >>> rd = mc.RelaxDriver(myarg=1)
     Traceback (most recent call last):
        ...
     AttributeError: ...
@@ -29,8 +29,8 @@ class RelaxDriver(Driver):
 
     >>> import mumax3c as mc
     ...
-    >>> td = mc.RelaxDriver()
-    >>> td._allowed_attributes
+    >>> rd = mc.RelaxDriver()
+    >>> rd._allowed_attributes
     [...]
 
     """
