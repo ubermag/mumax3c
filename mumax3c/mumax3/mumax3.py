@@ -237,7 +237,7 @@ def overhead():
             system = mm.examples.macrospin()
             td = mc.TimeDriver()
             mumax3c_start = time.time()
-            td.drive(system, t=1e-12)
+            td.drive(system, t=1e-12, n=1)
             mumax3c_stop = time.time()
             mumax3c_time = mumax3c_stop - mumax3c_start
 
