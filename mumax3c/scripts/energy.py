@@ -38,7 +38,6 @@ def zeeman_script(term, system):
     return mx3
 
 
-# Needs to be tidied up
 def uniaxialanisotropy_script(term, system):
     mx3 = "// UniaxialAnisotropy\n"
     if not isinstance(term.K, ts.descriptors.Parameter):
@@ -58,8 +57,12 @@ def demag_script(term, system):
 
 
 def dmi_script(term, system):
-    mx3 = ""
-    if system.energy.dmi.crystalclass.lower() in ["t", "o"]:
+    if not system.energy.get(type=mm.Exchange):
+        raise ValueError(
+            "In mumax3 DMI cannot be used without exchange. "
+            "Solution: define exchange with a negligible A value."
+        )
+    elif system.energy.dmi.crystalclass.lower() in ["t", "o"]:
         param_name = "Dbulk"
         param_val = term.D
     elif system.energy.dmi.crystalclass.lower() in ["cnv_z", "cnv"]:
@@ -76,10 +79,7 @@ def dmi_script(term, system):
         )
         raise ValueError(msg)
 
-    # In mumax3 DMI cannot be used without exchange
-    if mm.Exchange() not in system.energy:
-        mx3 += "Aex = 1e-25\n"
-    mx3 += "// DMI\n"
+    mx3 = "// DMI\n"
     mx3 += mc.scripts.set_parameter(parameter=param_val, name=param_name, system=system)
     return mx3
 
