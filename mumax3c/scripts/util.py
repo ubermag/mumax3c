@@ -26,7 +26,7 @@ def mumax3_regions(system, abspath=True):
     In this method, 'region' refers to mumax3, 'subregion refers to ubermag.
 
     If ``abspath=True`` use an absolute path for the regions omf file otherwise just the
-    file name.
+    filename.
 
     """
     mx3 = ""
