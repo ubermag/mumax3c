@@ -70,7 +70,7 @@ def mumax3_regions(system, abspath):
             f" {unique_index} mumax3 regions."
         )
 
-    region_path = 'mumax3_regions.omf'
+    region_path = "mumax3_regions.omf"
     df.Field(system.m.mesh, dim=1, value=region_indices).write(region_path)
     system.region_relator = region_relator
     if abspath:
