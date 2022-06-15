@@ -1,10 +1,8 @@
 import abc
-import datetime
 import logging
 import os
 import shutil
 import subprocess as sp
-import sys
 import time
 
 import micromagneticmodel as mm
@@ -15,97 +13,17 @@ import mumax3c as mc
 log = logging.getLogger("mumax3c")
 
 
-class Mumax3Runner(metaclass=abc.ABCMeta):
+class Mumax3Runner(mm.ExternalRunner):
     """Abstract class for running mumax3."""
 
-    def call(self, argstr, need_stderr=False, verbose=1, dry_run=False):
-        """Calls mumax3 by passing ``argstr`` to mumax3.
-
-        Parameters
-        ----------
-        argstr : str
-
-            Argument string passed to mumax3.
-
-        need_stderr : bool
-
-            If ``need_stderr=True``, standard error is captured. Defaults to
-            ``False``.
-
-        verbose : int, optional
-
-            If ``verbose=0``, no output is printed. For ``verbose>=1``
-            information about the OOMMF runner and the runtime is printed to
-            stdout. Defaults is ``verbose=1``.
-
-        dry_run : bool, optional
-
-            If ``dry_run=True`` this method returns the command to call OOMMF without
-            calling OOMMF. Defaults to ``False``.
-
-        Raises
-        ------
-        RuntimeError
-
-            If an error occured.
-
-        Returns
-        -------
-        int, str
-
-            If ``dry_run=False`` and when the OOMMF run was successful, ``0`` is
-            returned. If ``dry_run=True`` the command to call OOMMF is returned.
-
-        Examples
-        --------
-        1. Getting mumax3 runner automatically and calling it.
-
-        >>> import mumax3c as mc
-        ...
-        >>> runner = mc.runner.runner
-        >>> runner.call(argstr='')
-        Running mumax3...
-        CompletedProcess(...)
-
-        """
-        if dry_run:
-            return self._call(argstr=argstr, need_stderr=need_stderr, dry_run=True)
-
-        if verbose >= 1:
-            now = datetime.datetime.now()
-            timestamp = "{}/{:02d}/{:02d} {:02d}:{:02d}".format(
-                now.year, now.month, now.day, now.hour, now.minute
-            )
-            print(
-                f"Running mumax3 ({self.__class__.__name__}) [{timestamp}]... ", end=""
-            )
-            tic = time.time()
-
-        res = self._call(argstr=argstr, need_stderr=need_stderr)
-        if verbose >= 1:
-            toc = time.time()
-            seconds = "({:0.1f} s)".format(toc - tic)
-            print(seconds)  # append seconds to the previous print.
-
-        if res.returncode != 0:
-            msg = "Error in mumax3 run.\n"
-            cmdstr = " ".join(res.args)
-            msg += f"command: {cmdstr}\n"
-            if sys.platform != "win32":
-                # Only on Linux and MacOS - on Windows we do not get stderr and
-                # stdout.
-                stderr = res.stderr.decode("utf-8", "replace")
-                stdout = res.stdout.decode("utf-8", "replace")
-                msg += f"stdout: {stdout}\n"
-                msg += f"stderr: {stderr}\n"
-            raise RuntimeError(msg)
-
-        return res
+    @property
+    def package_name(self):
+        """Simulation package name."""
+        return "mumax3"
 
     @abc.abstractmethod
     def _call(self, argstr, need_stderr=False, dry_run=False):
         """This method should be implemented in subclass."""
-        pass  # pragma: no cover
 
     @property
     def status(self):
