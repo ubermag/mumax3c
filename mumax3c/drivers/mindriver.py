@@ -6,36 +6,45 @@ class MinDriver(Driver):
 
     Only attributes in ``_allowed_attributes`` can be defined. For details on
     possible values for individual attributes and their default values, please
-    refer to ``Oxs_MinDriver`` documentation (https://math.nist.gov/oommf/).
+    refer to ``Mumax3`` documentation (https://mumax.github.io).
 
     Examples
     --------
     1. Defining driver with a keyword argument.
 
-    >>> import oommfc as oc
+    >>> import mumax3c as mc
     ...
-    >>> md = oc.MinDriver(stopping_mxHxm=0.01)
+    >>> md = mc.MinDriver(DemagAccuracy=6)
 
     2. Passing an argument which is not allowed.
 
-    >>> import oommfc as oc
+    >>> import mumax3c as mc
     ...
-    >>> md = oc.MinDriver(myarg=1)
+    >>> md = mc.MinDriver(myarg=1)
     Traceback (most recent call last):
        ...
     AttributeError: ...
 
     3. Getting the list of allowed attributes.
 
-    >>> import oommfc as oc
+    >>> import mumax3c as mc
     ...
-    >>> md = oc.MinDriver()
+    >>> md = mc.MinDriver()
     >>> md._allowed_attributes
     [...]
 
     """
 
-    _allowed_attributes = ["MinimizerStop", "DemagAccuracy"]
+    _allowed_attributes = [
+        "MinimizerStop",
+        "DemagAccuracy",
+        "Headroom",
+        "LastErr",
+        "MaxErr",
+        "MinimizerSamples",
+        "NEval",
+        "PeakErr",
+    ]
 
     def _checkargs(self, **kwargs):
         pass  # no kwargs should be checked
