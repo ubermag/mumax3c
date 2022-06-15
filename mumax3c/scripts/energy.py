@@ -58,7 +58,7 @@ def demag_script(term, system):
 
 def dmi_script(term, system):
     if not system.energy.get(type=mm.Exchange):
-        raise ValueError(
+        raise RuntimeError(
             "In mumax3 DMI cannot be used without exchange. "
             "Solution: define exchange with a negligible A value."
         )
