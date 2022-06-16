@@ -124,17 +124,10 @@ def _set_inter_reg_params(key, value, name, system):
             "Only Aex and Dind can be set for different region in mumax3."
             f" Cannot set inter region {name}"
         )
-    # elif np.any([len(system.region_relator[sub_reg]) > 1 for sub_reg in sub_regions]):
-    #     raise ValueError(
-    #         "For now, cannot set inter subregion Exchange or DMI when one of"
-    #         " the subregions has more than one Ms values excluding Ms = 0."
-    #         f" The subregions to mumax3 regions relation is {system.region_relator}"
-    #     )
     else:
-        reg_combinations = itertools.product(
+        for reg_pair in itertools.product(
             system.region_relator[sub_regions[0]], system.region_relator[sub_regions[1]]
-        )
-        for reg_pair in reg_combinations:
+        ):
             if name == "Aex":
                 return f"\next_InterExchange({reg_pair[0]}, {reg_pair[1]}, {value})\n"
             else:
