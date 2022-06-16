@@ -1,7 +1,7 @@
 import contextlib
 import itertools
 import numbers
-import os
+import pathlib
 
 import discretisedfield as df
 import numpy as np
@@ -70,11 +70,11 @@ def mumax3_regions(system, abspath=True):
             f" {unique_index} mumax3 regions."
         )
 
-    region_path = "mumax3_regions.omf"
-    df.Field(system.m.mesh, dim=1, value=region_indices).write(region_path)
+    region_path = pathlib.Path("mumax3_regions.omf")
+    df.Field(system.m.mesh, dim=1, value=region_indices).write(str(region_path))
     system.region_relator = region_relator
     if abspath:
-        region_path = os.path.abspath(region_path)
+        region_path = region_path.absolute().as_posix()
     mx3 += f'\nregions.LoadFile("{region_path}")\n\n'
     return mx3
 
