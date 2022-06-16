@@ -65,7 +65,7 @@ def dmi_script(term, system):
     elif term.crystalclass.lower() in ["t", "o"]:
         param_name = "Dbulk"
         param_val = term.D
-    elif system.energy.dmi.crystalclass.lower() in ["cnv_z", "cnv"]:
+    elif term.crystalclass.lower() in ["cnv_z", "cnv"]:
         param_name = "Dind"
         if isinstance(term, dict):
             param_val = {sub_reg: -val for sub_reg, val in term.items()}
