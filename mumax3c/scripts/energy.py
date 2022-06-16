@@ -62,7 +62,7 @@ def dmi_script(term, system):
             "In mumax3 DMI cannot be used without exchange. "
             "Solution: define exchange with a negligible A value."
         )
-    elif system.energy.dmi.crystalclass.lower() in ["t", "o"]:
+    elif term.crystalclass.lower() in ["t", "o"]:
         param_name = "Dbulk"
         param_val = term.D
     elif system.energy.dmi.crystalclass.lower() in ["cnv_z", "cnv"]:
