@@ -109,8 +109,12 @@ def set_parameter(parameter, name, system):
                             "vector({}, {}, {}))\n".format(*value)
                         )
 
+    elif isinstance(parameter, df.Field) and name == "B_ext":
+        parameter.write("B_ext.ovf")
+        mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 represents constant in time
+
     else:
-        # In mumax3, the parameter cannot be set using Field.
+        # In mumax3, the parameter cannot be set using Field except for Zeeman field.
         msg = f"Cannot use {type(parameter)} to set parameter."
         raise TypeError(msg)
 
