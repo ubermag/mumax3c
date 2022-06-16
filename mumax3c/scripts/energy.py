@@ -24,6 +24,7 @@ def energy_script(system):
 def exchange_script(term, system):
     mx3 = "// Exchange energy\n"
     mx3 += mc.scripts.set_parameter(parameter=term.A, name="Aex", system=system)
+    mx3 += "tableadd(E_exch)\n"
     return mx3
 
 
@@ -39,6 +40,7 @@ def zeeman_script(term, system):
 
     mx3 = "// Zeeman\n"
     mx3 += mc.scripts.set_parameter(parameter=B, name="B_ext", system=system)
+    mx3 += "tableadd(E_Zeeman)\n"
     return mx3
 
 
@@ -51,12 +53,14 @@ def uniaxialanisotropy_script(term, system):
         mx3 += mc.scripts.set_parameter(parameter=term.K2, name="Ku2", system=system)
 
     mx3 += mc.scripts.set_parameter(parameter=term.u, name="anisU", system=system)
+    mx3 += "tableadd(E_anis)\n"
     return mx3
 
 
 def demag_script(term, system):
     mx3 = "// Demag\n"
     mx3 += "enabledemag = true\n\n"
+    mx3 += "tableadd(E_demag)"
     return mx3
 
 
@@ -83,6 +87,7 @@ def dmi_script(term, system):
 
     mx3 = "// DMI\n"
     mx3 += mc.scripts.set_parameter(parameter=param_val, name=param_name, system=system)
+    # In mumax DMI energy is combined with exchange energy
     return mx3
 
 
@@ -91,6 +96,7 @@ def cubicanisotropy_script(term, system):
     mx3 += mc.scripts.set_parameter(parameter=term.K, name="Kc1", system=system)
     mx3 += mc.scripts.set_parameter(parameter=term.u1, name="anisC1", system=system)
     mx3 += mc.scripts.set_parameter(parameter=term.u2, name="anisC2", system=system)
+    mx3 += "tableadd(E_anis)\n"
 
     return mx3
 
