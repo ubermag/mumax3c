@@ -71,8 +71,8 @@ def dmi_script(term, system):
         param_val = term.D
     elif term.crystalclass.lower() in ["cnv_z", "cnv"]:
         param_name = "Dind"
-        if isinstance(term, dict):
-            param_val = {sub_reg: -val for sub_reg, val in term.items()}
+        if isinstance(term.D, dict):
+            param_val = {sub_reg: -val for sub_reg, val in term.D.items()}
         else:
             param_val = -term.D
         # In mumax3 D = -D for interfacial DMI
