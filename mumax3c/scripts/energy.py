@@ -7,11 +7,7 @@ import mumax3c as mc
 
 def energy_script(system):
     mx3 = ""
-    for term in system.energy:
-        if len(system.energy.get(type=type(term))) > 1:
-            raise RuntimeError(
-                "Mumax3 does not allow more than one energy term of the same class."
-            )
+    for term in system.energy:  # TODO: different terms of same class not allowed
         mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](term, system)
 
     # Demagnetisation in mumax3 is enabled by default.
@@ -42,6 +38,7 @@ def zeeman_script(term, system):
     return mx3
 
 
+# Needs to be tidied up
 def uniaxialanisotropy_script(term, system):
     mx3 = "// UniaxialAnisotropy\n"
     if not isinstance(term.K, ts.descriptors.Parameter):
@@ -61,27 +58,28 @@ def demag_script(term, system):
 
 
 def dmi_script(term, system):
-    if not system.energy.get(type=mm.Exchange):
-        raise RuntimeError(
-            "In mumax3 DMI cannot be used without exchange. "
-            "Solution: define exchange with a negligible A value."
-        )
-    elif term.crystalclass.lower() in ["t", "o"]:
+    mx3 = ""
+    if system.energy.dmi.crystalclass.lower() in ["t", "o"]:
         param_name = "Dbulk"
         param_val = term.D
-    elif term.crystalclass.lower() in ["cnv_z", "cnv"]:
+    elif system.energy.dmi.crystalclass.lower() in ["cnv_z", "cnv"]:
         param_name = "Dind"
-        if isinstance(term, dict):
-            param_val = {sub_reg: -val for sub_reg, val in term.items()}
+        if isinstance(term.D, dict):
+            param_val = {sub_reg: -val for sub_reg, val in term.D.items()}
         else:
             param_val = -term.D
         # In mumax3 D = -D for interfacial DMI
     else:
-        raise ValueError(
-            f"The {term.crystalclass} crystal class is not supported in mumax3."
+        msg = (
+            f"The {system.energy.dmi.crystalclass} crystal class "
+            "is not supported in mumax3."
         )
+        raise ValueError(msg)
 
-    mx3 = "// DMI\n"
+    # In mumax3 DMI cannot be used without exchange
+    if mm.Exchange() not in system.energy:
+        mx3 += "Aex = 1e-25\n"
+    mx3 += "// DMI\n"
     mx3 += mc.scripts.set_parameter(parameter=param_val, name=param_name, system=system)
     return mx3
 
