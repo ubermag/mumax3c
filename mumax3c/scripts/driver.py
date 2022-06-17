@@ -1,4 +1,6 @@
 import micromagneticmodel as mm
+import discretisedfield as df
+import numpy as np
 
 import mumax3c as mc
 
@@ -17,7 +19,7 @@ def driver_script(driver, system, compute=None, **kwargs):
         mx3 += "tablesave()\n\n"
 
     if isinstance(driver, mc.RelaxDriver):
-        if mm.Damping() not in system.dynamics:
+        if not system.dynamics.get(type=mm.Damping):
             raise ValueError("A damping term is needed.")
         alpha = system.dynamics.damping.alpha
         mx3 += f"alpha = {alpha}\n"
@@ -32,11 +34,11 @@ def driver_script(driver, system, compute=None, **kwargs):
 
     if isinstance(driver, mc.TimeDriver):
         # Extract dynamics equation parameters.
-        if mm.Precession() in system.dynamics:
+        if system.dynamics.get(type=mm.Precession):
             gamma0 = system.dynamics.precession.gamma0
         else:
             gamma0 = 0
-        if mm.Damping() in system.dynamics:
+        if system.dynamics.get(type=mm.Damping):
             alpha = system.dynamics.damping.alpha
         else:
             alpha = 0
@@ -48,8 +50,24 @@ def driver_script(driver, system, compute=None, **kwargs):
             mx3 += f"gammaLL = {gamma0/mm.consts.mu0}\n"
             mx3 += "doprecess = true\n"
 
+        zh_li_terms = system.dynamics.get(type=mm.ZhangLi)
+        if zh_li_terms:
+            u = (
+                zh_li_terms[0].u
+                if isinstance(zh_li_terms[0].u, df.Field)
+                else df.Field(
+                    mesh=system.mesh, dim=3, value=(1, 0, 0), norm=zh_li_terms[0].u
+                )
+            )
+
+            j = np.multiply(u * (mm.consts.e / mm.consts.muB), system.m.norm)
+            j.write("j.ovf")
+            mx3 += f"Xi = {system.dynamics.get(type=mm.ZhangLi)[0].beta}"
+            mx3 += "Pol = 1"  # Current polarization is 1.
+            mx3 += 'J.add("j.ovf")'
+
         mx3 += "setsolver(5)\n"
-        mx3 += "fixDt = 0.0\n\n"
+        mx3 += "fixDt = 0\n\n"
 
         t, n = kwargs["t"], kwargs["n"]
 
