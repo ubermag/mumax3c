@@ -1,5 +1,5 @@
-import micromagneticmodel as mm
 import discretisedfield as df
+import micromagneticmodel as mm
 import numpy as np
 
 import mumax3c as mc
