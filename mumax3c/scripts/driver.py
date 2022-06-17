@@ -58,12 +58,16 @@ def driver_script(driver, system, compute=None, **kwargs):
                 else df.Field(
                     mesh=system.m.mesh,
                     dim=3,
-                    value=(-1.0, 0.0, 0.0),
+                    value=(1.0, 0.0, 0.0),
                     norm=zh_li_terms[0].u,
                 )
             )
 
-            j = np.multiply(u * (mm.consts.e / mm.consts.muB), system.m.norm)
+            j = -np.multiply(
+                u
+                * (mm.consts.e / (mm.consts.e * mm.consts.hbar / (2.0 * mm.consts.me))),
+                system.m.norm,
+            )
             j.write("j.ovf")
             mx3 += f"Xi = {system.dynamics.get(type=mm.ZhangLi)[0].beta}\n"
             mx3 += "Pol = 1\n"  # Current polarization is 1.
