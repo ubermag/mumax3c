@@ -7,7 +7,7 @@ def mesh_script(system):
     mx3 = "// Mesh\n"
     if any(i in system.m.mesh.bc for i in "xyz"):  # are there PBC?
         repetitions = [0, 0, 0]  # should be generalised in the future
-        for direction in system.m.mesh.pbc:
+        for direction in system.m.mesh.bc:
             # Need to figure out the way of setting up the repetitions.
             repetitions[df.util.axesdict(direction)] = 1
         mx3 += "SetPBC({}, {}, {})\n".format(*repetitions)

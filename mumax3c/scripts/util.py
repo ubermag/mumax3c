@@ -104,22 +104,43 @@ def set_parameter(parameter, name, system):
 
     # Spatially varying parameter defined using subregions.
     elif isinstance(parameter, dict):
-        names = system.m.mesh.subregions.keys()
-        subregions_dict = dict(zip(names, range(len(names))))
-
         for key, value in parameter.items():
-            if isinstance(value, numbers.Real):
-                mx3 += f"{name}.setregion({subregions_dict[key]}, {value})\n"
+            if ":" in key:
+                mx3 += _set_inter_reg_params(key, value, name, system)
+            else:
+                for region in system.region_relator[key]:
+                    if isinstance(value, numbers.Real):
+                        mx3 += f"{name}.setregion({region}, {value})\n"
+                    elif isinstance(value, (list, tuple, np.ndarray)):
+                        mx3 += (
+                            f"{name}.setregion({region}, "
+                            "vector({}, {}, {}))\n".format(*value)
+                        )
 
-            elif isinstance(value, (list, tuple, np.ndarray)):
-                mx3 += (
-                    f"{name}.setregion({subregions_dict[key]}, "
-                    "vector({}, {}, {}))\n".format(*value)
-                )
+    elif isinstance(parameter, df.Field) and name == "B_ext":
+        parameter.write("B_ext.ovf")
+        mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 represents constant in time
 
     else:
-        # In mumax3, the parameter cannot be set using Field.
+        # In mumax3, the parameter cannot be set using Field except for Zeeman field.
         msg = f"Cannot use {type(parameter)} to set parameter."
         raise TypeError(msg)
 
     return mx3
+
+
+def _set_inter_reg_params(key, value, name, system):
+    sub_regions = key.split(":")
+    if name not in {"Aex", "Dind"}:  # ext_InterDbulk not available.
+        raise ValueError(
+            "Only Aex and Dind can be set for different region in mumax3."
+            f" Cannot set inter region {name}"
+        )
+    else:
+        for reg_pair in itertools.product(
+            system.region_relator[sub_regions[0]], system.region_relator[sub_regions[1]]
+        ):
+            if name == "Aex":
+                return f"\next_InterExchange({reg_pair[0]}, {reg_pair[1]}, {value})\n"
+            else:
+                return f"\next_InterDind({reg_pair[0]}, {reg_pair[1]}, {value})\n"
