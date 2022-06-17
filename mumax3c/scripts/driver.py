@@ -64,7 +64,7 @@ def driver_script(driver, system, compute=None, **kwargs):
             j.write("j.ovf")
             mx3 += f"Xi = {system.dynamics.get(type=mm.ZhangLi)[0].beta}\n"
             mx3 += "Pol = 1\n"  # Current polarization is 1.
-            mx3 += 'J.add("j.ovf", 1)\n'  # 1 means constant in time.
+            mx3 += 'J.add(LoadFile("j.ovf"), 1)\n'  # 1 means constant in time.
 
         mx3 += "setsolver(5)\n"
         mx3 += "fixDt = 0\n\n"
