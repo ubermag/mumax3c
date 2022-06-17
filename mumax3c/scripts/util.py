@@ -74,7 +74,7 @@ def mumax3_regions(system, abspath=True):
     df.Field(system.m.mesh, dim=1, value=region_indices).write(str(region_path))
     system.region_relator = region_relator
     if abspath:
-        region_path = region_path.absolute().as_posix()
+        region_path = region_path.absolute().as_posix()  # / as path separator required
     mx3 += f'\nregions.LoadFile("{region_path}")\n\n'
     return mx3
 
