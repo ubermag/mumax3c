@@ -56,7 +56,7 @@ def driver_script(driver, system, compute=None, **kwargs):
                 zh_li_terms[0].u
                 if isinstance(zh_li_terms[0].u, df.Field)
                 else df.Field(
-                    mesh=system.mesh, dim=3, value=(1, 0, 0), norm=zh_li_terms[0].u
+                    mesh=system.m.mesh, dim=3, value=(1, 0, 0), norm=zh_li_terms[0].u
                 )
             )
 
