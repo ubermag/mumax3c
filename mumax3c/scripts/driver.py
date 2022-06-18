@@ -50,16 +50,16 @@ def driver_script(driver, system, compute=None, **kwargs):
             mx3 += f"gammaLL = {gamma0/mm.consts.mu0}\n"
             mx3 += "doprecess = true\n"
 
-        zh_li_terms = system.dynamics.get(type=mm.ZhangLi)
-        if zh_li_terms:
+        if system.dynamics.get(type=mm.ZhangLi):
+            (zh_li_term,) = system.dynamics.get(type=mm.ZhangLi)
             u = (
-                zh_li_terms[0].u
-                if isinstance(zh_li_terms[0].u, df.Field)
+                zh_li_term.u
+                if isinstance(zh_li_term.u, df.Field)
                 else df.Field(
                     mesh=system.m.mesh,
                     dim=3,
                     value=(1.0, 0.0, 0.0),
-                    norm=zh_li_terms[0].u,
+                    norm=zh_li_term.u,
                 )
             )
 
@@ -69,7 +69,7 @@ def driver_script(driver, system, compute=None, **kwargs):
                 system.m.norm,
             )
             j.write("j.ovf")
-            mx3 += f"Xi = {system.dynamics.get(type=mm.ZhangLi)[0].beta}\n"
+            mx3 += f"Xi = {zh_li_term.beta}\n"
             mx3 += "Pol = 1\n"  # Current polarization is 1.
             mx3 += 'J.add(LoadFile("j.ovf"), 1)\n'  # 1 means constant in time.
 
