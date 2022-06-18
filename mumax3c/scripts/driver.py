@@ -21,7 +21,7 @@ def driver_script(driver, system, compute=None, **kwargs):
     if isinstance(driver, mc.RelaxDriver):
         if not system.dynamics.get(type=mm.Damping):
             raise ValueError("A damping term is needed.")
-        alpha = system.dynamics.damping.alpha
+        alpha = system.dynamics.get(type=mm.Damping)[0].alpha
         mx3 += f"alpha = {alpha}\n"
 
         for attr, value in driver:
