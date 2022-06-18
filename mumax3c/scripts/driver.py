@@ -34,10 +34,7 @@ def driver_script(driver, system, compute=None, **kwargs):
 
     if isinstance(driver, mc.TimeDriver):
         # Extract dynamics equation parameters.
-        if system.dynamics.get(type=mm.Precession):
-            gamma0 = system.dynamics.precession.gamma0
-        else:
-            gamma0 = 0
+        gamma0 = precession[0].gamma0 if (precession := system.dynamics.get(type=mm.Precession)) else 0)
         if system.dynamics.get(type=mm.Damping):
             alpha = system.dynamics.damping.alpha
         else:
