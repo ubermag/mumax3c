@@ -60,7 +60,7 @@ def uniaxialanisotropy_script(term, system):
 def demag_script(term, system):
     mx3 = "// Demag\n"
     mx3 += "enabledemag = true\n\n"
-    mx3 += "tableadd(E_demag)"
+    mx3 += "tableadd(E_demag)\n"
     return mx3
 
 
