@@ -84,13 +84,15 @@ class Driver(mm.ExternalDriver):
 
         """
         with uu.changedir(dirname):
-            mx3 = mc.scripts.system_script(system, abspath)  # TODO
+            mx3 = mc.scripts.system_script(
+                system, ovf_format=ovf_format, abspath=abspath
+            )
             mx3 += mc.scripts.driver_script(
                 self,
                 system,
                 compute=None,  # TODO does mumax3 support compute?
                 **kwargs,
-            )  # TODO
+            )
             with open(self._mx3filename(system), "wt", encoding="utf-8") as mx3file:
                 mx3file.write(mx3)
 
