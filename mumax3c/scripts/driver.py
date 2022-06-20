@@ -1,4 +1,6 @@
+import discretisedfield as df
 import micromagneticmodel as mm
+import numpy as np
 
 import mumax3c as mc
 
@@ -17,9 +19,9 @@ def driver_script(driver, system, compute=None, **kwargs):
         mx3 += "tablesave()\n\n"
 
     if isinstance(driver, mc.RelaxDriver):
-        if mm.Damping() not in system.dynamics:
+        if not system.dynamics.get(type=mm.Damping):
             raise ValueError("A damping term is needed.")
-        alpha = system.dynamics.damping.alpha
+        alpha = system.dynamics.get(type=mm.Damping)[0].alpha
         mx3 += f"alpha = {alpha}\n"
 
         for attr, value in driver:
@@ -32,11 +34,12 @@ def driver_script(driver, system, compute=None, **kwargs):
 
     if isinstance(driver, mc.TimeDriver):
         # Extract dynamics equation parameters.
-        if mm.Precession() in system.dynamics:
-            gamma0 = system.dynamics.precession.gamma0
-        else:
-            gamma0 = 0
-        if mm.Damping() in system.dynamics:
+        gamma0 = (
+            precession[0].gamma0
+            if (precession := system.dynamics.get(type=mm.Precession))
+            else 0
+        )
+        if system.dynamics.get(type=mm.Damping):
             alpha = system.dynamics.damping.alpha
         else:
             alpha = 0
@@ -48,8 +51,31 @@ def driver_script(driver, system, compute=None, **kwargs):
             mx3 += f"gammaLL = {gamma0/mm.consts.mu0}\n"
             mx3 += "doprecess = true\n"
 
+        if system.dynamics.get(type=mm.ZhangLi):
+            (zh_li_term,) = system.dynamics.get(type=mm.ZhangLi)
+            u = (
+                zh_li_term.u
+                if isinstance(zh_li_term.u, df.Field)
+                else df.Field(
+                    mesh=system.m.mesh,
+                    dim=3,
+                    value=(1.0, 0.0, 0.0),
+                    norm=zh_li_term.u,
+                )
+            )
+
+            j = -np.multiply(
+                u
+                * (mm.consts.e / (mm.consts.e * mm.consts.hbar / (2.0 * mm.consts.me))),
+                system.m.norm,
+            )
+            j.write("j.ovf")
+            mx3 += f"Xi = {zh_li_term.beta}\n"
+            mx3 += "Pol = 1\n"  # Current polarization is 1.
+            mx3 += 'J.add(LoadFile("j.ovf"), 1)\n'  # 1 means constant in time.
+
         mx3 += "setsolver(5)\n"
-        mx3 += "fixDt = 0.0\n\n"
+        mx3 += "fixDt = 0\n\n"
 
         t, n = kwargs["t"], kwargs["n"]
 
