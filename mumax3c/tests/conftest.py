@@ -3,11 +3,50 @@ import pytest
 import mumax3c as mc
 
 not_supported_by_mumax = [
+    "TestDemag.test_demag_asymptotic_radius",
+    "TestEnergy.test_zeeman_zeeman",
     "TestExchange.test_field",
+    "TestHysteresisDriver.test_noevolver_nodriver",
+    "TestMinDriver.test_evolver_nodriver",
+    "TestMinDriver.test_evolver_driver",
+    "TestMinDriver.test_wrong_evolver",
+    "test_outputstep",
+    "TestPrecession.test_dict",
+    "TestPrecession.test_field",
+    "TestRKKY.test_scalar",
+    "TestThreads.test_threads",
+    "TestTimeDriver.test_rungekutta_evolver_nodriver",
+    "TestTimeDriver.test_euler_evolver_nodriver",
+    "TestTimeDriver.test_theta_evolver_nodriver",
+    "TestTimeDriver.test_therm_heun_evolver_nodriver",
+    "TestTimeDriver.test_noevolver_nodriver_finite_temperature",
+    "TestTimeDriver.test_wrong_evolver",
+
 ]
 
 missing_in_mumax3c = [
-    "TestRKKY.test_scalar",
+    "TestCompute.test_energy",
+    "TestCompute.test_energy_density",
+    "TestCompute.test_effective_field",
+    "TestCompute.test_invalid_func",
+    "TestCompute.test_dmi",
+    "TestCompute.test_slonczewski",
+    "TestCompute.test_zhang_li",
+    "TestCubicAnisotropy.test_field_vector_vector",
+    "TestCubicAnisotropy.test_field_field_field",
+    "TestDamping.test_field",
+    "TestDynamics.test_field_field",
+    "TestFixedSubregions.test_fixed_subregions",
+    "TestSlonczewski.test_single_values",
+    "TestSlonczewski.test_single_values_finite_temperature",
+    "TestSlonczewski.test_dict_values",
+    "TestSlonczewski.test_field_values",
+    "TestUniaxialAnisotropy.test_field_vector",
+    "TestUniaxialAnisotropy.test_scalar_field",
+    "TestUniaxialAnisotropy.test_field_field",
+    "TestUniaxialAnisotropy.test_field_dict",
+    "TestZhangLi.test_dict_scalar",
+    "TestZhangLi.test_field_scalar"
 ]
 
 
