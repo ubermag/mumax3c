@@ -21,7 +21,6 @@ not_supported_by_mumax = [
     "TestTimeDriver.test_therm_heun_evolver_nodriver",
     "TestTimeDriver.test_noevolver_nodriver_finite_temperature",
     "TestTimeDriver.test_wrong_evolver",
-
 ]
 
 missing_in_mumax3c = [
@@ -46,7 +45,7 @@ missing_in_mumax3c = [
     "TestUniaxialAnisotropy.test_field_field",
     "TestUniaxialAnisotropy.test_field_dict",
     "TestZhangLi.test_dict_scalar",
-    "TestZhangLi.test_field_scalar"
+    "TestZhangLi.test_field_scalar",
 ]
 
 
