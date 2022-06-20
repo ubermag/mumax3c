@@ -3,4 +3,5 @@ from micromagnetictests.calculatortests import (  # noqa: F401
     TestDMI,
     TestExchange,
     TestZeeman,
+    test_format,
 )
