@@ -5,14 +5,16 @@ import ubermagutil.typesystem as ts
 import mumax3c as mc
 
 
-def energy_script(system):
+def energy_script(system, ovf_format):
     mx3 = ""
     for term in system.energy:
         if len(system.energy.get(type=type(term))) > 1:
             raise RuntimeError(
                 "Mumax3 does not allow more than one energy term of the same class."
             )
-        mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](term, system)
+        mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](
+            term, system, ovf_format
+        )
 
     # Demagnetisation in mumax3 is enabled by default.
     if mm.Demag() not in system.energy:
@@ -21,14 +23,16 @@ def energy_script(system):
     return mx3
 
 
-def exchange_script(term, system):
+def exchange_script(term, system, ovf_format):
     mx3 = "// Exchange energy\n"
-    mx3 += mc.scripts.set_parameter(parameter=term.A, name="Aex", system=system)
+    mx3 += mc.scripts.set_parameter(
+        parameter=term.A, name="Aex", system=system, ovf_format=ovf_format
+    )
     mx3 += "tableadd(E_exch)\n"
     return mx3
 
 
-def zeeman_script(term, system):
+def zeeman_script(term, system, ovf_format):
     # mx3 file takes B, not H.
     H = term.H
     if isinstance(H, dict):
@@ -39,32 +43,42 @@ def zeeman_script(term, system):
         B = np.multiply(H, mm.consts.mu0)
 
     mx3 = "// Zeeman\n"
-    mx3 += mc.scripts.set_parameter(parameter=B, name="B_ext", system=system)
+    mx3 += mc.scripts.set_parameter(
+        parameter=B, name="B_ext", system=system, ovf_format=ovf_format
+    )
     mx3 += "tableadd(E_Zeeman)\n"
     return mx3
 
 
-def uniaxialanisotropy_script(term, system):
+def uniaxialanisotropy_script(term, system, ovf_format):
     mx3 = "// UniaxialAnisotropy\n"
     if not isinstance(term.K, ts.descriptors.Parameter):
-        mx3 += mc.scripts.set_parameter(parameter=term.K, name="Ku1", system=system)
+        mx3 += mc.scripts.set_parameter(
+            parameter=term.K, name="Ku1", system=system, ovf_format=ovf_format
+        )
     else:
-        mx3 += mc.scripts.set_parameter(parameter=term.K1, name="Ku1", system=system)
-        mx3 += mc.scripts.set_parameter(parameter=term.K2, name="Ku2", system=system)
+        mx3 += mc.scripts.set_parameter(
+            parameter=term.K1, name="Ku1", system=system, ovf_format=ovf_format
+        )
+        mx3 += mc.scripts.set_parameter(
+            parameter=term.K2, name="Ku2", system=system, ovf_format=ovf_format
+        )
 
-    mx3 += mc.scripts.set_parameter(parameter=term.u, name="anisU", system=system)
+    mx3 += mc.scripts.set_parameter(
+        parameter=term.u, name="anisU", system=system, ovf_format=ovf_format
+    )
     mx3 += "tableadd(E_anis)\n"
     return mx3
 
 
-def demag_script(term, system):
+def demag_script(term, system, ovf_format):
     mx3 = "// Demag\n"
     mx3 += "enabledemag = true\n"
     mx3 += "tableadd(E_demag)\n"
     return mx3
 
 
-def dmi_script(term, system):
+def dmi_script(term, system, ovf_format):
     if not system.energy.get(type=mm.Exchange):
         raise RuntimeError(
             "In mumax3 DMI cannot be used without exchange. "
@@ -86,16 +100,24 @@ def dmi_script(term, system):
         )
 
     mx3 = "// DMI\n"
-    mx3 += mc.scripts.set_parameter(parameter=param_val, name=param_name, system=system)
+    mx3 += mc.scripts.set_parameter(
+        parameter=param_val, name=param_name, system=system, ovf_format=ovf_format
+    )
     # In mumax DMI energy is combined with exchange energy
     return mx3
 
 
-def cubicanisotropy_script(term, system):
+def cubicanisotropy_script(term, system, ovf_format):
     mx3 = "// CubicAnisotropy\n"
-    mx3 += mc.scripts.set_parameter(parameter=term.K, name="Kc1", system=system)
-    mx3 += mc.scripts.set_parameter(parameter=term.u1, name="anisC1", system=system)
-    mx3 += mc.scripts.set_parameter(parameter=term.u2, name="anisC2", system=system)
+    mx3 += mc.scripts.set_parameter(
+        parameter=term.K, name="Kc1", system=system, ovf_format=ovf_format
+    )
+    mx3 += mc.scripts.set_parameter(
+        parameter=term.u1, name="anisC1", system=system, ovf_format=ovf_format
+    )
+    mx3 += mc.scripts.set_parameter(
+        parameter=term.u2, name="anisC2", system=system, ovf_format=ovf_format
+    )
     mx3 += "tableadd(E_anis)\n"
 
     return mx3
