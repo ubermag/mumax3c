@@ -10,5 +10,5 @@ def magnetisation_script(system, ovf_format="bin4", abspath=True):
         m0_path = m0_path.absolute().as_posix()  # '/' as path separator required
     mx3 = "// Magnetisation\n"
     mx3 += f'm.LoadFile("{m0_path}")\n'
-    mx3 += mc.scripts.mumax3_regions(system, ovf_format, abspath)
+    mx3 += mc.scripts.mumax3_regions(system, ovf_format=ovf_format, abspath=abspath)
     return mx3
