@@ -21,6 +21,12 @@ not_supported_by_mumax = [
     "TestTimeDriver.test_therm_heun_evolver_nodriver",
     "TestTimeDriver.test_noevolver_nodriver_finite_temperature",
     "TestTimeDriver.test_wrong_evolver",
+    "TestTimeDriver.test_noevolver_driver",
+    "TestZeeman.test_time_vector",
+    "TestZeeman.test_time_dict",
+    "TestZeeman.test_time_field",
+    "TestMinDriver.test_noevolver_driver",
+    "TestDMI.test_crystalclass"
 ]
 
 missing_in_mumax3c = [
@@ -33,8 +39,10 @@ missing_in_mumax3c = [
     "TestCompute.test_zhang_li",
     "TestCubicAnisotropy.test_field_vector_vector",
     "TestCubicAnisotropy.test_field_field_field",
+    "TestDamping.test_dict",
     "TestDamping.test_field",
     "TestDynamics.test_field_field",
+    "TestDynamics.test_scalar_dict",
     "TestFixedSubregions.test_fixed_subregions",
     "TestSlonczewski.test_single_values",
     "TestSlonczewski.test_single_values_finite_temperature",
@@ -46,6 +54,8 @@ missing_in_mumax3c = [
     "TestUniaxialAnisotropy.test_field_dict",
     "TestZhangLi.test_dict_scalar",
     "TestZhangLi.test_field_scalar",
+    "TestZhangLi.test_time_scalar_scalar",
+    "test_multiple_drives_compute"
 ]
 
 
