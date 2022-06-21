@@ -104,6 +104,15 @@ def set_parameter(parameter, name, system):
 
     # Spatially varying parameter defined using subregions.
     elif isinstance(parameter, dict):
+        if "default" in parameter:
+            value = parameter.pop("default")
+            if isinstance(value, numbers.Real):
+                mx3 += f"{name} = {value}\n"
+            elif isinstance(value, (list, tuple, np.ndarray)):
+                mx3 += (
+                    f"{name} = , "
+                    "vector({}, {}, {}))\n".format(*value)
+                )
         for key, value in parameter.items():
             if ":" in key:
                 mx3 += _set_inter_reg_params(key, value, name, system)
