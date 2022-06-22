@@ -20,7 +20,7 @@ def _identify_subregions(system):
     return subregion_indices, subregion_dict
 
 
-def mumax3_regions(system, abspath=True):
+def mumax3_regions(system, ovf_format="bin4", abspath=True):
     """Convert ubermag subregions and changing Ms values into mumax3 regions.
 
     In this method, 'region' refers to mumax3, 'subregion refers to ubermag.
@@ -71,7 +71,9 @@ def mumax3_regions(system, abspath=True):
         )
 
     region_path = pathlib.Path("mumax3_regions.omf")
-    df.Field(system.m.mesh, dim=1, value=region_indices).write(str(region_path))
+    df.Field(system.m.mesh, dim=1, value=region_indices).write(
+        str(region_path), representation=ovf_format
+    )
     system.region_relator = region_relator
     if abspath:
         region_path = region_path.absolute().as_posix()  # / as path separator required
@@ -92,7 +94,7 @@ def unique_with_accuracy(array, accuracy=14):
     return np.unique(np.round(array / array_max, decimals=accuracy)) * array_max
 
 
-def set_parameter(parameter, name, system):
+def set_parameter(parameter, name, system, ovf_format="bin4"):
     mx3 = ""
     # Spatially constant scalar parameter.
     if isinstance(parameter, numbers.Real):
@@ -124,7 +126,7 @@ def set_parameter(parameter, name, system):
                         )
 
     elif isinstance(parameter, df.Field) and name == "B_ext":
-        parameter.write("B_ext.ovf")
+        parameter.write("B_ext.ovf", representation=ovf_format)
         mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 represents constant in time
 
     else:
