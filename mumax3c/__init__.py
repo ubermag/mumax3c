@@ -4,7 +4,7 @@ import pytest
 import mumax3c.mumax3
 import mumax3c.scripts
 
-from .compute import compute
+# from .compute import compute  # compute is not yet supported
 from .delete import delete
 from .drivers import MinDriver, RelaxDriver, TimeDriver
 
@@ -33,6 +33,17 @@ See Also
 
 
 def test():
+    """Run all package tests.
+
+    Examples
+    --------
+    1. Run all tests.
+
+    >>> import mumax3c as mc
+    ...
+    >>> # mc.test()
+
+    """
     return pytest.main(
         ["-m", "not travis and not docker", "-v", "--pyargs", "mumax3c"]
     )  # pragma: no cover

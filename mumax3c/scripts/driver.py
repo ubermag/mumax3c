@@ -5,7 +5,7 @@ import numpy as np
 import mumax3c as mc
 
 
-def driver_script(driver, system, compute=None, **kwargs):
+def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
     mx3 = "tableadd(E_total)\n"
     mx3 += "tableadd(dt)\n"
     mx3 += "tableadd(maxtorque)\n"
@@ -69,7 +69,7 @@ def driver_script(driver, system, compute=None, **kwargs):
                 * (mm.consts.e / (mm.consts.e * mm.consts.hbar / (2.0 * mm.consts.me))),
                 system.m.norm,
             )
-            j.write("j.ovf")
+            j.write("j.ovf", representation=ovf_format)
             mx3 += f"Xi = {zh_li_term.beta}\n"
             mx3 += "Pol = 1\n"  # Current polarization is 1.
             mx3 += 'J.add(LoadFile("j.ovf"), 1)\n'  # 1 means constant in time.
