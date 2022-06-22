@@ -39,9 +39,9 @@ def test():
     --------
     1. Run all tests.
 
-    >>> import oommfc as md
+    >>> import mumax3c as mc
     ...
-    >>> # md.test()
+    >>> # mc.test()
 
     """
     return pytest.main(
