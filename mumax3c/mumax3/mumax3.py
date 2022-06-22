@@ -226,7 +226,7 @@ def overhead():
 
     >>> import mumax3c as mc
     ...
-    >>> isinstance(mc.muamx3.overhead(), float)
+    >>> isinstance(mc.mumamx3.overhead(), float)
     Running mumax3...
     True
 
