@@ -1,0 +1,3 @@
+include README.md
+include LICENSE
+recursive-include oommfc/tests/test_sample *

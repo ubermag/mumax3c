@@ -1,0 +1,19 @@
+// Mesh
+SetGridSize(1, 1, 1)
+SetCellSize(1e-09, 1e-09, 1e-09)
+
+// Zeeman
+B_ext=vector(0.0, 0.0, 1.2566370614359172)
+
+Msat=999999.9999999999
+tableadd(E_total)
+tableadd(E_exch)
+tableadd(E_demag)
+tableadd(E_zeeman)
+tableadd(E_anis)
+tableadd(dt)
+tableadd(maxtorque)
+minimize()
+
+save(m_full)
+tablesave()

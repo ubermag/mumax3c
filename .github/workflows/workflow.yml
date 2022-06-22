@@ -1,0 +1,104 @@
+name: workflow
+
+on:
+  push:
+  schedule:
+    - cron: '0 0 * * 1'  # run every Monday
+
+env:
+  PYTEST_ADDOPTS: "--color=yes"
+
+jobs:
+  workflow-windows:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windowsGPU]
+    defaults:
+      run:
+        shell: powershell {0}
+
+    steps:
+    - name: Initialisation
+      uses: actions/checkout@v2
+
+    - name: Create conda env
+      run: conda env create -f ".github/environment.yml"
+
+    - name: Install packages
+      run: |
+        # eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        conda env list
+        python --version
+        python -m pip install .[dev]
+
+    - name: Unit tests with coverage
+      run: |
+        # eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        invoke test.coverage
+
+    - name: Doc tests
+      run: |
+        # eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        invoke test.docs
+
+    - name: Notebook tests
+      run: |
+        # eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        invoke test.ipynb
+
+    - name: Remove conda env
+      run: conda env remove -n conda-environment
+      if: always()
+
+    - name: Upload coverage to Codecov.io
+      uses: codecov/codecov-action@v1
+
+  workflow-linux:
+    runs-on: linuxGPU
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - name: Initialisation
+      uses: actions/checkout@v2
+
+    - name: Create conda env
+      run: conda env create -f ".github/environment.yml"
+
+    - name: Install packages
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        python --version
+        python -m pip install .[dev]
+
+    - name: Unit tests with coverage
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        invoke test.coverage
+
+    - name: Doc tests
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        invoke test.docs
+
+    - name: Notebook tests
+      run: |
+        eval "$(conda shell.bash hook)"
+        conda activate conda-environment
+        invoke test.ipynb
+
+    - name: Remove conda env
+      run: conda env remove -n conda-environment
+      if: always()
+
+    - name: Upload coverage to Codecov.io
+      uses: codecov/codecov-action@v1
