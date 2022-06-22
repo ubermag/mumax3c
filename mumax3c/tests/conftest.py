@@ -11,7 +11,6 @@ not_supported_by_mumax = [
     "TestMinDriver.test_evolver_driver",
     "TestMinDriver.test_wrong_evolver",
     "test_outputstep",
-    "TestPrecession.test_dict",
     "TestPrecession.test_field",
     "TestRKKY.test_scalar",
     "TestThreads.test_threads",
@@ -27,6 +26,15 @@ not_supported_by_mumax = [
     "TestZeeman.test_time_field",
     "TestMinDriver.test_noevolver_driver",
     "TestDMI.test_crystalclass",
+    "TestCubicAnisotropy.test_field_field_field",
+    "TestDamping.test_field",
+    "TestDynamics.test_field_field",
+    "TestSlonczewski.test_field_values",
+    "TestZhangLi.test_field_scalar",
+    "TestUniaxialAnisotropy.test_field_vector",
+    "TestUniaxialAnisotropy.test_scalar_field",
+    "TestUniaxialAnisotropy.test_field_field",
+    "TestUniaxialAnisotropy.test_field_dict"
 ]
 
 missing_in_mumax3c = [
@@ -38,22 +46,13 @@ missing_in_mumax3c = [
     "TestCompute.test_slonczewski",
     "TestCompute.test_zhang_li",
     "TestCubicAnisotropy.test_field_vector_vector",
-    "TestCubicAnisotropy.test_field_field_field",
     "TestDamping.test_dict",
-    "TestDamping.test_field",
-    "TestDynamics.test_field_field",
     "TestDynamics.test_scalar_dict",
     "TestFixedSubregions.test_fixed_subregions",
     "TestSlonczewski.test_single_values",
     "TestSlonczewski.test_single_values_finite_temperature",
     "TestSlonczewski.test_dict_values",
-    "TestSlonczewski.test_field_values",
-    "TestUniaxialAnisotropy.test_field_vector",
-    "TestUniaxialAnisotropy.test_scalar_field",
-    "TestUniaxialAnisotropy.test_field_field",
-    "TestUniaxialAnisotropy.test_field_dict",
     "TestZhangLi.test_dict_scalar",
-    "TestZhangLi.test_field_scalar",
     "TestZhangLi.test_time_scalar_scalar",
     "test_multiple_drives_compute",
     "TestZhangLi.test_scalar_scalar",
@@ -61,6 +60,7 @@ missing_in_mumax3c = [
     "TestDMI.test_scalar",
     "TestDMI.test_dict",
     "TestDamping.test_scalar",
+    "TestPrecession.test_dict"
 ]
 
 
