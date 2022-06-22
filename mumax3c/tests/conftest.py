@@ -34,7 +34,7 @@ not_supported_by_mumax = [
     "TestUniaxialAnisotropy.test_field_vector",
     "TestUniaxialAnisotropy.test_scalar_field",
     "TestUniaxialAnisotropy.test_field_field",
-    "TestUniaxialAnisotropy.test_field_dict"
+    "TestUniaxialAnisotropy.test_field_dict",
 ]
 
 missing_in_mumax3c = [
@@ -60,7 +60,7 @@ missing_in_mumax3c = [
     "TestDMI.test_scalar",
     "TestDMI.test_dict",
     "TestDamping.test_scalar",
-    "TestPrecession.test_dict"
+    "TestPrecession.test_dict",
 ]
 
 
