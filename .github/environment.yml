@@ -11,4 +11,4 @@ dependencies:
     - git+https://github.com/ubermag/ubermagtable.git
     - git+https://github.com/ubermag/discretisedfield.git
     - git+https://github.com/ubermag/micromagneticmodel.git
-    - git+https://github.com/ubermag/micromagnetictests.git@mumax3c-changes
+    - git+https://github.com/ubermag/micromagnetictests.git
