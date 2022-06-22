@@ -4,7 +4,7 @@ import pytest
 import mumax3c.mumax3
 import mumax3c.scripts
 
-from .compute import compute
+# from .compute import compute  # compute is not yet supported
 from .delete import delete
 from .drivers import MinDriver, RelaxDriver, TimeDriver
 
