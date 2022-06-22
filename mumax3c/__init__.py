@@ -33,6 +33,17 @@ See Also
 
 
 def test():
+    """Run all package tests.
+
+    Examples
+    --------
+    1. Run all tests.
+
+    >>> import oommfc as md
+    ...
+    >>> # md.test()
+
+    """
     return pytest.main(
         ["-m", "not travis and not docker", "-v", "--pyargs", "mumax3c"]
     )  # pragma: no cover
