@@ -44,7 +44,7 @@ class Mumax3Runner(mm.ExternalRunner):
 
         >>> import mumax3c as mc
         ...
-        >>> mc.mumax3c.status()
+        >>> mc.mumax3.status()
         Running mumax3...
         mumax3 found and running.
         0
