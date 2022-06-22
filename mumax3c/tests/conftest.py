@@ -26,7 +26,7 @@ not_supported_by_mumax = [
     "TestZeeman.test_time_dict",
     "TestZeeman.test_time_field",
     "TestMinDriver.test_noevolver_driver",
-    "TestDMI.test_crystalclass"
+    "TestDMI.test_crystalclass",
 ]
 
 missing_in_mumax3c = [
@@ -60,7 +60,7 @@ missing_in_mumax3c = [
     "TestPrecession.test_scalar",
     "TestDMI.test_scalar",
     "TestDMI.test_dict",
-    "TestDamping.test_scalar"
+    "TestDamping.test_scalar",
 ]
 
 
