@@ -12,6 +12,9 @@ license = {file = "LICENSE"}
 
 authors = [
     {name = "Marijan Beg"},
+    {name = "Samuel Holt"},
+    {name = "Swapneel Amit Pathak"},
+    {name = "Martin Lang"},
     {name = "Jeroen Mulkers"},
     {name = "Jonathan Leliaert"},
     {name = "Vanessa Nehruji"},
