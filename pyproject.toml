@@ -43,8 +43,10 @@ classifiers = [
 
 dependencies = [
     "scipy",
-    "micromagneticmodel",
-    "ubermagtable"
+    "micromagneticmodel>=0.62.0",
+    "micromagnetictests>=0.62.0",
+    "ubermagutil>=0.63.0",
+    "ubermagtable>=0.61.1"
 ]
 
 [project.optional-dependencies]
