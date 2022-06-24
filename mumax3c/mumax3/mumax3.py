@@ -205,7 +205,11 @@ class Runner:
             cmd.append("mumax3")
             self._runner = ExeMumax3Runner(cmd)
         else:
-            msg = "mumax3 cannot be found"
+            msg = (
+                "Mumax3 cannot be found. Mumax3 does not come automatically with"
+                " Ubermag. Make sure it is properly installed and can be found on the"
+                " command line."
+            )
             raise EnvironmentError(msg)
 
 
