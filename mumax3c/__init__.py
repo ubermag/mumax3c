@@ -1,3 +1,4 @@
+"""Mumax3 calculator."""
 import pkg_resources
 import pytest
 
