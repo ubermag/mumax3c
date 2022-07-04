@@ -26,6 +26,8 @@ def energy_script(system, ovf_format):
                     "as vectors. Try adding the extra fields as "
                     "discretisedfield.Field."
                 )
+            else:
+                mx3 += zeeman_script(term, system, ovf_format)
         else:
             mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](
                 term, system, ovf_format
