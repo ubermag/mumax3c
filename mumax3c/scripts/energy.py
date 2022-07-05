@@ -1,7 +1,8 @@
+import discretisedfield as df
 import micromagneticmodel as mm
 import numpy as np
 import ubermagutil.typesystem as ts
-import discretisedfield as df
+
 import mumax3c as mc
 
 
