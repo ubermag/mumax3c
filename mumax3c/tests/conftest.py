@@ -80,3 +80,11 @@ def skip_unsupported_or_missing(request):
         pytest.skip("Not supported by mumax3.")
     elif requesting_test_function in missing_in_mumax3c:
         pytest.xfail("Currently not implemented in mumax3c.")
+
+
+@pytest.fixture(autouse=True)
+def skip_all_tests_when_mumax3_is_missing():
+    try:
+        mc.runner.runner
+    except EnvironmentError:
+        pytest.skip("Mumax3 is not found on the system")
