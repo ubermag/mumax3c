@@ -7,31 +7,34 @@ import mumax3c as mc
 
 def energy_script(system, ovf_format):
     mx3 = ""
-    num_zeeman_vectors = 0
     for term in system.energy:
-        if len(system.energy.get(type=type(term))) > 1 and not isinstance(
-            term, mm.Zeeman
-        ):
+        if isinstance(term, mm.Zeeman):  # Handled separately
+            continue
+        elif len(system.energy.get(type=type(term))) > 1:
             raise RuntimeError(
                 "Mumax3 does not allow more than one energy term of the same class "
                 "except for the Zeeman term."
             )
-        elif isinstance(term, mm.Zeeman) and isinstance(
-            term.H, (tuple, list, dict, np.ndarray)
-        ):
-            num_zeeman_vectors += 1
-            if num_zeeman_vectors > 1:
-                raise RuntimeError(
-                    "Mumax3 does not allow defining multiple external fields H "
-                    "as vectors. Try adding the extra fields as "
-                    "discretisedfield.Field."
-                )
-            else:
-                mx3 += zeeman_script(term, system, ovf_format)
         else:
             mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](
                 term, system, ovf_format
             )
+
+    num_zeeman_vectors = 0
+    if zeeman_terms := system.energy.get(type=mm.Zeeman):
+        for term in zeeman_terms:
+            if isinstance(term.H, (tuple, list, dict, np.ndarray)):
+                num_zeeman_vectors += 1
+                if num_zeeman_vectors > 1:
+                    raise RuntimeError(
+                        "Mumax3 does not allow defining multiple external fields H "
+                        "as vectors. Add the extra fields as "
+                        "discretisedfield.Field."
+                    )
+
+            mx3 += zeeman_script(term, system, ovf_format)
+
+        mx3 += "tableadd(E_Zeeman)\n"
 
     # Demagnetisation in mumax3 is enabled by default.
     if mm.Demag() not in system.energy:
@@ -63,7 +66,6 @@ def zeeman_script(term, system, ovf_format):
     mx3 += mc.scripts.set_parameter(
         parameter=B, name="B_ext", system=system, ovf_format=ovf_format
     )
-    mx3 += "tableadd(E_Zeeman)\n"
     return mx3
 
 
