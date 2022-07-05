@@ -1,7 +1,7 @@
 import micromagneticmodel as mm
 import numpy as np
 import ubermagutil.typesystem as ts
-
+import discretisedfield as df
 import mumax3c as mc
 
 
@@ -26,13 +26,10 @@ def energy_script(system, ovf_format):
             if isinstance(term.H, (tuple, list, dict, np.ndarray)):
                 num_zeeman_vectors += 1
                 if num_zeeman_vectors > 1:
-                    raise RuntimeError(
-                        "Mumax3 does not allow defining multiple external fields H "
-                        "as vectors. Add the extra fields as "
-                        "discretisedfield.Field."
-                    )
-
-            mx3 += zeeman_script(term, system, ovf_format)
+                    H_field = df.Field(mesh=system.m.mesh, dim=3, value=term.H)
+                    mx3 += zeeman_script(mm.Zeeman(H=H_field), system, ovf_format)
+                else:
+                    mx3 += zeeman_script(term, system, ovf_format)
 
         mx3 += "tableadd(E_Zeeman)\n"
 
