@@ -21,16 +21,13 @@ def energy_script(system, ovf_format):
                 term, system, ovf_format
             )
 
-    num_zeeman_vectors = 0
     if zeeman_terms := system.energy.get(type=mm.Zeeman):
         for term in zeeman_terms:
             if isinstance(term.H, (tuple, list, dict, np.ndarray)):
-                num_zeeman_vectors += 1
-                if num_zeeman_vectors > 1:
-                    H_field = df.Field(mesh=system.m.mesh, dim=3, value=term.H)
-                    mx3 += zeeman_script(mm.Zeeman(H=H_field), system, ovf_format)
-                else:
-                    mx3 += zeeman_script(term, system, ovf_format)
+                H_field = df.Field(mesh=system.m.mesh, dim=3, value=term.H)
+                mx3 += zeeman_script(mm.Zeeman(H=H_field), system, ovf_format)
+            else:
+                mx3 += zeeman_script(term, system, ovf_format)
 
         mx3 += "tableadd(E_Zeeman)\n"
 
