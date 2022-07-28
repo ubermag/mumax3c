@@ -5,6 +5,7 @@ import pathlib
 
 import discretisedfield as df
 import numpy as np
+import ubermagutil.typesystem as ts
 
 
 def _identify_subregions(system):
@@ -125,14 +126,24 @@ def set_parameter(parameter, name, system, ovf_format="bin4"):
                             "vector({}, {}, {}))\n".format(*value)
                         )
 
-    elif isinstance(parameter, df.Field) and name == "B_ext":
+    elif isinstance(parameter, df.Field) and "B_ext" in (name_list := name.split("|")):
+        if isinstance(getattr(system.energy, name_list[-1]).func, ts.Descriptor):
+            time_dep = 1  # 1 means constant in time
+        elif isinstance(getattr(system.energy, name_list[-1]).func, str):
+            time_dep = getattr(system.energy, name_list[-1]).func
+        else:
+            raise TypeError(
+                "Scalar function defining time dependence of external field can "
+                "only be defined as a string that is valid Mumax3 API."
+            )
+
         if file_list := list(pathlib.Path(".").glob("B_ext*.ovf")):
             num_ovf = len(file_list)
             parameter.write(f"B_ext_{num_ovf}.ovf", representation=ovf_format)
-            mx3 += f'B_ext.add(LoadFile("B_ext_{num_ovf}.ovf"), 1)\n'
+            mx3 += f'B_ext.add(LoadFile("B_ext_{num_ovf}.ovf"), {time_dep})\n'
         else:
             parameter.write("B_ext.ovf", representation=ovf_format)
-            mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 means constant in time
+            mx3 += f'B_ext.add(LoadFile("B_ext.ovf"), {time_dep})\n'
 
     else:
         # In mumax3, the parameter cannot be set using Field except for Zeeman field.
