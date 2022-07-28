@@ -59,7 +59,7 @@ def zeeman_script(term, system, ovf_format):
 
     mx3 = "// Zeeman\n"
     mx3 += mc.scripts.set_parameter(
-        parameter=B, name="B_ext", system=system, ovf_format=ovf_format
+        parameter=B, name=("B_ext" + f"|{term.name}"), system=system, ovf_format=ovf_format
     )
     return mx3
 
