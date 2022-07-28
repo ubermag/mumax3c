@@ -62,7 +62,7 @@ def mumax3_regions(system, ovf_format="bin4", abspath=True):
 
     if unique_index > max_index:
         raise ValueError(
-            "mumax3 does not allow more than 256 seperate regions to be set. The"
+            "mumax3 does not allow more than 256 separate regions to be set. The"
             " number of mumax3 regions is determined by the number of unique"
             " combinations of `discretisedfield` subregions and saturation"
             f" magnetisation values. Found {len(system.m.mesh.subregions)} subregions"
