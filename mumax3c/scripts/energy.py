@@ -1,3 +1,4 @@
+import discretisedfield as df
 import micromagneticmodel as mm
 import numpy as np
 import ubermagutil.typesystem as ts
@@ -8,13 +9,27 @@ import mumax3c as mc
 def energy_script(system, ovf_format):
     mx3 = ""
     for term in system.energy:
-        if len(system.energy.get(type=type(term))) > 1:
+        if isinstance(term, mm.Zeeman):  # Handled separately
+            continue
+        elif len(system.energy.get(type=type(term))) > 1:
             raise RuntimeError(
-                "Mumax3 does not allow more than one energy term of the same class."
+                "Mumax3 does not allow more than one energy term of the same class "
+                "except for the Zeeman term."
             )
-        mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](
-            term, system, ovf_format
-        )
+        else:
+            mx3 += globals()[f"{term.__class__.__name__.lower()}_script"](
+                term, system, ovf_format
+            )
+
+    if zeeman_terms := system.energy.get(type=mm.Zeeman):
+        for term in zeeman_terms:
+            if isinstance(term.H, (tuple, list, dict, np.ndarray)):
+                H_field = df.Field(mesh=system.m.mesh, dim=3, value=term.H)
+                mx3 += zeeman_script(mm.Zeeman(H=H_field), system, ovf_format)
+            else:
+                mx3 += zeeman_script(term, system, ovf_format)
+
+        mx3 += "tableadd(E_Zeeman)\n"
 
     # Demagnetisation in mumax3 is enabled by default.
     if mm.Demag() not in system.energy:
@@ -46,7 +61,6 @@ def zeeman_script(term, system, ovf_format):
     mx3 += mc.scripts.set_parameter(
         parameter=B, name="B_ext", system=system, ovf_format=ovf_format
     )
-    mx3 += "tableadd(E_Zeeman)\n"
     return mx3
 
 

@@ -126,8 +126,13 @@ def set_parameter(parameter, name, system, ovf_format="bin4"):
                         )
 
     elif isinstance(parameter, df.Field) and name == "B_ext":
-        parameter.write("B_ext.ovf", representation=ovf_format)
-        mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 represents constant in time
+        if file_list := list(pathlib.Path(".").glob("B_ext*.ovf")):
+            num_ovf = len(file_list)
+            parameter.write(f"B_ext_{num_ovf}.ovf", representation=ovf_format)
+            mx3 += f'B_ext.add(LoadFile("B_ext_{num_ovf}.ovf"), 1)\n'
+        else:
+            parameter.write("B_ext.ovf", representation=ovf_format)
+            mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 means constant in time
 
     else:
         # In mumax3, the parameter cannot be set using Field except for Zeeman field.
