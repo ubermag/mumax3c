@@ -39,7 +39,15 @@ class Driver(mm.ExternalDriver):
     def _write_input_files(self, system, **kwargs):
         self.write_mx3(system, **kwargs)
 
-    def write_mx3(self, system, dirname=".", ovf_format="bin8", mx3_txt=None, abspath=True, **kwargs):
+    def write_mx3(
+        self,
+        system,
+        dirname=".",
+        ovf_format="bin8",
+        mx3_txt=None,
+        abspath=True,
+        **kwargs,
+    ):
         """Write the mx3 file and related files.
 
         Takes ``micromagneticmodel.System`` and write the mx3 file (and related files)
