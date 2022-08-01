@@ -98,7 +98,7 @@ class Driver(mm.ExternalDriver):
                 system,
                 compute=None,  # TODO does mumax3 support compute?
                 ovf_format=ovf_format,
-                mx3_txt=None,
+                mx3_txt=mx3_txt,
                 **kwargs,
             )
             with open(self._mx3filename(system), "wt", encoding="utf-8") as mx3file:
