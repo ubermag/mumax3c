@@ -110,12 +110,21 @@ class Driver(mm.ExternalDriver):
         if dry_run:
             return runner.call(argstr=self._mx3filename(system), dry_run=True)
         else:
-            runner.call(
-                argstr=self._mx3filename(system),
-                verbose=verbose,
-                total=kwargs.get("n"),
-                glob_name=f"{system.name}.out/m_full*.ovf",
-            )
+            if hasattr(self, "pipe"):
+                context = uu.progress.fs_observer(
+                    dirname=f"{system.name}.out",
+                    magnetisation_regex=r"m_full.*ovf",
+                    hv_pipe=self.pipe,
+                )
+            else:
+                context = uu.progress.quiet()
+            with context:
+                runner.call(
+                    argstr=self._mx3filename(system),
+                    verbose=verbose,
+                    total=kwargs.get("n"),
+                    glob_name=f"{system.name}.out/m_full*.ovf",
+                )
 
     def _read_data(self, system):
         # Update system's magnetisation. An example .ovf filename: m_full000000.ovf
