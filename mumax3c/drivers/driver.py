@@ -112,9 +112,9 @@ class Driver(mm.ExternalDriver):
         else:
             if hasattr(self, "pipe"):
                 context = uu.progress.fs_observer(
-                    dirname=f"{system.name}.out",
                     magnetisation_regex=r"m_full.*ovf",
                     hv_pipe=self.pipe,
+                    recursive=True,
                 )
             else:
                 context = uu.progress.quiet()
