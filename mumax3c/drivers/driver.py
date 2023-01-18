@@ -124,7 +124,7 @@ class Driver(mm.ExternalDriver):
         # pass Field.array instead of Field for better performance
         # Mumax3 norm changes so need to set back to old norm
         norm_field = system.m.norm
-        system.m.value = df.Field.fromfile(str(lastovffile)).array
+        system.m.array = df.Field.from_file(str(lastovffile)).array
         system.m.norm = norm_field
 
         system.table = ut.Table.fromfile(

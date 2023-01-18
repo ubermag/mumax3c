@@ -71,7 +71,7 @@ def mumax3_regions(system, ovf_format="bin4", abspath=True):
         )
 
     region_path = pathlib.Path("mumax3_regions.omf")
-    df.Field(system.m.mesh, dim=1, value=region_indices).write(
+    df.Field(system.m.mesh, dim=1, value=region_indices).to_file(
         str(region_path), representation=ovf_format
     )
     system.region_relator = region_relator
@@ -128,10 +128,10 @@ def set_parameter(parameter, name, system, ovf_format="bin4"):
     elif isinstance(parameter, df.Field) and name == "B_ext":
         if file_list := list(pathlib.Path(".").glob("B_ext*.ovf")):
             num_ovf = len(file_list)
-            parameter.write(f"B_ext_{num_ovf}.ovf", representation=ovf_format)
+            parameter.to_file(f"B_ext_{num_ovf}.ovf", representation=ovf_format)
             mx3 += f'B_ext.add(LoadFile("B_ext_{num_ovf}.ovf"), 1)\n'
         else:
-            parameter.write("B_ext.ovf", representation=ovf_format)
+            parameter.to_file("B_ext.ovf", representation=ovf_format)
             mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 means constant in time
 
     else:
