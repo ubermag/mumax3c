@@ -94,7 +94,7 @@ def unique_with_accuracy(array, accuracy=14):
     return np.unique(np.round(array / array_max, decimals=accuracy)) * array_max
 
 
-def set_parameter(parameter, name, system, ovf_format="bin4"):
+def set_parameter(parameter, name, system, ovf_format="bin4", abspath=True):
     mx3 = ""
     # Spatially constant scalar parameter.
     if isinstance(parameter, numbers.Real):
@@ -128,11 +128,17 @@ def set_parameter(parameter, name, system, ovf_format="bin4"):
     elif isinstance(parameter, df.Field) and name == "B_ext":
         if file_list := list(pathlib.Path(".").glob("B_ext*.ovf")):
             num_ovf = len(file_list)
-            parameter.to_file(f"B_ext_{num_ovf}.ovf", representation=ovf_format)
-            mx3 += f'B_ext.add(LoadFile("B_ext_{num_ovf}.ovf"), 1)\n'
+            b_ext_path = pathlib.Path(f"B_ext_{num_ovf}.ovf")
+            parameter.to_file(b_ext_path, representation=ovf_format)
+            if abspath:
+                b_ext_path = b_ext_path.absolute().as_posix()  # / as separator required
+            mx3 += f'B_ext.add(LoadFile("{b_ext_path}"), 1)\n'
         else:
+            b_ext_path = pathlib.Path("B_ext.ovf")
             parameter.to_file("B_ext.ovf", representation=ovf_format)
-            mx3 += 'B_ext.add(LoadFile("B_ext.ovf"), 1)\n'  # 1 means constant in time
+            if abspath:
+                b_ext_path = b_ext_path.absolute().as_posix()  # / as separator required
+            mx3 += f'B_ext.add(LoadFile("{b_ext_path}"), 1)\n'  # 1: constant in time
 
     else:
         # In mumax3, the parameter cannot be set using Field except for Zeeman field.

@@ -18,6 +18,6 @@ def system_script(system, ovf_format, abspath=True, **kwargs):
     mx3 += mc.scripts.magnetisation_script(
         system, ovf_format=ovf_format, abspath=abspath
     )
-    mx3 += mc.scripts.energy_script(system, ovf_format=ovf_format)
+    mx3 += mc.scripts.energy_script(system, ovf_format=ovf_format, abspath=abspath)
 
     return mx3
