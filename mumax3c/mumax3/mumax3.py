@@ -177,8 +177,10 @@ class Runner:
 
         """
         log.debug(
-            "Starting autoselect_runner: cache_runner=%(cache_runner)s, "
-            "mumax3_exe=%(mumax3_exe)s, optirun_exe=%(optirun_exe)s, ",
+            (
+                "Starting autoselect_runner: cache_runner=%(cache_runner)s, "
+                "mumax3_exe=%(mumax3_exe)s, optirun_exe=%(optirun_exe)s, "
+            ),
             {
                 "cache_runner": self.cache_runner,
                 "mumax3_exe": self.mumax3_exe,
