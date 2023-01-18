@@ -4,7 +4,7 @@ import mumax3c as mc
 
 
 def magnetisation_script(system, ovf_format="bin4", abspath=True):
-    system.m.orientation.write("m0.omf", representation=ovf_format)
+    system.m.orientation.to_file("m0.omf", representation=ovf_format)
     m0_path = pathlib.Path("m0.omf")
     if abspath:
         m0_path = m0_path.absolute().as_posix()  # '/' as path separator required
