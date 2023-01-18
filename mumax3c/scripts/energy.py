@@ -24,7 +24,7 @@ def energy_script(system, ovf_format):
     if zeeman_terms := system.energy.get(type=mm.Zeeman):
         for term in zeeman_terms:
             if isinstance(term.H, (tuple, list, dict, np.ndarray)):
-                H_field = df.Field(mesh=system.m.mesh, dim=3, value=term.H)
+                H_field = df.Field(mesh=system.m.mesh, nvdim=3, value=term.H)
                 mx3 += zeeman_script(mm.Zeeman(H=H_field), system, ovf_format)
             else:
                 mx3 += zeeman_script(term, system, ovf_format)

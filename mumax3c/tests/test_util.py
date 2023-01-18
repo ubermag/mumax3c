@@ -9,7 +9,7 @@ import mumax3c as mc
 def test_mumax3_regions__no_subregion():
     mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 2), cell=(1, 1, 1))
     system = mm.System(name="test")
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=1)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
 
     subregion_values, subregions_dict = mc.scripts.util._identify_subregions(system)
     assert np.allclose(subregion_values, 0)
@@ -29,7 +29,7 @@ def test_mumax3_regions__two_subregions():
     }
     mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 2), cell=(1, 1, 1), subregions=subregions)
     system = mm.System(name="test")
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=1)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
 
     subregion_values, subregions_dict = mc.scripts.util._identify_subregions(system)
     assert subregion_values[0, 0, 0, 0] == 1
@@ -56,7 +56,7 @@ def test_mumax3_regions__two_subregions_gap_ms():
         x, _, _ = pos
         return x
 
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=ms_fun)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=ms_fun)
 
     subregion_values, subregions_dict = mc.scripts.util._identify_subregions(system)
     assert subregion_values[0, 0, 0, 0] == 1
@@ -77,7 +77,7 @@ def test_mumax3_regions__two_subregions_gap_ms():
             return 0
         return 1
 
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=ms_fun)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=ms_fun)
 
     mc.scripts.util.mumax3_regions(system)
     subregions = df.Field.fromfile("mumax3_regions.omf")
@@ -93,7 +93,7 @@ def test_identify_subregions__two_overlaping_subregions():
     }
     mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 2), cell=(1, 1, 1), subregions=subregions)
     system = mm.System(name="test")
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=1)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
 
     subregion_values, subregions_dict = mc.scripts.util._identify_subregions(system)
     assert subregion_values[0, 0, 0, 0] == 1
@@ -112,7 +112,7 @@ def test_identify_subregions__two_overlaping_subregions():
     }
     mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 2), cell=(1, 1, 1), subregions=subregions)
     system = mm.System(name="test")
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=1)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
 
     subregion_values, subregions_dict = mc.scripts.util._identify_subregions(system)
     assert subregion_values[0, 0, 0, 0] == 1
@@ -134,7 +134,7 @@ def test_identify_subregions__three_subregions():
     }
     mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 3), cell=(1, 1, 1), subregions=subregions)
     system = mm.System(name="test")
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=1)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
 
     subregion_values, subregions_dict = mc.scripts.util._identify_subregions(system)
     assert subregion_values[0, 0, 0, 0] == 1
@@ -161,6 +161,6 @@ def test_mumax3_regions__too_many_ms():
         x, y, z = pos
         return x
 
-    system.m = df.Field(mesh, dim=3, value=(0, 0, 1), norm=ms_fun)
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=ms_fun)
     with pytest.raises(ValueError):
         mc.scripts.mumax3_regions(system)

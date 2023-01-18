@@ -58,7 +58,7 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
                 if isinstance(zh_li_term.u, df.Field)
                 else df.Field(
                     mesh=system.m.mesh,
-                    dim=3,
+                    nvdim=3,
                     value=(1.0, 0.0, 0.0),
                     norm=zh_li_term.u,
                 )

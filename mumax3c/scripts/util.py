@@ -71,7 +71,7 @@ def mumax3_regions(system, ovf_format="bin4", abspath=True):
         )
 
     region_path = pathlib.Path("mumax3_regions.omf")
-    df.Field(system.m.mesh, dim=1, value=region_indices).to_file(
+    df.Field(system.m.mesh, nvdim=1, value=region_indices).to_file(
         str(region_path), representation=ovf_format
     )
     system.region_relator = region_relator
