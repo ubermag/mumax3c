@@ -105,7 +105,8 @@ def uniaxialanisotropy_script(term, system, ovf_format, abspath):
     return mx3
 
 
-def demag_script(term, system, **kwargs):  # ovformat and abspath not used in here
+def demag_script(term, system, ovf_format, abspath):
+    # all energy terms must have the same signature
     mx3 = "// Demag\n"
     mx3 += "enabledemag = true\n"
     mx3 += "tableadd(E_demag)\n"
