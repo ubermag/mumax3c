@@ -23,18 +23,51 @@ class Driver(mm.ExternalDriver):
     def _checkargs(self, **kwargs):
         """Abstract method for checking arguments."""
 
-    def drive_kwargs_setup(self, abspath=True, **kwargs):
-        self._checkargs(**kwargs)
-        kwargs.setdefault("abspath", abspath)
+    def drive_kwargs_setup(self, drive_kwargs):
+        """Additional keyword arguments allowed for drive.
+
+        This function tests additional keyword arguments that have been passed to the
+        ``drive`` method (it is not intended for direct use). A drive in mumax3c can
+        accept the following additional keyword arguments.
+
+        Parameters
+        ----------
+        abspath : bool, optional
+
+            If ``True`` absolute paths for all input files (e.g. the initial
+            magnetisation) are used in the mx3 file. If ``False`` relative paths are
+            used. Defaults to ``True``.
+
+        """
+        self._checkargs(**drive_kwargs)
+        drive_kwargs.setdefault("abspath", True)
 
         # TODO OOMMF support additional arguments; are there equivalent options in mumax
         # fixed_subregions = None  # mumax?
         # compute = None  # mumax?
         # output_step = False  # mumax?
 
-    def schedule_kwargs_setup(self, abspath=True, **kwargs):
-        self._checkargs(**kwargs)
-        kwargs.setdefault("abspath", abspath)
+    def schedule_kwargs_setup(self, schedule_kwargs):
+        """Additional keyword arguments allowed for schedule.
+
+        This function tests additional keyword arguments that have been passed to the
+        ``schedule`` method (it is not intended for direct use). A drive in oommfc can
+        accept the following additional keyword arguments.
+
+        It is the user's responsibility to ensure that OOMMF can be executed from the
+        scheduled job.
+
+        Parameters
+        ----------
+        abspath : bool, optional
+
+            If ``True`` absolute paths for all input files (e.g. the initial
+            magnetisation) are used in the mx3 file. If ``False`` relative paths are
+            used. Defaults to ``True``.
+
+        """
+        self._checkargs(**schedule_kwargs)
+        schedule_kwargs.setdefault("abspath", True)
 
     def _write_input_files(self, system, **kwargs):
         self.write_mx3(system, **kwargs)
