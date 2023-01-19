@@ -58,7 +58,7 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
                 if isinstance(zh_li_term.u, df.Field)
                 else df.Field(
                     mesh=system.m.mesh,
-                    dim=3,
+                    nvdim=3,
                     value=(1.0, 0.0, 0.0),
                     norm=zh_li_term.u,
                 )
@@ -69,7 +69,7 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
                 * (mm.consts.e / (mm.consts.e * mm.consts.hbar / (2.0 * mm.consts.me))),
                 system.m.norm,
             )
-            j.write("j.ovf", representation=ovf_format)
+            j.to_file("j.ovf", representation=ovf_format)
             mx3 += f"Xi = {zh_li_term.beta}\n"
             mx3 += "Pol = 1\n"  # Current polarization is 1.
             mx3 += 'J.add(LoadFile("j.ovf"), 1)\n'  # 1 means constant in time.

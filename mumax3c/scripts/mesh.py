@@ -1,5 +1,3 @@
-import discretisedfield as df
-
 # import mumax3c as mc
 
 
@@ -9,7 +7,7 @@ def mesh_script(system):
         repetitions = [0, 0, 0]  # should be generalised in the future
         for direction in system.m.mesh.bc:
             # Need to figure out the way of setting up the repetitions.
-            repetitions[df.util.axesdict[direction]] = 1
+            repetitions[system.m.mesh.region._dim2index(direction)] = 1
         mx3 += "SetPBC({}, {}, {})\n".format(*repetitions)
     mx3 += "SetGridSize({}, {}, {})\n".format(*system.m.mesh.n)
     mx3 += "SetCellSize({}, {}, {})\n\n".format(*system.m.mesh.cell)
