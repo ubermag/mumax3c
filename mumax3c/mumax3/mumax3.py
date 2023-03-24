@@ -196,15 +196,15 @@ class Runner:
             {"optirun_exe": optirun_exe},
         )
         if optirun_exe:
-            cmd.append("optirun")
+            cmd.append(self.optirun_exe)
 
         log.debug("Step 2: Checking for mumax3")
         mumax3_exe = shutil.which(self.mumax3_exe)
         log.debug(
-            "Output from 'which mumax3_exe=%(mumax3_exe)s", {"mumax3_exe", mumax3_exe}
+            "Output from 'which mumax3_exe=%(mumax3_exe)s", {"mumax3_exe": mumax3_exe}
         )
         if mumax3_exe:
-            cmd.append("mumax3")
+            cmd.append(self.mumax3_exe)
             self._runner = ExeMumax3Runner(cmd)
         else:
             msg = (
