@@ -4,6 +4,7 @@ on:
   push:
   schedule:
     - cron: '0 0 * * 1'  # run every Monday
+  workflow_dispatch:
 
 env:
   PYTEST_ADDOPTS: "--color=yes"
@@ -59,7 +60,7 @@ jobs:
   #     uses: codecov/codecov-action@v1
 
   workflow-linux:
-    runs-on: linuxGPU
+    runs-on: GPU
     defaults:
       run:
         shell: bash -l {0}
