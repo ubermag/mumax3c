@@ -63,7 +63,7 @@ jobs:
     runs-on: GPU
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -li {0}
 
     steps:
     - name: Initialisation
