@@ -150,6 +150,13 @@ class Driver(mm.ExternalDriver):
                 glob_name=f"{system.name}.out/m_full*.ovf",
             )
 
+    def _schedule_commands(self, system, runner):
+        if runner is None:
+            runner = mc.runner.runner
+        return [
+            runner._call(argstr=self._mx3filename(system), dry_run=True),
+        ]
+
     def _read_data(self, system):
         # Update system's magnetisation. An example .ovf filename: m_full000000.ovf
         ovffiles = pathlib.Path(f"{system.name}.out").glob("m_full*.ovf")
