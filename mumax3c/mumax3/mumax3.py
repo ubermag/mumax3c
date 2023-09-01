@@ -82,7 +82,7 @@ class ExeMumax3Runner(Mumax3Runner):
     def _call(self, argstr, need_stderr=False, dry_run=False):
         cmd = self.mumax3_exe + [argstr]
         if dry_run:
-            return cmd
+            return " ".join(cmd)
         else:
             return sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
 
