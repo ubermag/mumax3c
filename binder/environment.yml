@@ -4,5 +4,5 @@ channels:
   - conda-forge
 
 dependencies:
-  - python==3.8
-  - mumax3c
+  - python==3.10
+  - ubermag
