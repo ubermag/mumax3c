@@ -64,9 +64,10 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
                 )
             )
 
+            mu_B = mm.consts.e * mm.consts.hbar / (2.0 * mm.consts.me)
+
             j = -np.multiply(
-                u
-                * (mm.consts.e / (mm.consts.e * mm.consts.hbar / (2.0 * mm.consts.me))),
+                u * 2 * (1 + zh_li_term.beta**2) * mm.consts.e / (mm.consts.g * mu_B),
                 system.m.norm,
             )
             j.to_file("j.ovf", representation=ovf_format)
