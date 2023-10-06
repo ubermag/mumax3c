@@ -15,7 +15,6 @@
 | Description | Badge |
 | --- | --- |
 | Tests | [![Build status](https://github.com/ubermag/mumax3c/workflows/workflow/badge.svg)](https://github.com/ubermag/mumax3c/actions?query=workflow%3Aworkflow) |
-|       | [![conda](https://github.com/ubermag/mumax3c/workflows/conda/badge.svg)](https://github.com/ubermag/mumax3c/actions?query=workflow%3Aconda) |
 | Linting | [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/ubermag/mumax3c/master.svg)](https://results.pre-commit.ci/latest/github/ubermag/mumax3c/master) |
 |         | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) |
 | Releases | [![PyPI version](https://badge.fury.io/py/mumax3c.svg)](https://badge.fury.io/py/mumax3c) |
@@ -77,7 +76,7 @@ Licensed under the BSD 3-Clause "New" or "Revised" License. For details, please 
 
 2. M. Beg, R. A. Pepper, and H. Fangohr. User interfaces for computational science: A domain specific language for OOMMF embedded in Python. [*AIP Advances* **7**, 56025](http://aip.scitation.org/doi/10.1063/1.4977225) (2017).
 
-3. Marijan Beg, Samuel Holt, Swapneel Amit Pathak, Martin Lang, Jeroen Mulkers, Jonathan Leliaert, Vanessa Nehruji, Gary Downing, Ryan A. Pepper, Martin Lang, Thomas Kluyver, and Hans Fangohr. mumax3c: Python interface to mumax3 integrated into Jupyter notebook. DOI: [10.5281/zenodo.3539461](http://doi.org/10.5281/zenodo.3539461) (2022).
+3. Marijan Beg, Samuel Holt, Swapneel Amit Pathak, Martin Lang, Jeroen Mulkers, Jonathan Leliaert, Vanessa Nehruji, Gary Downing, Ryan A. Pepper, Martin Lang, Thomas Kluyver, and Hans Fangohr. mumax3c: Python interface to mumax3 integrated into Jupyter notebook. DOI: [10.5281/zenodo.3539461](http://doi.org/10.5281/zenodo.3539461) (2023).
 
 ## Acknowledgements
 
