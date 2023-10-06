@@ -1,5 +1,6 @@
 """Mumax3 calculator."""
-import pkg_resources
+import importlib.metadata
+
 import pytest
 
 import mumax3c.mumax3
@@ -56,4 +57,4 @@ def test_docker():
     )  # pragma: no cover
 
 
-__version__ = pkg_resources.get_distribution(__name__).version
+__version__ = importlib.metadata.version(__package__)
