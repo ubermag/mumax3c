@@ -76,6 +76,9 @@ omit = ["mumax3c/tests/*"]
 profile = "black"
 skip_gitignore = true  # ignores files listed in .gitignore
 
+[tool.setuptools.packages.find]
+include = ["mumax3c*"]
+
 # to define additional information we use a custom table
 # see: https://www.python.org/dev/peps/pep-0518/#tool-table
 [tool.ubermag]
