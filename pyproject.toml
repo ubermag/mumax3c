@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mumax3c"
-version = "0.1"
+version = "0.2.0"
 description = "Python interface to mumax3 integrated into Jupyter notebook."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -43,10 +43,10 @@ classifiers = [
 
 dependencies = [
     "scipy",
-    "micromagneticmodel>=0.62.0",
-    "micromagnetictests>=0.62.0",
-    "ubermagutil>=0.63.0",
-    "ubermagtable>=0.61.1"
+    "micromagneticmodel>=0.63.2",
+    "micromagnetictests>=0.63.1",
+    "ubermagutil>=0.63.2",
+    "ubermagtable>=0.61.3"
 ]
 
 [project.optional-dependencies]
