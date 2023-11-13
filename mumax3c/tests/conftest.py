@@ -6,7 +6,7 @@ not_supported_by_mumax = [
     "TestDemag.test_demag_asymptotic_radius",
     "TestEnergy.test_zeeman_zeeman",
     "TestExchange.test_field",
-    "TestHysteresisDriver.test_noevolver_nodriver",
+    "test_simple_hysteresis_loop",
     "TestMinDriver.test_evolver_nodriver",
     "TestMinDriver.test_evolver_driver",
     "TestMinDriver.test_wrong_evolver",
