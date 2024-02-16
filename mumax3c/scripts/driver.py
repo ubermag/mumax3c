@@ -9,6 +9,11 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
     mx3 = "tableadd(E_total)\n"
     mx3 += "tableadd(dt)\n"
     mx3 += "tableadd(maxtorque)\n"
+
+    if system.T > 0:
+        TK = system.T 
+        mx3 += "Temp = {TK}\n"
+    
     if isinstance(driver, mc.MinDriver):
         for attr, value in driver:
             if attr != "evolver":
