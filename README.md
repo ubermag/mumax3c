@@ -83,3 +83,20 @@ Licensed under the BSD 3-Clause "New" or "Revised" License. For details, please 
 - [OpenDreamKit](http://opendreamkit.org/) – Horizon 2020 European Research Infrastructure project (676541)
 
 - EPSRC Programme Grant on [Skyrmionics](http://www.skyrmions.ac.uk) (EP/N032128/1)
+- 
+
+## My changes
+- Added support for simulations with temperature (pass system.T to mx3 file, so mumax3 can deal with it).
+- Added TimeTorqueDriver with limited support of RunWhile() mumax3 simulation. Requires passing maxtorque parameter. The example and corresponding mx3 file lines are below.
+
+'''
+import mumax3c as mc #import the package
+
+max_torque_allowed = 0.005 # the desired value of MaxTorque to pass into RunWhile()
+td = mc.TimeTorqueDriver() # set the driver
+td.drive(system, maxtorque=max_torque_allowed, verbose=2) #start simulation
+'''
+
+'''
+RunWhile(maxtorque > 0.005)
+'''
