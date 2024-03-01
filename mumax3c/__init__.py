@@ -8,7 +8,7 @@ import mumax3c.scripts
 
 # from .compute import compute  # compute is not yet supported
 from .delete import delete
-from .drivers import MinDriver, RelaxDriver, TimeDriver
+from .drivers import MinDriver, RelaxDriver, TimeDriver, TimeTorqueDriver
 
 runner = mumax3c.mumax3.Runner()
 """Controls the default runner.
