@@ -84,6 +84,3 @@ Licensed under the BSD 3-Clause "New" or "Revised" License. For details, please 
 
 - EPSRC Programme Grant on [Skyrmionics](http://www.skyrmions.ac.uk) (EP/N032128/1)
 - 
-
-## My changes
-- Added support for simulations with temperature (pass system.T to mx3 file, so mumax3 can deal with it).
