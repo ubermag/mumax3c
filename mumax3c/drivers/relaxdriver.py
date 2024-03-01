@@ -54,7 +54,7 @@ class RelaxDriver(Driver):
         if len(system.dynamics) == 0:
             raise RuntimeError("System's dynamics is not defined")
         if len(system.energy) == 0:
-            raise AttributeError("System's energy is not defined")
+            raise RuntimeError("System's energy is not defined")
 
     @property
     def _x(self):
