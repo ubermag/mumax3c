@@ -36,7 +36,7 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
         mx3 += "save(m_full)\n"
         mx3 += "tablesave()\n\n"
 
-    if isinstance(driver, mc.TimeDriver) or isinstance(driver, mc.TimeTorqueDriver):
+    if isinstance(driver, mc.TimeDriver):
         # Extract dynamics equation parameters.
         gamma0 = (
             precession[0].gamma0
@@ -82,20 +82,13 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
         mx3 += "setsolver(5)\n"
         mx3 += "fixDt = 0\n\n"
 
-        if isinstance(driver, mc.TimeDriver):
-            t, n = kwargs["t"], kwargs["n"]
+        t, n = kwargs["t"], kwargs["n"]
 
-            mx3 += f"for snap_counter:=0; snap_counter<{n}; snap_counter++{{\n"
-            mx3 += f"    run({t/n})\n"
-            mx3 += "    save(m_full)\n"
-            mx3 += "    tablesave()\n"
-            mx3 += "}"
+        mx3 += f"for snap_counter:=0; snap_counter<{n}; snap_counter++{{\n"
+        mx3 += f"    run({t/n})\n"
+        mx3 += "    save(m_full)\n"
+        mx3 += "    tablesave()\n"
+        mx3 += "}"
 
-        if isinstance(driver, mc.TimeTorqueDriver):
-            torque_val0 = kwargs["maxtorque"]
-
-            mx3 += f"RunWhile(maxtorque > {torque_val0})\n"
-            mx3 += "save(m_full)\n"
-            mx3 += "tablesave()\n"
 
     return mx3
