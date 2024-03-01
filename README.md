@@ -86,7 +86,6 @@ Licensed under the BSD 3-Clause "New" or "Revised" License. For details, please 
 - 
 
 ## My changes
-- Added support for simulations with temperature (pass system.T to mx3 file, so mumax3 can deal with it).
 - Added TimeTorqueDriver with limited support of RunWhile() mumax3 simulation. Requires passing maxtorque parameter. The example and corresponding mx3 file lines are below.
 
 ```
