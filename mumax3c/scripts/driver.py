@@ -19,10 +19,9 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
         mx3 += "tablesave()\n\n"
 
     if isinstance(driver, mc.RelaxDriver):
-        if not system.dynamics.get(type=mm.Damping):
-            raise ValueError("A damping term is needed.")
-        alpha = system.dynamics.get(type=mm.Damping)[0].alpha
-        mx3 += f"alpha = {alpha}\n"
+        if system.dynamics.get(type=mm.Damping):
+            alpha = system.dynamics.get(type=mm.Damping)[0].alpha
+            mx3 += f"alpha = {alpha}\n"
 
         for attr, value in driver:
             if attr != "evolver":
