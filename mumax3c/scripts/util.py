@@ -55,9 +55,9 @@ def mumax3_regions(system, ovf_format="bin4", abspath=True):
                 continue
             unique_index += 1
             mx3 += f"Msat.setregion({unique_index}, {ms})\n"
-            region_indices[
-                (sr_indices == sr_index) & np.isclose(Ms_array, ms)
-            ] = unique_index
+            region_indices[(sr_indices == sr_index) & np.isclose(Ms_array, ms)] = (
+                unique_index
+            )
             region_relator[sr_name].append(unique_index)
 
     if unique_index > max_index:
