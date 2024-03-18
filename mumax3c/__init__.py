@@ -1,4 +1,5 @@
 """Mumax3 calculator."""
+
 import importlib.metadata
 
 import pytest
