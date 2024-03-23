@@ -1,14 +1,12 @@
 import pathlib
 
-import micromagneticdata as md
+import micromagneticdata as mdata
 import ubermagutil as uu
-
-from .abstract_drive import AbstractDrive
 
 
 @uu.inherit_docs
-class Mumax3Drive(md.Drive):
-    """Drive class for Mumax3Drives (created automatically).
+class Mumax3Drive(mdata.Drive):
+    """Drive class for Mumax3Drives.
 
     This class provides utility for the analysis of individual mumax3 drives. It should
     not be created explicitly. Instead, use ``micromagneticdata.Drive`` which
@@ -72,7 +70,7 @@ class Mumax3Drive(md.Drive):
 
         super().__init__(name, number, dirname, x, use_cache, **kwargs)
 
-    @AbstractDrive.x.setter
+    @mdata.AbstractDrive.x.setter
     def x(self, value):
         if value is None:
             # self.info["driver"] in ["TimeDriver", "RelaxDriver", "MinDriver"]:
