@@ -56,7 +56,7 @@ class Mumax3Runner(mm.ExternalRunner):
             td.drive(system, t=1e-12, n=1, runner=self)
             print("mumax3 found and running.")
             return 0
-        except (EnvironmentError, RuntimeError):
+        except (OSError, RuntimeError):
             print("Cannot find mumax3.")
             return 1
 
@@ -210,7 +210,7 @@ class Runner:
                 " Ubermag. Make sure it is properly installed and can be found on the"
                 " command line."
             )
-            raise EnvironmentError(msg)
+            raise OSError(msg)
 
 
 def overhead():
