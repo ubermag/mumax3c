@@ -7,6 +7,7 @@ not_supported_by_mumax = [
     "TestEnergy.test_zeeman_zeeman",
     "TestExchange.test_field",
     "test_simple_hysteresis_loop",
+    "test_stepped_hysteresis_loop",
     "TestMinDriver.test_evolver_nodriver",
     "TestMinDriver.test_evolver_driver",
     "TestMinDriver.test_wrong_evolver",
