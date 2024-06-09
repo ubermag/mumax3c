@@ -1,3 +1,5 @@
+import numbers
+
 import discretisedfield as df
 import micromagneticmodel as mm
 import numpy as np
@@ -52,16 +54,21 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
 
         if system.dynamics.get(type=mm.ZhangLi):
             (zh_li_term,) = system.dynamics.get(type=mm.ZhangLi)
-            u = (
-                zh_li_term.u
-                if isinstance(zh_li_term.u, df.Field)
-                else df.Field(
+            if isinstance(zh_li_term.u, df.Field):
+                raise RuntimeError("Setting Zhang Li u with a 'Fiel' is not supported.")
+            elif isinstance(zh_li_term.u, numbers.Real):
+                u = df.Field(
                     mesh=system.m.mesh,
                     nvdim=3,
                     value=(1.0, 0.0, 0.0),
                     norm=zh_li_term.u,
                 )
-            )
+            elif isinstance(zh_li_term.u, dict):
+                raise NotImplementedError(
+                    "Setting Zhang Li u with a 'dict' is not yet supported."
+                )
+            else:  # array_like
+                u = df.Field(mesh=system.m.mesh, nvdim=3, value=zh_li_term.u)
 
             mu_B = mm.consts.e * mm.consts.hbar / (2.0 * mm.consts.me)
 
