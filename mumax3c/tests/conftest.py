@@ -57,7 +57,6 @@ missing_in_mumax3c = [
     "TestZhangLi.test_dict_scalar",
     "TestZhangLi.test_time_scalar_scalar",
     "test_multiple_drives_compute",
-    "TestZhangLi.test_scalar_scalar",
     "TestPrecession.test_scalar",
     "TestDMI.test_scalar",
     "TestDMI.test_dict",
