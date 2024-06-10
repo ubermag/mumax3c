@@ -127,7 +127,7 @@ class Driver(mm.ExternalDriver):
                 ovf_format=ovf_format,
                 **kwargs,
             )
-            with open(self._mx3filename(system), "wt", encoding="utf-8") as mx3file:
+            with open(self._mx3filename(system), "w", encoding="utf-8") as mx3file:
                 mx3file.write(mx3)
 
             # Generate and save json info file for a drive (not compute).

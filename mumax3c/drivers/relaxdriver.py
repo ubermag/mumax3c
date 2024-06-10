@@ -49,6 +49,11 @@ class RelaxDriver(Driver):
     def _checkargs(self, **kwargs):
         pass  # no kwargs should be checked
 
+    def _check_system(self, system):
+        """Checks the system has dynamics in it"""
+        if len(system.energy) == 0:
+            raise RuntimeError("System's energy is not defined")
+
     @property
     def _x(self):
         return "t"  # TODO correct iteration

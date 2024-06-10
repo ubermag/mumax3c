@@ -56,7 +56,7 @@ class Mumax3Runner(mm.ExternalRunner):
             td.drive(system, t=1e-12, n=1, runner=self)
             print("mumax3 found and running.")
             return 0
-        except (EnvironmentError, RuntimeError):
+        except (OSError, RuntimeError):
             print("Cannot find mumax3.")
             return 1
 
@@ -210,7 +210,7 @@ class Runner:
                 " Ubermag. Make sure it is properly installed and can be found on the"
                 " command line."
             )
-            raise EnvironmentError(msg)
+            raise OSError(msg)
 
 
 def overhead():
@@ -235,22 +235,21 @@ def overhead():
     True
 
     """
-    with tempfile.TemporaryDirectory() as workingdir:
-        with uu.changedir(workingdir):
-            # Running mumax3 through mumax3c.
-            system = mm.examples.macrospin()
-            td = mc.TimeDriver()
-            mumax3c_start = time.time()
-            td.drive(system, t=1e-12, n=1)
-            mumax3c_stop = time.time()
-            mumax3c_time = mumax3c_stop - mumax3c_start
+    with tempfile.TemporaryDirectory() as workingdir, uu.changedir(workingdir):
+        # Running mumax3 through mumax3c.
+        system = mm.examples.macrospin()
+        td = mc.TimeDriver()
+        mumax3c_start = time.time()
+        td.drive(system, t=1e-12, n=1)
+        mumax3c_stop = time.time()
+        mumax3c_time = mumax3c_stop - mumax3c_start
 
-            # Running mumax3 directly.
-            mumax3_runner = mc.runner.runner
-            mx3path = pathlib.Path(f"{system.name}/drive-0/macrospin.mx3").resolve()
-            mumax3_start = time.time()
-            mumax3_runner.call(str(mx3path))
-            mumax3_stop = time.time()
-            mumax3_time = mumax3_stop - mumax3_start
+        # Running mumax3 directly.
+        mumax3_runner = mc.runner.runner
+        mx3path = pathlib.Path(f"{system.name}/drive-0/macrospin.mx3").resolve()
+        mumax3_start = time.time()
+        mumax3_runner.call(str(mx3path))
+        mumax3_stop = time.time()
+        mumax3_time = mumax3_stop - mumax3_start
 
     return mumax3c_time - mumax3_time
