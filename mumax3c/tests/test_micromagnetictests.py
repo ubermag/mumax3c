@@ -19,8 +19,7 @@ def test_temperature():
     system.energy = mm.Exchange(A=A)
     system.dynamics = mm.Precession(gamma0=mm.consts.gamma0) + mm.Damping(alpha=1)
     system.m = df.Field(mesh, nvdim=3, value=(0, 0.1, 1), norm=Ms)
-    system.T = 1000
-
+    system.T = 1000  # Set a high temperature so it is almost random
     assert f"Temp = {system.T}" in mc.scripts.driver_script(
         mc.TimeDriver(), system, compute=None, t=1, n=1
     )
@@ -28,4 +27,5 @@ def test_temperature():
     td = mc.TimeDriver()
     td.drive(system, t=0.2e-9, n=1)
 
-    assert np.linalg.norm(system.m.orientation.mean()) < 1.0
+    # If random then there should be no overall direction
+    assert np.linalg.norm(system.m.orientation.mean()) < 0.5
