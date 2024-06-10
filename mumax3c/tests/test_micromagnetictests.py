@@ -29,3 +29,4 @@ def test_temperature():
 
     # If random then there should be no overall direction
     assert np.linalg.norm(system.m.orientation.mean()) < 0.5
+    mc.delete(system)
