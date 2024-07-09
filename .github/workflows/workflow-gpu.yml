@@ -78,7 +78,7 @@ jobs:
         which conda
 
     - name: Prepare env file
-      run: sed -i "s/PYTHON_VERSION/$python-version/g" .github/environment.yml
+      run: sed -i "s/PYTHON_VERSION/${{ matrix.python-version }}/g" .github/environment.yml
 
     - name: Create conda env
       run: conda env create -f ".github/environment.yml"
