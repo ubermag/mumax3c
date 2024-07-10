@@ -64,6 +64,9 @@ jobs:
     defaults:
       run:
         shell: bash -i {0}
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.10"]
 
     steps:
     - name: Initialisation
@@ -73,6 +76,10 @@ jobs:
         pwd
         echo $PATH
         which conda
+
+    - name: Prepare env file
+      run: sed -i "s/PYTHON_VERSION/${{ matrix.python-version }}/g" .github/environment.yml
+
     - name: Create conda env
       run: conda env create -f ".github/environment.yml"
 
