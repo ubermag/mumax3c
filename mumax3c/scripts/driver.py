@@ -54,18 +54,30 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
 
         if system.dynamics.get(type=mm.ZhangLi):
             (zh_li_term,) = system.dynamics.get(type=mm.ZhangLi)
-            if isinstance(zh_li_term.u, df.Field):
-                raise RuntimeError("Setting Zhang Li u with a 'Fiel' is not supported.")
+            if isinstance(zh_li_term.u, df.Field) and zh_li_term.u.nvdim == 3:
+                u = zh_li_term.u
+            elif isinstance(zh_li_term.u, df.Field) and zh_li_term.u.nvdim == 1:
+                zero_field = df.Field(
+                    mesh=system.m.mesh,
+                    nvdim=1,
+                    value=0.0,
+                )
+                u = zh_li_term.u << zero_field << zero_field
             elif isinstance(zh_li_term.u, numbers.Real):
                 u = df.Field(
                     mesh=system.m.mesh,
                     nvdim=3,
-                    value=(1.0, 0.0, 0.0),
-                    norm=zh_li_term.u,
+                    value=(zh_li_term.u, 0.0, 0.0),
                 )
             elif isinstance(zh_li_term.u, dict):
-                raise NotImplementedError(
-                    "Setting Zhang Li u with a 'dict' is not yet supported."
+                if isinstance(list(zh_li_term.u.values())[0], numbers.Real):
+                    u_values = {key: (value, 0.0, 0.0) for key, value in zh_li_term.u.items()}
+                else:
+                    u_values = zh_li_term.u
+                u = df.Field(
+                    mesh=system.m.mesh,
+                    nvdim=3,
+                    value=u_values,
                 )
             else:  # array_like
                 u = df.Field(mesh=system.m.mesh, nvdim=3, value=zh_li_term.u)
