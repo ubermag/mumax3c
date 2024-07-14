@@ -4,7 +4,7 @@ channels:
   - conda-forge
 
 dependencies:
-  - python==3.8
+  - python=PYTHON_VERSION
   - pip
   - oommf
   - pip:
