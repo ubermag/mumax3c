@@ -71,7 +71,9 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
                 )
             elif isinstance(zh_li_term.u, dict):
                 if isinstance(list(zh_li_term.u.values())[0], numbers.Real):
-                    u_values = {key: (value, 0.0, 0.0) for key, value in zh_li_term.u.items()}
+                    u_values = {
+                        key: (value, 0.0, 0.0) for key, value in zh_li_term.u.items()
+                    }
                 else:
                     u_values = zh_li_term.u
                 u = df.Field(
