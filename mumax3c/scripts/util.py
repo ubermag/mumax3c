@@ -91,7 +91,20 @@ def unique_with_accuracy(array, accuracy=14):
     if len(array.flat) <= 1:
         return np.array(array.flat)
     array_max = np.max(array)
-    return np.unique(np.round(array / array_max, decimals=accuracy)) * array_max
+    return (
+        np.unique(
+            np.round(
+                np.divide(
+                    array,
+                    array_max,
+                    out=np.zeros_like(array),
+                    where=not np.isclose(array_max, 0.0),
+                ),
+                decimals=accuracy,
+            )
+        )
+        * array_max
+    )
 
 
 def set_parameter(parameter, name, system, ovf_format="bin4", abspath=True):
