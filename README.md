@@ -14,7 +14,7 @@
 
 | Description | Badge |
 | --- | --- |
-| Tests | [![tests](https://github.com/ubermag/mumax3c/actions/workflows/tests.yml/badge.svg)](https://github.com/ubermag/mumax3c/actions/workflows/tests.yml) |
+| Tests | [![tests](https://github.com/ubermag/mumax3c/actions/workflows/test.yml/badge.svg)](https://github.com/ubermag/mumax3c/actions/workflows/test.yml) |
 | Linting | [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/ubermag/mumax3c/master.svg)](https://results.pre-commit.ci/latest/github/ubermag/mumax3c/master) |
 |         | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) |
 | Releases | [![PyPI version](https://badge.fury.io/py/mumax3c.svg)](https://badge.fury.io/py/mumax3c) |
