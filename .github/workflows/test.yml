@@ -15,60 +15,42 @@ env:
 
 jobs:
   tests:
-    runs-on: GPU
-    defaults:
-      run:
-        shell: bash -i {0}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.9", "3.13"]
-
+        os: [ubuntu-latest, macos-26-intel, windows-latest]
+        python-version: ["3.13"]
+        include:
+          - os: ubuntu-latest
+            python-version: "3.9"
+    defaults:
+      run:
+        shell: bash -l {0}
     steps:
     - name: Initialisation
-      uses: actions/checkout@v2
-    - name: Debug
-      run: |
-        pwd
-        echo $PATH
-        which conda
-
-    - name: Prepare env file
-      run: sed -i "s/PYTHON_VERSION/${{ matrix.python-version }}/g" .github/environment.yml
-
-    - name: Create conda env
-      run: conda env create -f ".github/environment.yml"
-
-    - name: Install packages
-      run: |
-        eval "$(conda shell.bash hook)"
-        conda activate conda-environment
-        python --version
-        python -m pip install .[dev]
-
+      uses: actions/checkout@v4
+    - name: Set up conda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        auto-update-conda: true
+        activate-environment: conda-environment
+        environment-file: .github/environment.yml
+    - name: Install package
+      run: python -m pip install .[dev]
+    - name: Unit tests
+      run: invoke test.unittest
+      if: matrix.os != 'ubuntu-latest'
     - name: Unit tests with coverage
-      run: |
-        eval "$(conda shell.bash hook)"
-        conda activate conda-environment
-        invoke test.coverage
-
-    - name: Doc tests
-      run: |
-        eval "$(conda shell.bash hook)"
-        conda activate conda-environment
-        invoke test.docs
-
-    - name: Notebook tests
-      run: |
-        eval "$(conda shell.bash hook)"
-        conda activate conda-environment
-        invoke test.ipynb
-
-    - name: Remove conda env
-      run: conda env remove -n conda-environment
-      if: always()
-
+      run: invoke test.coverage
+      if: matrix.os == 'ubuntu-latest'
+    - name: Documentation tests
+      run: invoke test.docs
+    - name: Jupyter notebook tests
+      run: invoke test.ipynb
     - name: Upload coverage to Codecov.io
       uses: codecov/codecov-action@v1
+      if: matrix.os == 'ubuntu-latest'
 
   build:
     needs: tests
