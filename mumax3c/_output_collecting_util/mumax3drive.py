@@ -64,7 +64,7 @@ class Mumax3Drive(mdata.Drive):
             f"{dirname}/{name}/drive-{number}/{name}.out"
         )  # required to initialise self.x in super
         if not self._mumax_output_path.exists():
-            raise IOError(
+            raise OSError(
                 f"Output directory {self._mumax_output_path!r} does not exist."
             )
 
