@@ -2,14 +2,14 @@ import abc
 import pathlib
 
 import discretisedfield as df
-import micromagneticmodel as mm
 import ubermagtable as ut
 import ubermagutil as uu
+from micromagneticmodel import adapter_base
 
 import mumax3c as mc
 
 
-class Driver(mm.ExternalDriver):
+class Driver(adapter_base.ExternalDriver):
     """Driver base class."""
 
     def __init__(self, **kwargs):
