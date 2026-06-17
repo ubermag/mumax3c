@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from ubermagtable.tests.test_table import *  # noqa: F401,F403
+from ubermagtable.testing.table import *  # noqa: F401,F403
 
 from mumax3c._output_collecting_util.read_table import table_from_file
 
