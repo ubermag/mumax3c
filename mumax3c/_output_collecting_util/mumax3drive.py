@@ -97,31 +97,3 @@ class Mumax3Drive(mdata.Drive):
     def calculator_script(self):
         with (self.drive_path / f"{self.name}.mx3").open() as f:
             return f.read()
-
-    def __repr__(self):
-        """Representation string.
-
-        Returns
-        -------
-        str
-
-            Representation string.
-
-        Examples
-        --------
-        1. Representation string.
-
-        >>> import os
-        >>> import micromagneticdata as md
-        ...
-        >>> dirname = dirname=os.path.join(os.path.dirname(__file__),
-        ...                                'tests', 'test_sample')
-        >>> drive = md.Drive(name='system_name', number=1, dirname=dirname)
-        >>> drive
-        Mumax3Drive(name='system_name', number=1, dirname='...test_sample', x='t')
-
-        """
-        return (
-            f"Mumax3Drive(name='{self.name}', number={self.number}, "
-            f"dirname='{self.dirname}', x='{self.x}')"
-        )
