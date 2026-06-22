@@ -1,0 +1,1 @@
+{"total": {"pmin": [-5e-08, -2.5e-08, 0.0], "pmax": [5e-08, 2.5e-08, 2e-08], "dims": ["x", "y", "z"], "units": ["m", "m", "m"], "tolerance_factor": 1e-12}}
