@@ -1,1 +1,1 @@
-{"drive_number": 2, "date": "2026-06-22", "time": "12:19:46", "start_time": "2026-06-22T12:19:46", "adapter": "mumax3c", "adapter_version": "0.1", "driver": "TimeDriver", "t": 2.5e-11, "n": 25, "end_time": "2026-06-22T12:19:46", "elapsed_time": "00:00:01", "success": true}
+{"drive_number": 2, "date": "2026-06-22", "time": "12:27:21", "start_time": "2026-06-22T12:27:21", "adapter": "mumax3c", "adapter_version": "0.1", "driver": "TimeDriver", "t": 2.5e-11, "n": 25, "end_time": "2026-06-22T12:27:21", "elapsed_time": "00:00:01", "success": true}

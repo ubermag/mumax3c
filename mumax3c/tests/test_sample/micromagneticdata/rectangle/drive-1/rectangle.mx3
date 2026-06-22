@@ -21,7 +21,8 @@ enabledemag = false
 tableadd(E_total)
 tableadd(dt)
 tableadd(maxtorque)
-minimize()
+alpha = 0.02
+relax()
 
 save(m_full)
 tablesave()

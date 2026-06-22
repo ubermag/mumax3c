@@ -28,5 +28,5 @@ tablesave()
 //Please cite the following references, relevant for your simulation. //
 //See bibtex file in output folder for justification.                 //
 //********************************************************************//
-//   * Vansteenkiste et al., AIP Adv. 4, 107133 (2014).
 //   * Exl et al., J. Appl. Phys. 115, 17D118 (2014).
+//   * Vansteenkiste et al., AIP Adv. 4, 107133 (2014).

@@ -50,8 +50,8 @@ def rectangle(mode):
         md = mc.MinDriver()
         md.drive(system)
     elif mode == "relax_driver":
-        md = mc.MinDriver()
-        md.drive(system, output_step=True)
+        rd = mc.RelaxDriver()
+        rd.drive(system, output_step=True)
     else:
         raise NotImplementedError(mode)
 
