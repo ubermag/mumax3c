@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from ubermagtable.testing.table import *  # noqa: F401,F403
 
-from mumax3c._output_collecting_util.read_table import table_from_file
+from mumax3c.plugins import table_from_file
 
 llg_files = [
     "mumax3-file1.txt",
