@@ -2,11 +2,11 @@ import abc
 import pathlib
 
 import discretisedfield as df
-import ubermagtable as ut
 import ubermagutil as uu
 from micromagneticmodel import adapter_base
 
 import mumax3c as mc
+import mumax3c.plugins
 
 
 class Driver(adapter_base.ExternalDriver):
@@ -163,7 +163,7 @@ class Driver(adapter_base.ExternalDriver):
         system.m.array = df.Field.from_file(str(lastovffile)).array
         system.m.norm = norm_field
 
-        system.table = ut.Table.fromfile(
+        system.table = mumax3c.plugins.table_from_file(
             str(pathlib.Path(f"{system.name}.out/table.txt")), x=self._x
         )
 
