@@ -32,6 +32,7 @@ def table_from_file(filename, /, x=None, rename=True):
     --------
     1. Defining ``ubermagtable.Table`` by reading a mumax3 ``.txt`` file.
 
+    >>> import os
     >>> import mumax3c.plugins
     >>> table_file = os.path.join(os.path.dirname(__file__), '..',
     ...                           'tests', 'test_sample', 'tables', 'mumax3-file1.txt')
