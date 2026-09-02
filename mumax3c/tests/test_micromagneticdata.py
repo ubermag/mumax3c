@@ -9,7 +9,7 @@ from micromagneticdata.testing.drive import *  # noqa: F403
     params=[
         (0, ("t", "mx", "minimize()")),
         (1, ("t", "mx", "relax()")),
-        (2, ("t", "mx", "run(1e-12)")),  # llg, 25 ps in 25 steps
+        (2, ("t", "mx", "run(1e-12)")),  # llg, 25 ps in 25 steps -> 1ps per iteration
     ]
 )
 def drive_with_reference(request):
