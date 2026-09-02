@@ -65,7 +65,10 @@ homepage = "https://ubermag.github.io"
 documentation = "https://ubermag.github.io/documentation/mumax3c"
 repository = "https://github.com/ubermag/mumax3c"
 
-
+[project.entry-points."micromagneticdata.plugins.CalculatorDrive"]
+mumax3c = "mumax3c.plugins:Mumax3Drive"
+[project.entry-points."micromagneticdata.plugins.read_table"]
+mumax3c = "mumax3c.plugins:table_from_file"
 
 
 [tool.coverage.run]
