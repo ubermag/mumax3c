@@ -1,0 +1,28 @@
+OutputFormat = OVF2_BINARY
+
+// Mesh
+SetGridSize(20, 10, 4)
+SetCellSize(5e-09, 5e-09, 5e-09)
+
+// Magnetisation
+m.LoadFile("/home/mlang/ubermag-devtools/repos/mumax3c/mumax3c/tests/test_sample/micromagneticdata/rectangle/drive-0/m0.omf")
+Msat.setregion(0, 799999.9999999999)
+
+regions.LoadFile("/home/mlang/ubermag-devtools/repos/mumax3c/mumax3c/tests/test_sample/micromagneticdata/rectangle/drive-0/mumax3_regions.omf")
+
+// Exchange energy
+Aex = 1.3e-11
+tableadd(E_exch)
+// Zeeman
+B_ext.add(LoadFile("/home/mlang/ubermag-devtools/repos/mumax3c/mumax3c/tests/test_sample/micromagneticdata/rectangle/drive-0/B_ext.ovf"), 1)
+tableadd(E_Zeeman)
+enabledemag = false
+
+tableadd(E_total)
+tableadd(dt)
+tableadd(maxtorque)
+minimize()
+
+save(m_full)
+tablesave()
+

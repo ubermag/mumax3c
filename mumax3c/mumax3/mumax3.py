@@ -8,13 +8,14 @@ import time
 
 import micromagneticmodel as mm
 import ubermagutil as uu
+from micromagneticmodel import adapter_base
 
 import mumax3c as mc
 
 log = logging.getLogger("mumax3c")
 
 
-class Mumax3Runner(mm.ExternalRunner):
+class Mumax3Runner(adapter_base.ExternalRunner):
     """Abstract class for running mumax3."""
 
     @property
