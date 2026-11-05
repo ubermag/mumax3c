@@ -1,5 +1,7 @@
+import contextlib
 import pathlib
 
+import discretisedfield as df
 import micromagneticdata as mdata
 import ubermagutil as uu
 
@@ -92,6 +94,21 @@ class Mumax3Drive(mdata.Drive):
     @property
     def _step_file_glob(self):
         return self._mumax_output_path.glob("*.ovf")
+
+    def _read_m(self, filename):
+        """Read a mumax3 magnetisation field in the initial mesh coordinates."""
+        field = df.Field.from_file(filename)
+        if pathlib.Path(filename) != self._m0_path:
+            initial_field = df.Field.from_file(self._m0_path)
+            if not field.mesh.region.allclose(initial_field.mesh.region):
+                field.mesh.translate(
+                    initial_field.mesh.region.pmin - field.mesh.region.pmin,
+                    inplace=True,
+                )
+            with contextlib.suppress(FileNotFoundError):
+                field.mesh.load_subregions(self._m0_path)
+        field.valid = "norm"
+        return field
 
     @property
     def calculator_script(self):

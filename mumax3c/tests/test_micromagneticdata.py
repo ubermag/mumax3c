@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import discretisedfield as df
 import micromagneticdata as mdata
 import pytest
 from micromagneticdata.testing.drive import *  # noqa: F403
@@ -21,6 +22,17 @@ def drive_with_reference(request):
 @pytest.fixture
 def drive(drive_with_reference):
     return drive_with_reference[0]
+
+
+@pytest.fixture
+def expected_field_type():
+    return df.Field
+
+
+def test_magnetisation_geometry(drive):
+    """Magnetisation steps are aligned with the initial region and subregions."""
+    assert drive[0].mesh.region.allclose(drive.m0.mesh.region)
+    assert drive[0].mesh.subregions.keys() == drive.m0.mesh.subregions.keys()
 
 
 def test_ovf2vtk(drive, tmp_path):
