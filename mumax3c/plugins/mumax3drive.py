@@ -66,20 +66,13 @@ class Mumax3Drive(mdata.Drive):
 
         super().__init__(name, number, dirname, x, use_cache, **kwargs)
 
-    @mdata.AbstractDrive.x.setter
-    def x(self, value):
-        if value is None:
-            # self.info["driver"] in ["TimeDriver", "RelaxDriver", "MinDriver"]:
-            self._x = "t"
-        else:
-            # self.table reads self.x so self._x has to be defined first
-            if hasattr(self, "_x"):
-                # store old value to reset in case value is invalid
-                _x = self._x
-            self._x = value
-            if value not in self.table.data.columns:
-                self._x = _x
-                raise ValueError(f"Column {value=} does not exist in data.")
+    @property
+    def _default_x(self):
+        return "t"
+
+    @property
+    def _m0_path(self):
+        return self.drive_path / "m0.omf"
 
     @property
     def _table_path(self):
