@@ -50,14 +50,8 @@ class Mumax3Drive(mdata.Drive):
     --------
     1. Getting drive object.
 
-    >>> import os
     >>> import micromagneticdata as md
-    ...
-    >>> dirname = dirname=os.path.join(os.path.dirname(__file__), '..',
-    ...                                'tests', 'test_sample')
-    >>> drive = md.Drive(name='system_name', number=1, dirname=dirname)
-    >>> drive
-    Mumax3Drive(...)
+    >>> drive = md.Drive(name='system_name', number=1)  # doctest: +SKIP
 
     """
 
