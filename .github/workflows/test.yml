@@ -35,15 +35,14 @@ jobs:
     - name: Prepare env file
       run: sed -i "s/PYTHON_VERSION/${{ matrix.python-version }}/g" .github/environment.yml
 
-    - name: Authenticate git for GitHub HTTPS clones
-      # Avoids anonymous git-over-HTTPS being rate-limited/throttled (which
-      # surfaces as pip's git clone asking for a username during conda env creation)
-      run: git config --global url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-
     - name: Create conda env
       run: conda env create -f ".github/environment.yml"
+      env:
+        # Authenticate pip's git clones of GitHub repos, which are otherwise
+        # throttled anonymously and surface as a username prompt.
+        GIT_CONFIG_COUNT: 1
+        GIT_CONFIG_KEY_0: url.https://x-access-token:${{ github.token }}@github.com/.insteadOf
+        GIT_CONFIG_VALUE_0: https://github.com/
 
     - name: Install packages
       run: |
@@ -72,12 +71,6 @@ jobs:
 
     - name: Remove conda env
       run: conda env remove -n conda-environment
-      if: always()
-
-    - name: Remove git auth config
-      run: git config --global --unset url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf || true
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
       if: always()
 
     - name: Upload coverage to Codecov.io
