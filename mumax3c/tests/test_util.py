@@ -164,3 +164,44 @@ def test_mumax3_regions__too_many_ms():
     system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=ms_fun)
     with pytest.raises(ValueError):
         mc.scripts.mumax3_regions(system)
+
+
+def test_set_parameter__dict_default_vector():
+    mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 2), cell=(1, 1, 1))
+    system = mm.System(name="test")
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
+    mc.scripts.mumax3_regions(system)
+
+    mx3 = mc.scripts.set_parameter({"default": (1, 2, 3)}, name="u", system=system)
+    assert mx3 == "u = vector(1, 2, 3)\n"
+
+
+def test_set_parameter__does_not_modify_dict():
+    mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 2), cell=(1, 1, 1))
+    system = mm.System(name="test")
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
+    mc.scripts.mumax3_regions(system)
+
+    alpha = {"default": 0.1}
+    mc.scripts.set_parameter(alpha, name="alpha", system=system)
+    assert alpha == {"default": 0.1}
+
+
+@pytest.mark.parametrize("driver_cls", [mc.RelaxDriver, mc.TimeDriver])
+def test_driver_script__alpha_per_subregion(driver_cls):
+    subregions = {
+        "r1": df.Region(p1=(0, 0, 0), p2=(2, 2, 1)),
+        "r2": df.Region(p1=(0, 0, 1), p2=(2, 2, 2)),
+    }
+    mesh = df.Mesh(p1=(0, 0, 0), p2=(2, 2, 2), cell=(1, 1, 1), subregions=subregions)
+    system = mm.System(name="test")
+    system.m = df.Field(mesh, nvdim=3, value=(0, 0, 1), norm=1)
+    system.dynamics = mm.Precession(gamma0=mm.consts.gamma0) + mm.Damping(
+        alpha={"r1": 0.01, "r2": 0.2}
+    )
+    mc.scripts.mumax3_regions(system)
+
+    mx3 = mc.scripts.driver_script(driver_cls(), system, t=1e-9, n=10)
+    assert "alpha.setregion(0, 0.01)" in mx3
+    assert "alpha.setregion(1, 0.2)" in mx3
+    assert "{'r1'" not in mx3
