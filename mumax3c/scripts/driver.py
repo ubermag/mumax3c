@@ -24,7 +24,9 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
     if isinstance(driver, mc.RelaxDriver):
         if system.dynamics.get(type=mm.Damping):
             alpha = system.dynamics.get(type=mm.Damping)[0].alpha
-            mx3 += f"alpha = {alpha}\n"
+            mx3 += mc.scripts.set_parameter(
+                parameter=alpha, name="alpha", system=system, ovf_format=ovf_format
+            )
 
         for attr, value in driver:
             if attr != "evolver":
@@ -49,7 +51,9 @@ def driver_script(driver, system, compute=None, ovf_format="bin4", **kwargs):
         else:
             alpha = 0
 
-        mx3 += f"alpha = {alpha}\n"
+        mx3 += mc.scripts.set_parameter(
+            parameter=alpha, name="alpha", system=system, ovf_format=ovf_format
+        )
         if not gamma0:
             mx3 += "doprecess = false\n"
         else:
