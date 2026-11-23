@@ -37,6 +37,12 @@ jobs:
 
     - name: Create conda env
       run: conda env create -f ".github/environment.yml"
+      env:
+        # Authenticate pip's git clones of GitHub repos, which are otherwise
+        # throttled anonymously and surface as a username prompt.
+        GIT_CONFIG_COUNT: 1
+        GIT_CONFIG_KEY_0: url.https://x-access-token:${{ github.token }}@github.com/.insteadOf
+        GIT_CONFIG_VALUE_0: https://github.com/
 
     - name: Install packages
       run: |
